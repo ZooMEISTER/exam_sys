@@ -1,0 +1,13 @@
+.ant-menu-overflow-item.ant-menu-submenu.ant-menu-submenu-horizontal{
+    margin-left: auto;
+}
+
+.base-page-footer-div{
+    display: flex;
+    width: 100%;
+    height: 50px;
+}
+.base-page-footer-div-text{
+    margin: auto;
+    font-size: 20px;
+}
