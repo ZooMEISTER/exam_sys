@@ -23,6 +23,7 @@ public class SuperAdminPO {
     private String email;
     @TableLogic(value = "0", delval = "1")
     private int deleted;
+    private int profilev;
 
     public Long getId() {
         return id;
@@ -88,7 +89,15 @@ public class SuperAdminPO {
         this.deleted = deleted;
     }
 
-    public SuperAdminPO(Long id, String avatar, String username, String realname, String password, String phone, String email, int deleted) {
+    public int getProfilev() {
+        return profilev;
+    }
+
+    public void setProfilev(int profilev) {
+        this.profilev = profilev;
+    }
+
+    public SuperAdminPO(Long id, String avatar, String username, String realname, String password, String phone, String email, int deleted, int profilev) {
         this.id = id;
         this.avatar = avatar;
         this.username = username;
@@ -97,6 +106,7 @@ public class SuperAdminPO {
         this.phone = phone;
         this.email = email;
         this.deleted = deleted;
+        this.profilev = profilev;
     }
 
     @Override
@@ -110,6 +120,7 @@ public class SuperAdminPO {
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", deleted=" + deleted +
+                ", profilev=" + profilev +
                 '}';
     }
 }

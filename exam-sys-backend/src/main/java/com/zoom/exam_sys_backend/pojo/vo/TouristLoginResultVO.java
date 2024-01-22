@@ -9,21 +9,21 @@ package com.zoom.exam_sys_backend.pojo.vo;
 public class TouristLoginResultVO {
     int resultCode;
     int permissionLevel;
-    long userId;
+    long userid;
     String avatar;
-    String userName;
-    String realName;
+    String username;
+    String realname;
     String phone;
     String email;
     String token;
 
-    public TouristLoginResultVO(int resultCode, int permissionLevel, long userId, String avatar, String userName, String realName, String phone, String email, String token) {
+    public TouristLoginResultVO(int resultCode, int permissionLevel, long userid, String avatar, String username, String realname, String phone, String email, String token) {
         this.resultCode = resultCode;
         this.permissionLevel = permissionLevel;
-        this.userId = userId;
+        this.userid = userid;
         this.avatar = avatar;
-        this.userName = userName;
-        this.realName = realName;
+        this.username = username;
+        this.realname = realname;
         this.phone = phone;
         this.email = email;
         this.token = token;
@@ -45,12 +45,12 @@ public class TouristLoginResultVO {
         this.permissionLevel = permissionLevel;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getUserid() {
+        return userid;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUserid(long userid) {
+        this.userid = userid;
     }
 
     public String getAvatar() {
@@ -61,20 +61,20 @@ public class TouristLoginResultVO {
         this.avatar = avatar;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getRealName() {
-        return realName;
+    public String getRealname() {
+        return realname;
     }
 
-    public void setRealName(String realName) {
-        this.realName = realName;
+    public void setRealname(String realname) {
+        this.realname = realname;
     }
 
     public String getPhone() {

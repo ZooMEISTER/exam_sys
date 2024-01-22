@@ -18,6 +18,6 @@ public interface TouristService {
     // 游客注册
     TouristRegisterResultVO InsertRegisterTourist(String avatar, String username, String password);
 
-    // 游客登陆
+    // 游客登陆 使用用户名和密码
     TouristLoginResultVO TouristLogin(String username, String password);
 }

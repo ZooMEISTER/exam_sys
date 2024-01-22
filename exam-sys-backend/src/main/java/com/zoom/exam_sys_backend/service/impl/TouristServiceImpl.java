@@ -1,5 +1,6 @@
 package com.zoom.exam_sys_backend.service.impl;
 
+import com.zoom.exam_sys_backend.constant.ExamSysConstants;
 import com.zoom.exam_sys_backend.exception.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.*;
 import com.zoom.exam_sys_backend.pojo.po.AdminPO;
@@ -9,6 +10,7 @@ import com.zoom.exam_sys_backend.pojo.po.TeacherPO;
 import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
 import com.zoom.exam_sys_backend.pojo.vo.TouristRegisterResultVO;
 import com.zoom.exam_sys_backend.service.TouristService;
+import com.zoom.exam_sys_backend.util.JWTUtils;
 import com.zoom.exam_sys_backend.util.SnowflakeIdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,7 +70,7 @@ public class TouristServiceImpl implements TouristService {
         long id = idWorker.nextId();
         // 插入数据库
         int insertResult = touristMapper.insert(new StudentPO(
-                id, avatar, username, "default", password, "default", "default", 0
+                id, avatar, username, "default", password, "default", "default", 0, 0
         ));
         //返回 VO
         return new TouristRegisterResultVO((insertResult > 0) ? TouristResultCode.TOURIST_REGISTER_SUCCESS : TouristResultCode.TOURIST_REGISTER_FAIL_OTHER_REASON , String.valueOf(id));
@@ -90,7 +92,10 @@ public class TouristServiceImpl implements TouristService {
         // 实际上返回的对象中只有permissionLevel有区别
 
         // 这个是用户登录后服务端生成的 JWT token
+        // 调用 JWTUtil 来处理这个
         String token = "";
+        TouristLoginResultVO touristLoginResultVO = null;
+        boolean correctPassword = false;
 
         if(!IsUsernameAvailable(username, "user_super_admin")){
             // 超级管理员表中有对应记录
@@ -98,9 +103,11 @@ public class TouristServiceImpl implements TouristService {
             SuperAdminPO superAdminPO = superAdminMapper.getSuperAdminPOByUsername(username);
             // 比对密码
             if(password.equals(superAdminPO.getPassword())){
-                return new TouristLoginResultVO(
+                token = JWTUtils.genAccessToken(superAdminPO.getId(), superAdminPO.getProfilev());
+                correctPassword = true;
+                touristLoginResultVO = new TouristLoginResultVO(
                         TouristResultCode.TOURIST_LOGIN_SUCCESS,
-                        4,
+                        ExamSysConstants.SUPER_ADMIN_PERMISSION_LEVEL,
                         superAdminPO.getId(),
                         superAdminPO.getAvatar(),
                         superAdminPO.getUsername(),
@@ -110,9 +117,6 @@ public class TouristServiceImpl implements TouristService {
                         token
                 );
             }
-            else{
-                return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL");
-            }
         }
         else if(!IsUsernameAvailable(username, "user_admin")){
             // 管理员表中有对应记录
@@ -120,9 +124,11 @@ public class TouristServiceImpl implements TouristService {
             AdminPO adminPO = adminMapper.getAdminPOByUsername(username);
             // 比对密码
             if(password.equals(adminPO.getPassword())){
-                return new TouristLoginResultVO(
+                token = JWTUtils.genAccessToken(adminPO.getId(), adminPO.getProfilev());
+                correctPassword = true;
+                touristLoginResultVO = new TouristLoginResultVO(
                         TouristResultCode.TOURIST_LOGIN_SUCCESS,
-                        3,
+                        ExamSysConstants.ADMIN_PERMISSION_LEVEL,
                         adminPO.getId(),
                         adminPO.getAvatar(),
                         adminPO.getUsername(),
@@ -132,9 +138,6 @@ public class TouristServiceImpl implements TouristService {
                         token
                 );
             }
-            else{
-                return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL");
-            }
         }
         else if(!IsUsernameAvailable(username, "user_teacher")){
             // 老师表中有对应记录
@@ -142,9 +145,11 @@ public class TouristServiceImpl implements TouristService {
             TeacherPO teacherPO = teacherMapper.getTeacherPOByUsername(username);
             // 比对密码
             if(password.equals(teacherPO.getPassword())){
-                return new TouristLoginResultVO(
+                token = JWTUtils.genAccessToken(teacherPO.getId(), teacherPO.getProfilev());
+                correctPassword = true;
+                touristLoginResultVO = new TouristLoginResultVO(
                         TouristResultCode.TOURIST_LOGIN_SUCCESS,
-                        2,
+                        ExamSysConstants.TEACHER_PERMISSION_LEVEL,
                         teacherPO.getId(),
                         teacherPO.getAvatar(),
                         teacherPO.getUsername(),
@@ -154,9 +159,6 @@ public class TouristServiceImpl implements TouristService {
                         token
                 );
             }
-            else{
-                return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL");
-            }
         }
         else if(!IsUsernameAvailable(username, "user_student")){
             // 学生表中有对应记录
@@ -164,9 +166,11 @@ public class TouristServiceImpl implements TouristService {
             StudentPO studentPO = studentMapper.getStudentPOByUsername(username);
             // 比对密码
             if(password.equals(studentPO.getPassword())){
-                return new TouristLoginResultVO(
+                token = JWTUtils.genAccessToken(studentPO.getId(), studentPO.getProfilev());
+                correctPassword = true;
+                touristLoginResultVO = new TouristLoginResultVO(
                         TouristResultCode.TOURIST_LOGIN_SUCCESS,
-                        1,
+                        ExamSysConstants.STUDENT_PERMISSION_LEVEL,
                         studentPO.getId(),
                         studentPO.getAvatar(),
                         studentPO.getUsername(),
@@ -176,9 +180,16 @@ public class TouristServiceImpl implements TouristService {
                         token
                 );
             }
-            else{
-                return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL");
-            }
+        }
+
+        // 如果返回对象不为null，且密码正确
+        if(touristLoginResultVO != null && correctPassword){
+            // 对redis进行操作，将用户id和权限等级存入
+
+            return touristLoginResultVO;
+        }
+        else if(touristLoginResultVO == null && !correctPassword){
+            return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL");
         }
 
         // 数据库中没找到 用户不存在

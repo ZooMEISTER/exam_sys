@@ -25,6 +25,7 @@ public class StudentPO {
     private String email;
     @TableLogic(value = "0", delval = "1")
     private int deleted;
+    private int profilev;
 
     public Long getId() {
         return id;
@@ -90,7 +91,15 @@ public class StudentPO {
         this.deleted = deleted;
     }
 
-    public StudentPO(Long id, String avatar, String username, String realname, String password, String phone, String email, int deleted) {
+    public int getProfilev() {
+        return profilev;
+    }
+
+    public void setProfilev(int profilev) {
+        this.profilev = profilev;
+    }
+
+    public StudentPO(Long id, String avatar, String username, String realname, String password, String phone, String email, int deleted, int profilev) {
         this.id = id;
         this.avatar = avatar;
         this.username = username;
@@ -99,6 +108,7 @@ public class StudentPO {
         this.phone = phone;
         this.email = email;
         this.deleted = deleted;
+        this.profilev = profilev;
     }
 
     @Override
@@ -112,6 +122,7 @@ public class StudentPO {
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", deleted=" + deleted +
+                ", profilev=" + profilev +
                 '}';
     }
 }

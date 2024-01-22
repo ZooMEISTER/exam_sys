@@ -10,6 +10,9 @@ package com.zoom.exam_sys_backend.controller;
 import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
 import com.zoom.exam_sys_backend.pojo.vo.TouristRegisterResultVO;
 import com.zoom.exam_sys_backend.service.TouristService;
+import com.zoom.exam_sys_backend.util.JWTUtils;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,7 +56,7 @@ public class TouristController {
     * @Author: ZooMEISTER
     * @Description: http://localhost:3001/tourist/register/login 游客登陆
     * @DateTime: 2024/1/16 20:05
-    * @Params: []
+    * @Params: [username, password]
     * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginVO
     */
     @PostMapping("/login")

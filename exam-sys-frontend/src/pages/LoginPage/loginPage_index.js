@@ -8,12 +8,27 @@ import {
     message
 } from "antd";
 
+import { useDispatch, useSelector } from "react-redux";
+import { avatar_setValue } from "../../store/modules/avatarStore";
+import { email_setValue } from "../../store/modules/emailStore";
+import { permissionLevel_setValue } from "../../store/modules/permissionLevelStore";
+import { phone_setValue } from "../../store/modules/phoneStore";
+import { realname_setValue } from "../../store/modules/realnameStore";
+import { token_setValue } from "../../store/modules/tokenStore";
+import { userid_setValue } from "../../store/modules/useridStore";
+import { username_setValue } from "../../store/modules/usernameStore";
+
 import { touristRequest } from '../../utils';
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 
 const LoginPage = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const token = useSelector(state => state.token.value)
+    const [ rememberCheck, setRememberCheck ] = useState(true)
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -27,13 +42,35 @@ const LoginPage = () => {
             username: values.username,
             password: values.password
         })
-        .then(function (response) {
+        .then(async function (response) {
             console.log(response);
             if(response.data.resultCode === 10010){
                 // 登录成功
                 message.success("登录成功")
                 // 在这里把返回的用户数据存入到redux中
-                navigate("/login")
+                dispatch(avatar_setValue(response.data.avatar))
+                dispatch(email_setValue(response.data.email))
+                dispatch(permissionLevel_setValue(response.data.permissionLevel))
+                dispatch(phone_setValue(response.data.phone))
+                dispatch(realname_setValue(response.data.realname))
+                dispatch(token_setValue(response.data.token))
+                dispatch(userid_setValue(response.data.userid))
+                dispatch(username_setValue(response.data.username))
+
+                console.log('token: ' + response.data.token)
+
+                // 这里判断用户是否选择了"记住我"
+                // 选了就将 token 存到 cookie 中
+                if(rememberCheck === true){
+                    console.log("Remember me")
+                    localStorage.setItem("exam-sys-login-token", response.data.token)
+                }
+                else{
+                    console.log("not Remember me")
+                    localStorage.removeItem("exam-sys-login-token")
+                }
+                
+                navigate("/")
             }
             else if(response.data.resultCode === 10011){
                 // 登录失败，用户不存在
@@ -56,6 +93,11 @@ const LoginPage = () => {
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
+    // 记住我 Checkbox 变化事件
+    const onCheckboxChange = (e) => {
+        console.log(`checked = ${e.target.checked}`);
+        setRememberCheck(`${e.target.checked}`)
+      };
 
     return (
         <div>
@@ -73,26 +115,29 @@ const LoginPage = () => {
                     <Form.Item
                         label="用户名"
                         name="username"
-                        rules={[{required: true,message: '请输入用户名'}]}>
+                        rules={[{required: true, message: '请输入用户名'}]}>
                         <Input placeholder="用户名"/>
                     </Form.Item>
 
                     <Form.Item
                         label="密码"
                         name="password"
-                        rules={[{required: true,message: '请输入密码'}]}>
+                        rules={[{required: true, message: '请输入密码'}]}>
                         <Input.Password placeholder="密码"/>
                     </Form.Item>
 
                     <Form.Item
                         name="remember"
                         valuePropName="checked"
-                        wrapperCol={{offset: 8,span: 16}}>
-                        <Checkbox>记住我</Checkbox>
+                        wrapperCol={{offset: 8, span: 16}}>
+                        <Checkbox 
+                            onChange={onCheckboxChange}>
+                                记住我
+                        </Checkbox>
                     </Form.Item>
 
                     <Form.Item
-                        wrapperCol={{offset: 8,span: 16}}>
+                        wrapperCol={{offset: 8, span: 16}}>
                         <Button type="primary" htmlType="submit">
                             登录
                         </Button>
