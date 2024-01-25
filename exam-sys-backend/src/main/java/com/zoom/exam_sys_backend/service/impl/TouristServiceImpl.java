@@ -1,7 +1,12 @@
 package com.zoom.exam_sys_backend.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.zoom.exam_sys_backend.constant.ExamSysConstants;
-import com.zoom.exam_sys_backend.exception.TouristResultCode;
+import com.zoom.exam_sys_backend.exception.InvalidProfilevException;
+import com.zoom.exam_sys_backend.exception.NoPermissionException;
+import com.zoom.exam_sys_backend.exception.UserNotExistException;
+import com.zoom.exam_sys_backend.exception.code.InterceptorResultCode;
+import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.*;
 import com.zoom.exam_sys_backend.pojo.po.AdminPO;
 import com.zoom.exam_sys_backend.pojo.po.StudentPO;
@@ -12,8 +17,13 @@ import com.zoom.exam_sys_backend.pojo.vo.TouristRegisterResultVO;
 import com.zoom.exam_sys_backend.service.TouristService;
 import com.zoom.exam_sys_backend.util.JWTUtils;
 import com.zoom.exam_sys_backend.util.SnowflakeIdWorker;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * @Author ZooMEISTER
@@ -23,6 +33,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TouristServiceImpl implements TouristService {
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private TouristMapper touristMapper;
@@ -50,6 +63,89 @@ public class TouristServiceImpl implements TouristService {
     public Boolean IsUsernameAvailable(String username, String tablename) {
         int count = touristMapper.IsUsernameAvailable(username, tablename);
         return (count == 0);
+    }
+
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 通过 userid 查找用户信息
+    * @DateTime: 2024/1/24 21:29
+    * @Params: [userid]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO
+    */
+    @Override
+    public TouristLoginResultVO SearchUserByUserid(Long userid, String token) {
+        SuperAdminPO superAdminPO = superAdminMapper.selectById(userid);
+        AdminPO adminPO = adminMapper.selectById(userid);
+        TeacherPO teacherPO = teacherMapper.selectById(userid);
+        StudentPO studentPO = studentMapper.selectById(userid);
+
+        if(superAdminPO != null){
+            // 超级管理员表中有对应记录
+            return new TouristLoginResultVO(
+                    TouristResultCode.TOURIST_LOGIN_SUCCESS,
+                    ExamSysConstants.SUPER_ADMIN_PERMISSION_LEVEL,
+                    superAdminPO.getId(),
+                    superAdminPO.getAvatar(),
+                    superAdminPO.getUsername(),
+                    superAdminPO.getRealname(),
+                    superAdminPO.getPhone(),
+                    superAdminPO.getEmail(),
+                    token,
+                    superAdminPO.getDeleted(),
+                    superAdminPO.getProfilev()
+            );
+        }
+        else if(adminPO != null){
+            // 管理员表中有对应记录
+            return new TouristLoginResultVO(
+                    TouristResultCode.TOURIST_LOGIN_SUCCESS,
+                    ExamSysConstants.ADMIN_PERMISSION_LEVEL,
+                    adminPO.getId(),
+                    adminPO.getAvatar(),
+                    adminPO.getUsername(),
+                    adminPO.getRealname(),
+                    adminPO.getPhone(),
+                    adminPO.getEmail(),
+                    token,
+                    adminPO.getDeleted(),
+                    adminPO.getProfilev()
+            );
+        }
+        else if(teacherPO != null){
+            // 老师表中有对应记录
+            return new TouristLoginResultVO(
+                    TouristResultCode.TOURIST_LOGIN_SUCCESS,
+                    ExamSysConstants.TEACHER_PERMISSION_LEVEL,
+                    teacherPO.getId(),
+                    teacherPO.getAvatar(),
+                    teacherPO.getUsername(),
+                    teacherPO.getRealname(),
+                    teacherPO.getPhone(),
+                    teacherPO.getEmail(),
+                    token,
+                    teacherPO.getDeleted(),
+                    teacherPO.getProfilev()
+            );
+        }
+        else if(studentPO != null){
+            // 学生表中有对应记录
+            return new TouristLoginResultVO(
+                    TouristResultCode.TOURIST_LOGIN_SUCCESS,
+                    ExamSysConstants.STUDENT_PERMISSION_LEVEL,
+                    studentPO.getId(),
+                    studentPO.getAvatar(),
+                    studentPO.getUsername(),
+                    studentPO.getRealname(),
+                    studentPO.getPhone(),
+                    studentPO.getEmail(),
+                    token,
+                    studentPO.getDeleted(),
+                    studentPO.getProfilev()
+            );
+        }
+
+        return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_USER_NOT_EXIST, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
     }
 
     /**
@@ -114,7 +210,9 @@ public class TouristServiceImpl implements TouristService {
                         superAdminPO.getRealname(),
                         superAdminPO.getPhone(),
                         superAdminPO.getEmail(),
-                        token
+                        token,
+                        superAdminPO.getDeleted(),
+                        superAdminPO.getProfilev()
                 );
             }
         }
@@ -135,7 +233,9 @@ public class TouristServiceImpl implements TouristService {
                         adminPO.getRealname(),
                         adminPO.getPhone(),
                         adminPO.getEmail(),
-                        token
+                        token,
+                        adminPO.getDeleted(),
+                        adminPO.getProfilev()
                 );
             }
         }
@@ -156,7 +256,9 @@ public class TouristServiceImpl implements TouristService {
                         teacherPO.getRealname(),
                         teacherPO.getPhone(),
                         teacherPO.getEmail(),
-                        token
+                        token,
+                        teacherPO.getDeleted(),
+                        teacherPO.getProfilev()
                 );
             }
         }
@@ -177,22 +279,87 @@ public class TouristServiceImpl implements TouristService {
                         studentPO.getRealname(),
                         studentPO.getPhone(),
                         studentPO.getEmail(),
-                        token
+                        token,
+                        studentPO.getDeleted(),
+                        studentPO.getProfilev()
                 );
             }
         }
 
         // 如果返回对象不为null，且密码正确
         if(touristLoginResultVO != null && correctPassword){
-            // 对redis进行操作，将用户id和权限等级存入
+            // 对redis进行操作，将用户id和用户对象存入
+            redisTemplate.opsForValue().set(String.valueOf(touristLoginResultVO.getUserid()), JSONObject.toJSONString(touristLoginResultVO));
 
             return touristLoginResultVO;
         }
         else if(touristLoginResultVO == null && !correctPassword){
-            return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL");
+            return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
         }
 
         // 数据库中没找到 用户不存在
-        return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_USER_NOT_EXIST, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL");
+        return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_USER_NOT_EXIST, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 用户自动登录方法
+    * @DateTime: 2024/1/25 13:32
+    * @Params: [token]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO
+    */
+    @Override
+    public TouristLoginResultVO TouristAutoLogin(String token) {
+        try{
+            // 解析 token，获得 userid 和 profilev
+            Jws<Claims> claimsJws = JWTUtils.parseClaim(token);
+            String userid = String.valueOf(claimsJws.getPayload().get("userid"));
+            int profilev = Integer.parseInt(String.valueOf(claimsJws.getPayload().get("profilev")));
+            // 用 userid 去 Redis 中查询用户的 profilev，并比对是否相同
+            TouristLoginResultVO requestSenderVO = JSONObject.parseObject(String.valueOf(redisTemplate.opsForValue().get(String.valueOf(userid))), TouristLoginResultVO.class);
+            if(requestSenderVO != null){
+                // 先判断个人信息版本是否正确
+                if(requestSenderVO.getProfilev() != profilev){
+                    // 个人信息版本错误
+                    throw new InvalidProfilevException();
+                }
+            }
+            else{
+                // 若 Redis 中没有，则去 Mysql 中查询
+                requestSenderVO = SearchUserByUserid(Long.valueOf(userid), token);
+                if(requestSenderVO.getResultCode() == TouristResultCode.TOURIST_LOGIN_FAIL_USER_NOT_EXIST){
+                    // 用户不存在
+                    throw new UserNotExistException();
+                }
+                else{
+                    // 用户存在，将用户信息记录加入 Redis
+                    redisTemplate.opsForValue().set(String.valueOf(requestSenderVO.getUserid()), JSONObject.toJSONString(requestSenderVO));
+                    // 用户存在，先比对用户信息版本
+                    if(requestSenderVO.getProfilev() != profilev){
+                        // 个人信息版本错误
+                        throw new InvalidProfilevException();
+                    }
+                }
+            }
+
+            requestSenderVO.setResultCode(TouristResultCode.TOURIST_AUTOLOGIN_SUCCESS);
+
+            return requestSenderVO;
+        }
+        catch (Exception e){
+            if(e instanceof SignatureException){
+                // token 无效
+                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_INVALID_TOKEN, 0, 0, null, null, null, null, null, null, 0, 0);
+            }
+            else if(e instanceof InvalidProfilevException){
+                // 个人信息版本错误
+                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_INVALID_PROFILEV, 0, 0, null, null, null, null, null, null, 0, 0);
+            }
+            else if(e instanceof UserNotExistException){
+                // 用户不存在
+                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_USER_NOT_EXIST, 0, 0, null, null, null, null, null, null, 0, 0);
+            }
+        }
+        return new TouristLoginResultVO(TouristResultCode.TOURIST_RESULT_CODE_UNKNOWN_ERROR, 0, 0, null, null, null, null, null, null, 0, 0);
     }
 }

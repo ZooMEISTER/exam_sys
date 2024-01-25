@@ -1,5 +1,7 @@
 package com.zoom.exam_sys_backend.pojo.vo;
 
+import java.io.Serializable;
+
 /**
  * @Author ZooMEISTER
  * @Description: 游客登录时返回给前端的对象
@@ -16,8 +18,10 @@ public class TouristLoginResultVO {
     String phone;
     String email;
     String token;
+    private int deleted;
+    private int profilev;
 
-    public TouristLoginResultVO(int resultCode, int permissionLevel, long userid, String avatar, String username, String realname, String phone, String email, String token) {
+    public TouristLoginResultVO(int resultCode, int permissionLevel, long userid, String avatar, String username, String realname, String phone, String email, String token, int deleted, int profilev) {
         this.resultCode = resultCode;
         this.permissionLevel = permissionLevel;
         this.userid = userid;
@@ -27,6 +31,8 @@ public class TouristLoginResultVO {
         this.phone = phone;
         this.email = email;
         this.token = token;
+        this.deleted = deleted;
+        this.profilev = profilev;
     }
 
     public int getResultCode() {
@@ -99,5 +105,38 @@ public class TouristLoginResultVO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
+
+    public int getProfilev() {
+        return profilev;
+    }
+
+    public void setProfilev(int profilev) {
+        this.profilev = profilev;
+    }
+
+    @Override
+    public String toString() {
+        return "TouristLoginResultVO{" +
+                "resultCode=" + resultCode +
+                ", permissionLevel=" + permissionLevel +
+                ", userid=" + userid +
+                ", avatar='" + avatar + '\'' +
+                ", username='" + username + '\'' +
+                ", realname='" + realname + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", token='" + token + '\'' +
+                ", deleted=" + deleted +
+                ", profilev=" + profilev +
+                '}';
     }
 }

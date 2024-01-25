@@ -46,16 +46,35 @@
 
 
 
-## 前端页面设计
+## 前端设计
+
+### 自动登录设计
+
+此项目采用的是JWT，因此会在本地保存一个token，之后每次自动登录时都将这个token发送到后端进行验证。
+
+### Redux持久化
+
+不同于Vuex，Redux在页面刷新后不会保存状态，因此需要对Redux的状态数据进行持久化处理。采用的方案是登录时将Redux的数据以json格式存入localStorage，之后每次页面加载直接从localStorage中加载数据到Redux中。由于localStorage是永久的，故在存储时往json中加入过期时间，之后从localStoage中加载Redux数据前先判断是否过期，若过期则需使用token发送到后端的方式重新登录。
 
 ### 页面路由结构设计
 
 ```
 BasePage
+	FrontPage
 	HomePage
+		Teacher_OperateClass
+		Teacher_MyClass
+		Teacher_MyExam
+		Student_ChooseClass
+		Student_MyClass
+		Student_MyExam
 	LoginPage
 	RegisterPage
 ```
+
+### JWT Token
+
+包含两个字段，一个是用户的 id，一个是用户的个人信息版本号。
 
 
 
@@ -493,9 +512,16 @@ BasePage
 
 
 
-## 后端接口设计 ( RESTful )
+## 后端接口设计
 
+接口根据发起的角色分类：
 
+- 超级管理员调用的接口以 /superadmin 开头
+- 管理员调用的接口以 /admin 开头
+- 老师调用的接口以 /teacher 开头
+- 游客调用的接口 /tourist 开头
+
+拦截器拦截除游客外的请求，解析 token ，从 Redis 取出用户信息，对解析得出的值进行校验。
 
 
 

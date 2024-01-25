@@ -1,31 +1,60 @@
-const mainMenuItems_NoLogin = [{
-    label: (
-        <a href="/">
-            考试系统
-        </a>
-    ),
-    key: "front-page"
-},
-{
-    label: "我",
-    key: "me",
-    children:[{
+// 未登录时的顶部菜单
+const mainMenuItems_NoLogin = [
+    {
         label: (
-            <a href="/login">
-                登录
-            </a>
+            "首页"
         ),
-        key: "login",
+        key: "/"
     },
     {
         label: (
-            <a href="/register">
-                注册
-            </a>
+            "考试系统"
         ),
-        key: "register",
-    }]
-}
+        key: "/home"
+    },
+    {
+        label: "我",
+        key: "me",
+        children:[{
+            label: (
+                "登录"
+            ),
+            key: "/login",
+        },
+        {
+            label: (
+                "注册"
+            ),
+            key: "/register",
+        }]
+    }
 ]
 
-export default mainMenuItems_NoLogin
+// 已登陆后的顶部菜单
+const mainMenuItems_Logged = [
+    {
+        label: (
+            "首页"
+        ),
+        key: "/"
+    },
+    {
+        label: (
+            "考试系统"
+        ),
+        key: "/home"
+    },
+    {
+        label: "我",
+        key: "me",
+        children:[{
+            label: (
+                "退出登录"
+            ),
+            key: "logout",
+        }]
+    }
+]
+
+
+export { mainMenuItems_NoLogin, mainMenuItems_Logged }

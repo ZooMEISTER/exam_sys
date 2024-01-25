@@ -65,4 +65,16 @@ public class TouristController {
     ){
         return touristService.TouristLogin(username, password);
     }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 用户自动登录接口
+    * @DateTime: 2024/1/25 13:30
+    * @Params: [token]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO
+    */
+    @PostMapping("/autologin")
+    public TouristLoginResultVO TouristAutoLogin(@RequestParam("token") String token){
+        return touristService.TouristAutoLogin(token);
+    }
 }

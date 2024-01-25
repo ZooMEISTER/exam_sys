@@ -1,0 +1,11 @@
+.home-page-root{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.home-page-menu{
+    height: 100%;
+    width: 15%;
+}

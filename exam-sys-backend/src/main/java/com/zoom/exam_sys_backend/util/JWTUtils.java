@@ -115,11 +115,12 @@ public class JWTUtils {
         return parseClaim(token).getPayload();
     }
 
-//    public static void main(String[] args) {
-//        String token = genAccessToken(1234L, 1);
-//        System.out.println(token);
-//        System.out.println(parseHeader(token));
-//        System.out.println(parsePayload(token));
-//        System.out.println(parseClaim(token));
-//    }
+    public static void main(String[] args) {
+        String token = genAccessToken(1234L, 1);
+//        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjExOTEzODY5NTY5OTk2ODgxOTIsInByb2ZpbGV2IjowLCJqdGkiOiIxYmIwNmZlZi0xOGZiLTRjMjAtODMwZS1lYWU3ZTdhMDQxZDQiLCJleHAiOjE3MDYyODIxNTMsImlhdCI6MTcwNTY3NzM1Mywic3ViIjoibG9naW4tdG9rZW4iLCJpc3MiOiJab29NRUlTVEVSIn0.nJDSQVBykGBA09YuOrntjWS4gImBb2bWgKOO15xVM6wI";
+        System.out.println(token);
+        System.out.println(parseHeader(token));
+        System.out.println(parsePayload(token));
+        System.out.println(parseClaim(token));
+    }
 }

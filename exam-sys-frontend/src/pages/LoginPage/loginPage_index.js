@@ -8,7 +8,7 @@ import {
     message
 } from "antd";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { avatar_setValue } from "../../store/modules/avatarStore";
 import { email_setValue } from "../../store/modules/emailStore";
 import { permissionLevel_setValue } from "../../store/modules/permissionLevelStore";
@@ -19,6 +19,8 @@ import { userid_setValue } from "../../store/modules/useridStore";
 import { username_setValue } from "../../store/modules/usernameStore";
 
 import { touristRequest } from '../../utils';
+import storageUtils from '../../utils/storage'
+import memoryUtils from '../../utils/memory'
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -27,7 +29,6 @@ const LoginPage = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const token = useSelector(state => state.token.value)
     const [ rememberCheck, setRememberCheck ] = useState(true)
 
     const onFinish = (values) => {
@@ -57,7 +58,12 @@ const LoginPage = () => {
                 dispatch(userid_setValue(response.data.userid))
                 dispatch(username_setValue(response.data.username))
 
-                console.log('token: ' + response.data.token)
+                const user = response.data
+                user.expiration = new Date().getTime() + (24 * 60 * 60 * 1000);
+                //如何显示用户信息呢？需要储存起来
+                memoryUtils.user = JSON.stringify(user)     //保存在内存中
+                storageUtils.saveUser(user) //保存到local中
+
 
                 // 这里判断用户是否选择了"记住我"
                 // 选了就将 token 存到 cookie 中
@@ -97,7 +103,7 @@ const LoginPage = () => {
     const onCheckboxChange = (e) => {
         console.log(`checked = ${e.target.checked}`);
         setRememberCheck(`${e.target.checked}`)
-      };
+    };
 
     return (
         <div>
