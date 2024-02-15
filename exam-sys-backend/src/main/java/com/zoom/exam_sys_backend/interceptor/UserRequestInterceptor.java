@@ -41,6 +41,10 @@ public class UserRequestInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
+
         // 获取请求路径
         String requestPath = request.getServletPath();
         // 期望的权限等级
@@ -72,7 +76,8 @@ public class UserRequestInterceptor implements HandlerInterceptor {
         // 判断发送的请求是否需要鉴权
         if(expectPermissionLevel > 0){
             // 获取请求头中的 token
-            String token = request.getHeader("exam-sys-login-token");
+            //String token = request.getHeader("exam-sys-login-token");
+            String token = request.getHeader("Authorization").substring(7);
             try{
                 // 解析 token，获得 userid 和 profilev
                 Jws<Claims> claimsJws = JWTUtils.parseClaim(token);
@@ -158,6 +163,12 @@ public class UserRequestInterceptor implements HandlerInterceptor {
         }
         else{
             // 非法请求，直接拦截
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("resultCode", InterceptorResultCode.INTERCEPTED_ILLEGAL_REQUEST);
+            jsonObject.put("msg", "非法请求");
+            String jsonObjectStr = JSONObject.toJSONString(jsonObject);
+            ReturnJson(response, jsonObjectStr);
+
             return false;
         }
     }

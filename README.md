@@ -155,8 +155,9 @@ BasePage
 | id            | bigint | 是       | 是       | 雪花算法                   |
 | icon          | string | 否       |          | 学院图片，存储的是图片路径 |
 | name          | string | 是       |          | 学院名，不可重复           |
-| description   | string | 是       |          | 该学院的描述               |
+| description   | string | 否       |          | 该学院的描述               |
 | subjuct_count | int    | 是       |          | 该学院下属的专业数         |
+| deleted       | int    | 是       |          | 学院是否删除               |
 
 #### 	专业 ( sys_subject )
 
@@ -165,9 +166,10 @@ BasePage
 | id           | bigint | 是       | 是       | 雪花算法                   |
 | icon         | string | 否       |          | 专业图片，存储的是图片路径 |
 | name         | string | 是       |          | 专业名，不可重复           |
-| description  | string | 是       |          | 该专业的描述               |
+| description  | string | 否       |          | 该专业的描述               |
 | belongto     | bigint | 是       |          | 该专业所属的的学院的id     |
 | course_count | int    | 是       |          | 该专业下属的课程数         |
+| deleted      | int    | 是       |          | 专业是否删除               |
 
 #### 	课程 ( sys_course )
 
@@ -176,9 +178,10 @@ BasePage
 | id           | bigint   | 是       | 是       | 雪花算法                              |
 | icon         | string   | 否       |          | 课程图片，存储的是图片路径            |
 | name         | string   | 是       |          | 课程名，可重复 (同一门课程会开多个课) |
-| description  | string   | 是       |          | 该课程的描述                          |
+| description  | string   | 否       |          | 该课程的描述                          |
 | teachby      | bigint   | 是       |          | 该教授该课程的老师的 id               |
 | created_time | datetime | 是       |          | 该课程创建的时间                      |
+| deleted      | int      | 是       |          | 课程是否删除                          |
 
 #### 	考试 ( sys_exam )
 
@@ -529,6 +532,8 @@ BasePage
 
 1. #### Invalid value type for attribute 'factoryBeanObjectType': java.lang.String：通过调试发现是bean在创建的时候的问题，最后在网上找到了解决办法[4]，主要是由于 mybatis-plus 中 [mybatis](https://so.csdn.net/so/search?q=mybatis&spm=1001.2101.3001.7020) 的整合包版本不够导致的，排除 mybatis-plus 中自带的 mybatis 整合包，单独引入即可。
 
+1. #### CORS error：在请求header中加上Authorization并放入token，请求被拦截，原因是自定义请求头后，该请求为非简单请求，而由于后端未设置具体的字段许可名单，导致该请求在预检阶段被拦截，解决办法[5] 为后端设置一下即可
+
 
 
 ## 参考文档
@@ -540,3 +545,5 @@ BasePage
 [3] ENCRYPTED EXAMINATION PAPER  DISTRIBUTION SYSTEM FOR PREVENTING PAPER  LEAKAGE
 
 [4] springboot3.2 整合 mybatis-plus - CSDN： https://blog.csdn.net/qq_24330181/article/details/134641250
+
+[5] 向请求头添加自定义属性，实现token功能时，出现CORS跨域导致请求失败：https://blog.csdn.net/qq_41359758/article/details/115031701

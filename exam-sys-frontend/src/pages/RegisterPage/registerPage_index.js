@@ -47,9 +47,6 @@ const RegisterPage = () => {
         if (!isLt2M) {
             message.error('头像文件大小需小于 2MB !');
         }
-        
-        //console.log(file)
-
         if(isJpgOrPng && isLt2M){
             getBase64(file, (url) => {
                 setImageUrl(url);

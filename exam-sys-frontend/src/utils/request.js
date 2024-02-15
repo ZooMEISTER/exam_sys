@@ -26,6 +26,10 @@ const userRequest = axios.create({
 // 添加请求拦截器
 userRequest.interceptors.request.use((config) => {
     // 在请求发送之前会触发这里
+    const token = localStorage.getItem("exam-sys-login-token")
+    if(token){
+        config.headers.Authorization = `Bearer ${token}`
+    }
     return config
 }, (error) => { 
     return Promise.reject(error)

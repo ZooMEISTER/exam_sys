@@ -18,7 +18,7 @@ import { token_setValue } from "../../store/modules/tokenStore";
 import { userid_setValue } from "../../store/modules/useridStore";
 import { username_setValue } from "../../store/modules/usernameStore";
 
-import { touristRequest } from '../../utils';
+import { touristRequest } from '../../utils/request';
 import storageUtils from '../../utils/storage'
 import memoryUtils from '../../utils/memory'
 import { useNavigate } from "react-router-dom";

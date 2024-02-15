@@ -3,7 +3,8 @@ import { Outlet, useNavigate } from "react-router-dom"
 
 import { 
     Menu,
-    message
+    message,
+    Modal
 } from "antd";
 
 import { touristRequest } from '../../utils';
@@ -27,8 +28,11 @@ import { mainMenuItems_NoLogin, mainMenuItems_Logged } from '../../constants/Mai
 
 //该页的样式文件
 import './basePage_index.css'
+import { floatButtonPrefixCls } from 'antd/es/float-button/FloatButton';
 
 const BasePage = () => {
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -40,25 +44,36 @@ const BasePage = () => {
         setCurrentSelectedMenuItem(e.key);
 
         if(e.key === "logout"){
-            // 退出登录
-            localStorage.removeItem("exam-sys-login-token")
-            storageUtils.deleteUser()
-
-            dispatch(avatar_setValue(""))
-            dispatch(email_setValue(""))
-            dispatch(permissionLevel_setValue(0))
-            dispatch(phone_setValue(""))
-            dispatch(realname_setValue(""))
-            dispatch(token_setValue(""))
-            dispatch(userid_setValue(0))
-            dispatch(username_setValue(""))
-
-            navigate("/")
+            setIsLogoutModalOpen(true)
         }
         else{
             navigate(e.key)
         }
     };
+
+    const handleOk = () => {
+        // 退出登录
+        localStorage.removeItem("exam-sys-login-token")
+        storageUtils.deleteUser()
+
+        dispatch(avatar_setValue(""))
+        dispatch(email_setValue(""))
+        dispatch(permissionLevel_setValue(0))
+        dispatch(phone_setValue(""))
+        dispatch(realname_setValue(""))
+        dispatch(token_setValue(""))
+        dispatch(userid_setValue(0))
+        dispatch(username_setValue(""))
+
+        memoryUtils.user = "{}"
+
+        navigate("/")
+
+        setIsLogoutModalOpen(false)
+    }
+    const handleCancel = () => {
+        setIsLogoutModalOpen(false)
+    }
 
     // 自动登录方法
     const autoLogin = () => {
@@ -68,7 +83,15 @@ const BasePage = () => {
 
         // 当 localStorage 中有用户信息对象且未过期
         if(memoryUtils.user !== "{}" && JSON.parse(memoryUtils.user).expiration > new Date().getTime()){
-            
+            console.log("从localstorage获取用户信息")
+            dispatch(avatar_setValue(JSON.parse(memoryUtils.user).avatar))
+            dispatch(email_setValue(JSON.parse(memoryUtils.user).email))
+            dispatch(permissionLevel_setValue(JSON.parse(memoryUtils.user).permissionLevel))
+            dispatch(phone_setValue(JSON.parse(memoryUtils.user).phone))
+            dispatch(realname_setValue(JSON.parse(memoryUtils.user).realname))
+            dispatch(token_setValue(JSON.parse(memoryUtils.user).token))
+            dispatch(userid_setValue(JSON.parse(memoryUtils.user).userid))
+            dispatch(username_setValue(JSON.parse(memoryUtils.user).username))
         }
         else{
             // 调用后端自动登录接口
@@ -140,6 +163,10 @@ const BasePage = () => {
             <div className='base-page-footer-div'>
                 <span className='base-page-footer-div-text'>Made by ZooMEISTER with 💩</span>
             </div>
+
+            <Modal title="Basic Modal" open={isLogoutModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <p>你确定要退出登陆吗</p>
+            </Modal>
         </div>
     )
         

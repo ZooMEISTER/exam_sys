@@ -11,4 +11,5 @@ public interface InterceptorResultCode {
     public static final int INTERCEPTED_INVALID_PROFILEV = 11002;
     public static final int INTERCEPTED_USER_NOT_EXIST = 11003;
     public static final int INTERCEPTED_NO_PERMISSION = 11004;
+    public static final int INTERCEPTED_ILLEGAL_REQUEST = 11005;
 }

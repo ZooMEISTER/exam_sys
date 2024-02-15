@@ -47,7 +47,14 @@ const mainMenuItems_Logged = [
     {
         label: "我",
         key: "me",
-        children:[{
+        children:[
+            {
+                label: (
+                    "个人资料"
+                ),
+                key: "/profile",
+            },
+            {
             label: (
                 "退出登录"
             ),

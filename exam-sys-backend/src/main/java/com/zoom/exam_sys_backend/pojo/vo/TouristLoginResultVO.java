@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class TouristLoginResultVO {
     int resultCode;
     int permissionLevel;
-    long userid;
+    String userid;
     String avatar;
     String username;
     String realname;
@@ -21,7 +21,7 @@ public class TouristLoginResultVO {
     private int deleted;
     private int profilev;
 
-    public TouristLoginResultVO(int resultCode, int permissionLevel, long userid, String avatar, String username, String realname, String phone, String email, String token, int deleted, int profilev) {
+    public TouristLoginResultVO(int resultCode, int permissionLevel, String userid, String avatar, String username, String realname, String phone, String email, String token, int deleted, int profilev) {
         this.resultCode = resultCode;
         this.permissionLevel = permissionLevel;
         this.userid = userid;
@@ -51,11 +51,11 @@ public class TouristLoginResultVO {
         this.permissionLevel = permissionLevel;
     }
 
-    public long getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(long userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 

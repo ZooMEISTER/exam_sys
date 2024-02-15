@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const useridSlice = createSlice({
     name: 'userid',
     initialState: {
-        value: 0
+        value: ""
     },
     reducers: {
         userid_setValue(state, action){

@@ -3,17 +3,18 @@ import FrontPage from "../pages/FrontPage/frontPage_index"
 import BasePage from "../pages/BasePage/basePage_index";
 
 import HomePage from "../pages/HomePage/homePage_index";
-    import Student_ChooseClass from "../pages/HomePage/subPage/student_ChooseClass/student_ChooseClass_index"
-    import Student_MyClass from "../pages/HomePage/subPage/student_MyClass/student_MyClass_index"
-    import Student_MyExam from "../pages/HomePage/subPage/student_MyExam/student_MyExam_index"
-    import Teacher_OperateClass from "../pages/HomePage/subPage/teacher_OperateClass/teacher_OperateClass_index"
-    import Teacher_MyClass from "../pages/HomePage/subPage/teacher_MyClass/teacher_MyClass_index"
-    import Teacher_MyExam from "../pages/HomePage/subPage/teacher_MyExam/teacher_MyExam_index"
+    import Student_ChooseClass from "../pages/HomePage/subPage/student/student_ChooseClass/student_ChooseClass_index"
+    import Student_MyClass from "../pages/HomePage/subPage/student/student_MyClass/student_MyClass_index"
+    import Student_MyExam from "../pages/HomePage/subPage/student/student_MyExam/student_MyExam_index"
+    import Teacher_OperateClass from "../pages/HomePage/subPage/teacher/teacher_OperateClass/teacher_OperateClass_index"
+    import Teacher_MyClass from "../pages/HomePage/subPage/teacher/teacher_MyClass/teacher_MyClass_index"
+    import Teacher_MyExam from "../pages/HomePage/subPage/teacher/teacher_MyExam/teacher_MyExam_index"
 
 import LoginPage from "../pages/LoginPage/loginPage_index";
 
 import RegisterPage from "../pages/RegisterPage/registerPage_index";
 
+import ProfilePage from "../pages/ProfilePage/profilePage_index";
 
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
             {
                 path: "register",
                 element: <RegisterPage/>
+            },
+            {
+                path: "profile",
+                element: <ProfilePage/>
             }
         ]
     },

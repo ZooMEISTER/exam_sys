@@ -85,7 +85,7 @@ public class TouristServiceImpl implements TouristService {
             return new TouristLoginResultVO(
                     TouristResultCode.TOURIST_LOGIN_SUCCESS,
                     ExamSysConstants.SUPER_ADMIN_PERMISSION_LEVEL,
-                    superAdminPO.getId(),
+                    String.valueOf(superAdminPO.getId()),
                     superAdminPO.getAvatar(),
                     superAdminPO.getUsername(),
                     superAdminPO.getRealname(),
@@ -101,7 +101,7 @@ public class TouristServiceImpl implements TouristService {
             return new TouristLoginResultVO(
                     TouristResultCode.TOURIST_LOGIN_SUCCESS,
                     ExamSysConstants.ADMIN_PERMISSION_LEVEL,
-                    adminPO.getId(),
+                    String.valueOf(adminPO.getId()),
                     adminPO.getAvatar(),
                     adminPO.getUsername(),
                     adminPO.getRealname(),
@@ -117,7 +117,7 @@ public class TouristServiceImpl implements TouristService {
             return new TouristLoginResultVO(
                     TouristResultCode.TOURIST_LOGIN_SUCCESS,
                     ExamSysConstants.TEACHER_PERMISSION_LEVEL,
-                    teacherPO.getId(),
+                    String.valueOf(teacherPO.getId()),
                     teacherPO.getAvatar(),
                     teacherPO.getUsername(),
                     teacherPO.getRealname(),
@@ -133,7 +133,7 @@ public class TouristServiceImpl implements TouristService {
             return new TouristLoginResultVO(
                     TouristResultCode.TOURIST_LOGIN_SUCCESS,
                     ExamSysConstants.STUDENT_PERMISSION_LEVEL,
-                    studentPO.getId(),
+                    String.valueOf(studentPO.getId()),
                     studentPO.getAvatar(),
                     studentPO.getUsername(),
                     studentPO.getRealname(),
@@ -145,7 +145,7 @@ public class TouristServiceImpl implements TouristService {
             );
         }
 
-        return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_USER_NOT_EXIST, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
+        return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_USER_NOT_EXIST, 0, "0", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
     }
 
     /**
@@ -204,7 +204,7 @@ public class TouristServiceImpl implements TouristService {
                 touristLoginResultVO = new TouristLoginResultVO(
                         TouristResultCode.TOURIST_LOGIN_SUCCESS,
                         ExamSysConstants.SUPER_ADMIN_PERMISSION_LEVEL,
-                        superAdminPO.getId(),
+                        String.valueOf(superAdminPO.getId()),
                         superAdminPO.getAvatar(),
                         superAdminPO.getUsername(),
                         superAdminPO.getRealname(),
@@ -227,7 +227,7 @@ public class TouristServiceImpl implements TouristService {
                 touristLoginResultVO = new TouristLoginResultVO(
                         TouristResultCode.TOURIST_LOGIN_SUCCESS,
                         ExamSysConstants.ADMIN_PERMISSION_LEVEL,
-                        adminPO.getId(),
+                        String.valueOf(adminPO.getId()),
                         adminPO.getAvatar(),
                         adminPO.getUsername(),
                         adminPO.getRealname(),
@@ -250,7 +250,7 @@ public class TouristServiceImpl implements TouristService {
                 touristLoginResultVO = new TouristLoginResultVO(
                         TouristResultCode.TOURIST_LOGIN_SUCCESS,
                         ExamSysConstants.TEACHER_PERMISSION_LEVEL,
-                        teacherPO.getId(),
+                        String.valueOf(teacherPO.getId()),
                         teacherPO.getAvatar(),
                         teacherPO.getUsername(),
                         teacherPO.getRealname(),
@@ -273,7 +273,7 @@ public class TouristServiceImpl implements TouristService {
                 touristLoginResultVO = new TouristLoginResultVO(
                         TouristResultCode.TOURIST_LOGIN_SUCCESS,
                         ExamSysConstants.STUDENT_PERMISSION_LEVEL,
-                        studentPO.getId(),
+                        String.valueOf(studentPO.getId()),
                         studentPO.getAvatar(),
                         studentPO.getUsername(),
                         studentPO.getRealname(),
@@ -294,11 +294,11 @@ public class TouristServiceImpl implements TouristService {
             return touristLoginResultVO;
         }
         else if(touristLoginResultVO == null && !correctPassword){
-            return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
+            return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, "0", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
         }
 
         // 数据库中没找到 用户不存在
-        return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_USER_NOT_EXIST, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
+        return new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_USER_NOT_EXIST, 0, "0", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
     }
 
     /**
@@ -349,17 +349,17 @@ public class TouristServiceImpl implements TouristService {
         catch (Exception e){
             if(e instanceof SignatureException){
                 // token 无效
-                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_INVALID_TOKEN, 0, 0, null, null, null, null, null, null, 0, 0);
+                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_INVALID_TOKEN, 0, "0", null, null, null, null, null, null, 0, 0);
             }
             else if(e instanceof InvalidProfilevException){
                 // 个人信息版本错误
-                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_INVALID_PROFILEV, 0, 0, null, null, null, null, null, null, 0, 0);
+                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_INVALID_PROFILEV, 0, "0", null, null, null, null, null, null, 0, 0);
             }
             else if(e instanceof UserNotExistException){
                 // 用户不存在
-                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_USER_NOT_EXIST, 0, 0, null, null, null, null, null, null, 0, 0);
+                return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_USER_NOT_EXIST, 0, "0", null, null, null, null, null, null, 0, 0);
             }
         }
-        return new TouristLoginResultVO(TouristResultCode.TOURIST_RESULT_CODE_UNKNOWN_ERROR, 0, 0, null, null, null, null, null, null, 0, 0);
+        return new TouristLoginResultVO(TouristResultCode.TOURIST_RESULT_CODE_UNKNOWN_ERROR, 0, "0", null, null, null, null, null, null, 0, 0);
     }
 }
