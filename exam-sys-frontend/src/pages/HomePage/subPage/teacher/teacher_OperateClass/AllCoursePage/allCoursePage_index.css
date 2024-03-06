@@ -1,0 +1,18 @@
+.root-div{
+    display: flex;
+    flex-direction: column;
+}
+
+.navigate-breadcrumb{
+    margin-top: 30px;
+    margin-left: 40px;
+
+    font-size: 20px;
+}
+.show-all-course-div{
+    margin-top: 10px;
+    margin-left: 40px;
+
+    display: flex;
+    flex-wrap: wrap;
+}

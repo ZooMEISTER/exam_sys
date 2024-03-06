@@ -5,14 +5,20 @@ import com.zoom.exam_sys_backend.exception.code.StudentResultCode;
 import com.zoom.exam_sys_backend.exception.code.TeacherResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.TeacherMapper;
-import com.zoom.exam_sys_backend.pojo.po.StudentPO;
-import com.zoom.exam_sys_backend.pojo.po.TeacherPO;
+import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
+import com.zoom.exam_sys_backend.pojo.po.*;
+import com.zoom.exam_sys_backend.pojo.vo.CourseVO;
+import com.zoom.exam_sys_backend.pojo.vo.DepartmentVO;
+import com.zoom.exam_sys_backend.pojo.vo.SubjectVO;
 import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
 import com.zoom.exam_sys_backend.service.TeacherService;
 import com.zoom.exam_sys_backend.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author ZooMEISTER
@@ -47,7 +53,7 @@ public class TeacherServiceImpl implements TeacherService {
                 return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_USER_NOT_EXIST, 0, "0", null, null, null, null, null, null, 0, 0);
             }
             requestSenderVO = new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_SUCCESS,
-                    1,
+                    2,
                     String.valueOf(userid),
                     teacherPO.getAvatar(),
                     teacherPO.getUsername(),
@@ -80,7 +86,7 @@ public class TeacherServiceImpl implements TeacherService {
         String newToken = JWTUtils.genAccessToken(userid, newProfilev);
         // 生成新的对象
         TouristLoginResultVO touristLoginResultVO = new TouristLoginResultVO(TeacherResultCode.TEACHER_UPDATE_PROFILE_SUCCESS,
-                1,
+                2,
                 String.valueOf(userid),
                 newAvatar,
                 newUsername,
@@ -94,5 +100,78 @@ public class TeacherServiceImpl implements TeacherService {
         redisTemplate.opsForValue().set(String.valueOf(userid), JSONObject.toJSONString(touristLoginResultVO));
         // 返回值
         return touristLoginResultVO;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取所有学院信息方法
+    * @DateTime: 2024/2/16 18:08
+    * @Params: []
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.po.DepartmentPO>
+    */
+    @Override
+    public List<DepartmentVO> TeacherGetAllDepartment() {
+        List<DepartmentVO> departmentVOList = new ArrayList<>();
+        List<DepartmentPO> departmentPOList = teacherMapper.teacherGetAllDepartment();
+        for(DepartmentPO i : departmentPOList){
+            departmentVOList.add(new DepartmentVO(
+                    i.getId().toString(),
+                    i.getIcon(),
+                    i.getName(),
+                    i.getDescription(),
+                    i.getSubject_count()
+            ));
+        }
+        return departmentVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个学院下所有专业方法
+    * @DateTime: 2024/2/16 18:09
+    * @Params: [departmentId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.po.SubjectPO>
+    */
+    @Override
+    public List<SubjectVO> TeacherGetAllSubject(Long departmentId) {
+        List<SubjectVO> subjectVOList = new ArrayList<>();
+        List<SubjectPO> subjectPOList = teacherMapper.teacherGetAllSubjects(departmentId);
+        for(SubjectPO i : subjectPOList){
+            subjectVOList.add(new SubjectVO(
+                    i.getId().toString(),
+                    i.getIcon(),
+                    i.getName(),
+                    i.getDescription(),
+                    i.getBelongto().toString(),
+                    i.getCourse_count()
+            ));
+        }
+        return subjectVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个专业下所有课程方法
+    * @DateTime: 2024/2/16 18:09
+    * @Params: [subjectId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.po.CoursePO>
+    */
+    @Override
+    public List<CourseVO> TeacherGetAllCourse(Long subjectId) {
+        // 不推荐使用join，因此在这里用代码逻辑实现多表联合查询
+        List<SubjectCourseBO> subjectCoursePOList = teacherMapper.teacherGetAllSubjectCourseRelation(subjectId);
+        List<CourseVO> courseVOList = new ArrayList<>();
+        for(SubjectCourseBO i : subjectCoursePOList){
+            CoursePO coursePO = teacherMapper.teacherGetSingleCourse(i.getCourse_id());
+            courseVOList.add(new CourseVO(
+                    coursePO.getId().toString(),
+                    coursePO.getIcon(),
+                    coursePO.getName(),
+                    coursePO.getDescription(),
+                    coursePO.getTeachby().toString(),
+                    coursePO.getCreated_time()
+            ));
+        }
+        return courseVOList;
     }
 }

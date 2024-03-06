@@ -46,6 +46,11 @@ const ProfilePage = () =>{
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
+    const [oldUsername, setOldUsername] = useState(username)
+    const [oldRealname, setOldRealname] = useState(realname)
+    const [oldPhone, setOldPhone] = useState(phone)
+    const [oldEmail, setOldEmail] = useState(email)
+
     const [newAvatar, setNewAvatar] = useState(avatar)
     const [newUsername, setNewUsername] = useState(username)
     const [newRealname, setNewRealname] = useState(realname)
@@ -261,7 +266,24 @@ const ProfilePage = () =>{
             setIsPasswordModalOpen(false)
         }
     }
+    const handleModalOK = () =>{
+        setOldUsername(newUsername)
+        setOldRealname(newRealname)
+        setOldPhone(newPhone)
+        setOldEmail(newEmail)
+
+        setIsUsernameModalOpen(false)
+        setIsRealnameModalOpen(false)
+        setIsPhoneModalOpen(false)
+        setIsEmailModalOpen(false)
+        setIsPasswordModalOpen(false)
+    }
     const handleModalClose = () =>{
+        setNewUsername(oldUsername)
+        setNewRealname(oldRealname)
+        setNewPhone(oldPhone)
+        setNewEmail(oldEmail)
+
         setIsUsernameModalOpen(false)
         setIsRealnameModalOpen(false)
         setIsPhoneModalOpen(false)
@@ -311,9 +333,9 @@ const ProfilePage = () =>{
                         name="username"
                         rules={[{ required: true, message: '请输入用户名'}]}>
                         <div className='profile-form-item-content'>
-                            <Input placeholder='用户名' value={newUsername} disabled/>
+                            <Input placeholder='用户名' value={oldUsername} disabled/>
                             <Button className='profile-form-item-content-btn' onClick={changeUsername}>修改</Button>
-                            <Modal title="更改用户名" open={isUsernameModalOpen} onOk={handleModalClose} onCancel={handleModalClose}>
+                            <Modal title="更改用户名" open={isUsernameModalOpen} onOk={handleModalOK} onCancel={handleModalClose}>
                                 <Input value={newUsername} onChange={newUsernameInputChange}/>
                             </Modal>
                         </div>
@@ -324,9 +346,9 @@ const ProfilePage = () =>{
                         name="realname"
                         rules={[{ required: true, message: '请输入真名'}]}>
                         <div className='profile-form-item-content'>
-                            <Input placeholder='真名' value={newRealname} disabled/>
+                            <Input placeholder='真名' value={oldRealname} disabled/>
                             <Button className='profile-form-item-content-btn' onClick={changeRealname}>修改</Button>
-                            <Modal title="更改真名" open={isRealnameModalOpen} onOk={handleModalClose} onCancel={handleModalClose}>
+                            <Modal title="更改真名" open={isRealnameModalOpen} onOk={handleModalOK} onCancel={handleModalClose}>
                                 <Input value={newRealname} onChange={newRealnameInputChange}/>
                             </Modal>
                         </div>
@@ -337,9 +359,9 @@ const ProfilePage = () =>{
                         name="phone"
                         rules={[{ required: true, message: '请输入电话'}]}>
                         <div className='profile-form-item-content'>
-                            <Input placeholder='电话' value={newPhone} disabled/>
+                            <Input placeholder='电话' value={oldPhone} disabled/>
                             <Button className='profile-form-item-content-btn' onClick={changePhone}>修改</Button>
-                            <Modal title="更改电话" open={isPhoneModalOpen} onOk={handleModalClose} onCancel={handleModalClose}>
+                            <Modal title="更改电话" open={isPhoneModalOpen} onOk={handleModalOK} onCancel={handleModalClose}>
                                 <Input value={newPhone} onChange={newPhoneInputChange}/>
                             </Modal>
                         </div>
@@ -350,9 +372,9 @@ const ProfilePage = () =>{
                         name="email"
                         rules={[{ required: true, message: '请输入邮箱'}]}>
                         <div className='profile-form-item-content'>
-                            <Input placeholder='邮箱' value={newEmail} disabled/>
+                            <Input placeholder='邮箱' value={oldEmail} disabled/>
                             <Button className='profile-form-item-content-btn' onClick={changeEmail}>修改</Button>
-                            <Modal title="更改邮箱" open={isEmailModalOpen} onOk={handleModalClose} onCancel={handleModalClose}>
+                            <Modal title="更改邮箱" open={isEmailModalOpen} onOk={handleModalOK} onCancel={handleModalClose}>
                                 <Input value={newEmail} onChange={newEmailInputChange}/>
                             </Modal>
                         </div>
@@ -366,7 +388,9 @@ const ProfilePage = () =>{
                             <Input placeholder='密码' defaultValue={"********"} disabled/>
                             <Button className='profile-form-item-content-btn' onClick={changePassword}>修改</Button>
                             <Modal title="更改密码" open={isPasswordModalOpen} onOk={handlePasswordOk} onCancel={handlePasswordModalClose}>
+                                <label>请输入更改后的密码</label>
                                 <Input value={newPassword} onChange={newPasswordInputChange}/>
+                                <label>请再次输入更改后的密码</label>
                                 <Input value={newPassword_} onChange={newPassword_InputChange}/>
                             </Modal>
                         </div>

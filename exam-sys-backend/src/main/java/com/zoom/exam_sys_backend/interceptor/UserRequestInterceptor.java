@@ -41,6 +41,7 @@ public class UserRequestInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 如果请求是浏览器预检，直接放行
         if (request.getMethod().equals("OPTIONS")) {
             return true;
         }

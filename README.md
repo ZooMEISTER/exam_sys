@@ -70,6 +70,7 @@ BasePage
 		Student_MyExam
 	LoginPage
 	RegisterPage
+	ProfilePage
 ```
 
 ### JWT Token
@@ -533,6 +534,12 @@ BasePage
 1. #### Invalid value type for attribute 'factoryBeanObjectType': java.lang.String：通过调试发现是bean在创建的时候的问题，最后在网上找到了解决办法[4]，主要是由于 mybatis-plus 中 [mybatis](https://so.csdn.net/so/search?q=mybatis&spm=1001.2101.3001.7020) 的整合包版本不够导致的，排除 mybatis-plus 中自带的 mybatis 整合包，单独引入即可。
 
 1. #### CORS error：在请求header中加上Authorization并放入token，请求被拦截，原因是自定义请求头后，该请求为非简单请求，而由于后端未设置具体的字段许可名单，导致该请求在预检阶段被拦截，解决办法[5] 为后端设置一下即可
+
+1. #### Redux数据丢失：Redux的数据在刷新页面后便会丢失，需要额外在本地进行持久化处理
+
+1. #### 前端Number精度丢失：在前端JS中，Number的存储为8个字节，而后端雪花算法算出的id值有19为，传到前端时会导致精度丢失，故id传回前端时使用String类型
+
+1. #### Mysql Join：在实际项目开发中，不推荐使用join，因此多表联合查询在后端用代码逻辑实现
 
 
 

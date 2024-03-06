@@ -1,8 +1,12 @@
+import React, { useState, useEffect } from 'react';
+import { Outlet, useNavigate } from "react-router-dom"
+
+import "./student_ChooseClass_index.css"
 
 const Student_ChooseClass = () => {
     return(
         <div>
-            学生选课
+            <Outlet/>
         </div>
     )
 }

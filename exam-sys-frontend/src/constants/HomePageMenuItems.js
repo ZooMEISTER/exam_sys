@@ -1,7 +1,7 @@
 const homePageMenuItems_Teacher = [
     {
         label: (
-            "课程"
+            "所有学院"
         ),
         key: "/home/teacher-operate-class"
     },
@@ -26,7 +26,7 @@ const homePageMenuItems_Teacher = [
 const homePageMenuItems_Student = [
     {
         label: (
-            "选课"
+            "所有学院"
         ),
         key: "/home/student-choose-class"
     },
@@ -35,7 +35,7 @@ const homePageMenuItems_Student = [
         key: "me_Student",
         children:[{
             label: (
-                "我的课程"
+                "我参加的课程"
             ),
             key: "/home/student-my-class",
         },

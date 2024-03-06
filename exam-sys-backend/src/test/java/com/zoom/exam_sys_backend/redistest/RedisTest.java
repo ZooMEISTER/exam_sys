@@ -25,7 +25,7 @@ public class RedisTest {
 
     @Test
     public void test() {
-        TouristLoginResultVO touristLoginResultVO = new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, 0, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
+        TouristLoginResultVO touristLoginResultVO = new TouristLoginResultVO(TouristResultCode.TOURIST_LOGIN_FAIL_WRONG_PASSWORD, 0, "0", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", 0, 0);
         //redisTemplate.opsForValue().set(String.valueOf(touristLoginResultVO.getUserid()), JSONObject.toJSONString(touristLoginResultVO));
         System.out.println(redisTemplate.opsForValue().get(String.valueOf(touristLoginResultVO.getUserid())));
         System.out.println(JSONObject.parseObject(String.valueOf(redisTemplate.opsForValue().get(String.valueOf(touristLoginResultVO.getUserid()))), TouristLoginResultVO.class).toString());

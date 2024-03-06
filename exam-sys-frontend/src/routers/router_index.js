@@ -4,9 +4,16 @@ import BasePage from "../pages/BasePage/basePage_index";
 
 import HomePage from "../pages/HomePage/homePage_index";
     import Student_ChooseClass from "../pages/HomePage/subPage/student/student_ChooseClass/student_ChooseClass_index"
+        import Student_AllDepartmentPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllDepartmentPage/allDepartmentPage_index";
+        import Student_AllSubjectPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllSubjectPage/allSubjectPage_index";
+        import Student_AllCoursePage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllCoursePage/allCoursePage_index";
     import Student_MyClass from "../pages/HomePage/subPage/student/student_MyClass/student_MyClass_index"
     import Student_MyExam from "../pages/HomePage/subPage/student/student_MyExam/student_MyExam_index"
+
     import Teacher_OperateClass from "../pages/HomePage/subPage/teacher/teacher_OperateClass/teacher_OperateClass_index"
+        import Teacher_AllDepartmentPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllDepartmentPage/allDepartmentPage_index";
+        import Teacher_AllSubjectPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllSubjectPage/allSubjectPage_index";
+        import Teacher_AllCoursePage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllCoursePage/allCoursePage_index";
     import Teacher_MyClass from "../pages/HomePage/subPage/teacher/teacher_MyClass/teacher_MyClass_index"
     import Teacher_MyExam from "../pages/HomePage/subPage/teacher/teacher_MyExam/teacher_MyExam_index"
 
@@ -34,7 +41,21 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: "teacher-operate-class",
-                        element: <Teacher_OperateClass/>
+                        element: <Teacher_OperateClass/>,
+                        children:[
+                            {
+                                index: true,
+                                element: <Teacher_AllDepartmentPage_index/>
+                            },
+                            {
+                                path: "subject",
+                                element: <Teacher_AllSubjectPage_index/>
+                            },
+                            {
+                                path: "course",
+                                element: <Teacher_AllCoursePage_index/>
+                            }
+                        ]
                     },
                     {
                         path: "teacher-my-class",
@@ -47,7 +68,21 @@ const router = createBrowserRouter([
 
                     {   
                         path: "student-choose-class",
-                        element: <Student_ChooseClass/>
+                        element: <Student_ChooseClass/>,
+                        children:[
+                            {
+                                index: true,
+                                element: <Student_AllDepartmentPage_index/>
+                            },
+                            {
+                                path: "subject",
+                                element: <Student_AllSubjectPage_index/>
+                            },
+                            {
+                                path: "course",
+                                element: <Student_AllCoursePage_index/>
+                            }
+                        ]
                     },
                     {   
                         path: "student-my-class",

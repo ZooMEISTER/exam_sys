@@ -4,13 +4,23 @@ import com.alibaba.fastjson2.JSONObject;
 import com.zoom.exam_sys_backend.exception.code.StudentResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.StudentMapper;
+import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
+import com.zoom.exam_sys_backend.pojo.po.CoursePO;
+import com.zoom.exam_sys_backend.pojo.po.DepartmentPO;
 import com.zoom.exam_sys_backend.pojo.po.StudentPO;
+import com.zoom.exam_sys_backend.pojo.po.SubjectPO;
+import com.zoom.exam_sys_backend.pojo.vo.CourseVO;
+import com.zoom.exam_sys_backend.pojo.vo.DepartmentVO;
+import com.zoom.exam_sys_backend.pojo.vo.SubjectVO;
 import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
 import com.zoom.exam_sys_backend.service.StudentService;
 import com.zoom.exam_sys_backend.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author ZooMEISTER
@@ -92,5 +102,78 @@ public class StudentServiceImpl implements StudentService {
         redisTemplate.opsForValue().set(String.valueOf(userid), JSONObject.toJSONString(touristLoginResultVO));
         // 返回值
         return touristLoginResultVO;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取所有学院方法
+    * @DateTime: 2024/3/6 18:09
+    * @Params: []
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.DepartmentVO>
+    */
+    @Override
+    public List<DepartmentVO> StudentGetAllDepartment() {
+        List<DepartmentVO> departmentVOList = new ArrayList<>();
+        List<DepartmentPO> departmentPOList = studentMapper.studentGetAllDepartment();
+        for(DepartmentPO i : departmentPOList){
+            departmentVOList.add(new DepartmentVO(
+                    i.getId().toString(),
+                    i.getIcon(),
+                    i.getName(),
+                    i.getDescription(),
+                    i.getSubject_count()
+            ));
+        }
+        return departmentVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取某个学院下所有专业方法
+    * @DateTime: 2024/3/6 18:11
+    * @Params: [departmentId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.SubjectVO>
+    */
+    @Override
+    public List<SubjectVO> StudentGetAllSubject(Long departmentId) {
+        List<SubjectVO> subjectVOList = new ArrayList<>();
+        List<SubjectPO> subjectPOList = studentMapper.studentGetAllSubjects(departmentId);
+        for(SubjectPO i : subjectPOList){
+            subjectVOList.add(new SubjectVO(
+                    i.getId().toString(),
+                    i.getIcon(),
+                    i.getName(),
+                    i.getDescription(),
+                    i.getBelongto().toString(),
+                    i.getCourse_count()
+            ));
+        }
+        return subjectVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取某个专业下所有课程方法
+    * @DateTime: 2024/3/6 18:11
+    * @Params: [subjectId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.CourseVO>
+    */
+    @Override
+    public List<CourseVO> StudentGetAllCourse(Long subjectId) {
+        // 不推荐使用join，因此在这里用代码逻辑实现多表联合查询
+        List<SubjectCourseBO> subjectCoursePOList = studentMapper.studentGetAllSubjectCourseRelation(subjectId);
+        List<CourseVO> courseVOList = new ArrayList<>();
+        for(SubjectCourseBO i : subjectCoursePOList){
+            CoursePO coursePO = studentMapper.studentGetSingleCourse(i.getCourse_id());
+            courseVOList.add(new CourseVO(
+                    coursePO.getId().toString(),
+                    coursePO.getIcon(),
+                    coursePO.getName(),
+                    coursePO.getDescription(),
+                    coursePO.getTeachby().toString(),
+                    coursePO.getCreated_time()
+            ));
+        }
+        return courseVOList;
     }
 }

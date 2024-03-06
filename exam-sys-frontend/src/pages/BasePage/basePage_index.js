@@ -149,7 +149,7 @@ const BasePage = () => {
     // 执行自动登录
     useEffect(() => {
         autoLogin()
-	});
+	}, []);
     return (
         <div>
             {/* 这是 BasePage,包含了 header（导航栏） 和 footer（信息栏） */}
