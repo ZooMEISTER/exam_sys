@@ -47,4 +47,36 @@ userRequest.interceptors.response.use((response) => {
 })
 
 
-export { touristRequest, userRequest }
+// 已登陆用户的上传文件的request
+// 需要带上jwt token
+const userFileUploadRequest = axios.create({
+    baseURL: "http://localhost:3001",
+    timeout: 20000,
+    headers: { 'content-type': 'multipart/form-data' }
+})
+
+// 添加请求拦截器
+userFileUploadRequest.interceptors.request.use((config) => {
+    // 在请求发送之前会触发这里
+    const token = localStorage.getItem("exam-sys-login-token")
+    if(token){
+        config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+}, (error) => { 
+    return Promise.reject(error)
+})
+
+// 添加响应拦截器
+userFileUploadRequest.interceptors.response.use((response) => {
+    // 2XX 范围的状态码会触发这里
+    // 对响应做点什么
+    return response.data
+}, (error) => {
+    // 超出 2XX 范围的状态码会触发这里
+    // 对响应做点什么
+    return Promise.reject(error)
+})
+
+
+export { touristRequest, userRequest, userFileUploadRequest }

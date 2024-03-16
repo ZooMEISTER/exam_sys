@@ -27,6 +27,7 @@ const HomePage = () => {
 
     if(permissionLevel > 0){
         if(permissionLevel === 1){
+            // navigate("/home/student-choose-class")
             return (
                 <div className="home-page-root">
                     <Menu className="home-page-menu"
@@ -38,8 +39,10 @@ const HomePage = () => {
                     <Outlet/>
                 </div>
             )
+            
         }
         else if(permissionLevel === 2){
+            // navigate("/home/teacher-operate-class")
             return (
                 <div className="home-page-root">
                     <Menu className="home-page-menu"
@@ -51,6 +54,7 @@ const HomePage = () => {
                     <Outlet/>
                 </div>
             )
+            
         }
         
     }

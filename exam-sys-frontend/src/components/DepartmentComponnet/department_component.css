@@ -1,16 +1,37 @@
-.root-div{
-    display: flex;
-}
 
 .department-card{
     width: 300px;
-    height: 300px;
+    height: 375px;
 
     margin-left: 10px;
     margin-top: 10px;
+
+    /* box-shadow: 0px 0px 1px grey; */
+    border: solid;
+    border-color: #e5e5e5af;
+    border-width: 1px;
 }
 
-.cover-img{
-    height: 150px;
+.department-cover-img{
+    height: 200px;
     width: 300px;
+}
+
+.department-card-info-div{
+    display: flex;
+    flex-direction: column;
+
+    height: 135px;
+}
+.department-card-title{
+    font-size: 25px;
+}
+.department-card-description{
+    font-size: 15px;
+    margin-top: auto;
+    color: rgb(66, 66, 66);
+}
+.department-card-subject-count{
+    font-size: 15px;
+    color: rgb(138, 138, 138);
 }

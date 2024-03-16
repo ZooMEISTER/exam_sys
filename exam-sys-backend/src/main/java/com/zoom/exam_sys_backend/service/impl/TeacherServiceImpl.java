@@ -1,23 +1,33 @@
 package com.zoom.exam_sys_backend.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.zoom.exam_sys_backend.exception.code.StudentResultCode;
+import com.zoom.exam_sys_backend.comparator.ExamVOComparator;
 import com.zoom.exam_sys_backend.exception.code.TeacherResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.TeacherMapper;
+import com.zoom.exam_sys_backend.pojo.bo.CourseExamBO;
+import com.zoom.exam_sys_backend.pojo.bo.ExamPaperBO;
 import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
 import com.zoom.exam_sys_backend.pojo.po.*;
-import com.zoom.exam_sys_backend.pojo.vo.CourseVO;
-import com.zoom.exam_sys_backend.pojo.vo.DepartmentVO;
-import com.zoom.exam_sys_backend.pojo.vo.SubjectVO;
-import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
+import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.TeacherService;
+import com.zoom.exam_sys_backend.util.FileUtils;
 import com.zoom.exam_sys_backend.util.JWTUtils;
+import com.zoom.exam_sys_backend.util.SnowflakeIdWorker;
+import com.zoom.exam_sys_backend.util.TimeTransferUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +38,15 @@ import java.util.List;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
+
+    @Value("${file.dataFolder}")
+    String fileDataFolderPath;
+
+    @Value("${data.examPaperFolder}")
+    String examPaperFolderPath;
+
+    @Value("${data.examAnswerPaperFolder}")
+    String examAnswerPaperFolderPath;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -43,6 +62,7 @@ public class TeacherServiceImpl implements TeacherService {
     * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO
     */
     @Override
+    @Transactional
     public TouristLoginResultVO TeacherUpdateProfile(Long userid, String newAvatar, String newUsername, String newRealname, String newPhone, String newEmail, String newPassword) {
         TouristLoginResultVO requestSenderVO = JSONObject.parseObject(String.valueOf(redisTemplate.opsForValue().get(String.valueOf(userid))), TouristLoginResultVO.class);
         if(requestSenderVO == null){
@@ -169,9 +189,131 @@ public class TeacherServiceImpl implements TeacherService {
                     coursePO.getName(),
                     coursePO.getDescription(),
                     coursePO.getTeachby().toString(),
-                    coursePO.getCreated_time()
+                    TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time())
             ));
         }
         return courseVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个课程下所有考试方法
+    * @DateTime: 2024/3/14 14:52
+    * @Params: [courseId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.ExamVO>
+    */
+    @Override
+    public List<ExamVO> TeacherGetAllExam(Long courseId) {
+        List<CourseExamBO> courseExamBOList = teacherMapper.teacherGetAllCourseExamRelation(courseId);
+        List<ExamVO> examVOList = new ArrayList<>();
+        for(CourseExamBO i : courseExamBOList){
+            ExamPO examPO = teacherMapper.teacherGetSingleExam(i.getExam_id());
+            examVOList.add(new ExamVO(
+                    examPO.getId().toString(),
+                    examPO.getName(),
+                    examPO.getDescription(),
+                    TimeTransferUtils.TransferTime2LocalTime(examPO.getStart_time()),
+                    TimeTransferUtils.TransferTime2LocalTime(examPO.getEnd_time()),
+                    examPO.getTeachby().toString(),
+                    examPO.getType(),
+                    examPO.getPublished(),
+                    TimeTransferUtils.TransferTime2LocalTime(examPO.getCreated_time())
+            ));
+        }
+        Collections.sort(examVOList, new ExamVOComparator());
+        return examVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个特定考试的信息方法
+    * @DateTime: 2024/3/14 18:07
+    * @Params: [examId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ExtendedExamVO
+    */
+    @Override
+    public TeacherExtendedExamVO TeacherGetSingleExamInfo(Long examId) {
+        ExamPO examPO = teacherMapper.teacherGetSingleExam(examId);
+        CourseExamBO courseExamBO = teacherMapper.teacherGetCourseExamRelationByExamId(examId);
+        CoursePO coursePO = teacherMapper.teacherGetSingleCourse(courseExamBO.getCourse_id());
+        ExamPaperBO examPaperBO = teacherMapper.teacherGetExamPaperRelationByExamId(examId);
+        PaperPO paperPO = teacherMapper.teacherGetPaperInfo(examPaperBO.getPaper_id());
+        return new TeacherExtendedExamVO(examPO.getId().toString(),
+                examPO.getName(),
+                examPO.getDescription(),
+                TimeTransferUtils.TransferTime2LocalTime(examPO.getStart_time()),
+                TimeTransferUtils.TransferTime2LocalTime(examPO.getEnd_time()),
+                examPO.getTeachby().toString(),
+                examPO.getType(),
+                examPO.getPublished(),
+                TimeTransferUtils.TransferTime2LocalTime(examPO.getCreated_time()),
+                coursePO.getId().toString(),
+                coursePO.getName(),
+                paperPO.getId().toString(),
+                paperPO.getName(),
+                paperPO.getDescription(),
+                paperPO.getPath(),
+                paperPO.getScore()
+        );
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师上传考试试卷文件方法
+    * @DateTime: 2024/3/15 13:58
+    * @Params: [multipartFile]
+    * @Return java.lang.String
+    */
+    @Override
+    public String TeacherUploadExamPaperFile(MultipartFile multipartFile) throws IOException {
+        // 判断文件是否为空
+        if(multipartFile == null){
+            return "null paper file";
+        }
+        // 获取文件名
+        String originalFileName = multipartFile.getOriginalFilename();
+        String fileName = multipartFile.getName();
+        // 获取文件后缀
+        String suffixName = originalFileName.substring(originalFileName.lastIndexOf('.'));
+        // 生成随机字符串
+        String rndStr = FileUtils.getRandomString(32);
+
+        // 把文件保存到本地
+        FileUtils.saveFile(multipartFile, fileDataFolderPath + examPaperFolderPath, rndStr + originalFileName);
+
+        return rndStr + originalFileName;
+    }
+
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师添加考试方法
+    * @DateTime: 2024/3/15 15:08
+    * @Params: [examName, examDescription, examStartDateTime, examEndDateTime, paperFileName, paperName, paperDescription, paperScore, teachby]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.TeacherAddExamResultVO
+    */
+    @Override
+    @Transactional
+    public TeacherAddExamResultVO TeacherAddExam(String examName, String examDescription, String examStartDateTime, String examEndDateTime, String paperFileName, String paperName, String paperDescription, int paperScore, Long teachby, Long courseId) throws ParseException {
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+        Long newPaperId = idWorker.nextId();
+        Long newExamId = idWorker.nextId();
+        Long relationId = idWorker.nextId();
+        Long relationId1 = idWorker.nextId();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date examStartDateTime_Date = formatter.parse(examStartDateTime);
+        Date examEndDateTime_Date = formatter.parse(examEndDateTime);
+
+        int res1 = teacherMapper.teacherAddNewPaper(newPaperId, paperName, paperDescription, teachby, paperScore, paperFileName);
+        int res2 = teacherMapper.teacherAddNewExam(newExamId, examName, examDescription, examStartDateTime_Date, examEndDateTime_Date, teachby, 1, 0);
+        int res3 = teacherMapper.teacherAddNewExamPaperRelation(relationId, newExamId, newPaperId);
+        int res4 = teacherMapper.teacherAddNewCourseExamRelation(relationId1, courseId, newExamId);
+        if(res1 > 0 && res2 > 0 && res3 > 0 && res4 > 0){
+            return new TeacherAddExamResultVO(TeacherResultCode.TEACHER_ADD_NEW_EXAM_SUCCESS, "考试添加成功");
+        }
+        else{
+            return new TeacherAddExamResultVO(TeacherResultCode.TEACHER_ADD_NEW_EXAM_FAIL, "考试添加失败");
+        }
     }
 }

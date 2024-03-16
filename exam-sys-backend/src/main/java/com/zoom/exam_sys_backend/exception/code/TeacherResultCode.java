@@ -9,4 +9,7 @@ package com.zoom.exam_sys_backend.exception.code;
 public interface TeacherResultCode {
     public static final int TEACHER_UPDATE_PROFILE_SUCCESS = 12000;
     public static final int TEACHER_UPDATE_PROFILE_FAIL = 12001;
+    public static final int TEACHER_ADD_NEW_EXAM_SUCCESS = 12010;
+    public static final int TEACHER_ADD_NEW_EXAM_FAIL = 12011;
+
 }

@@ -39,10 +39,9 @@
 | ---- | ------------------------------------------------------------ |
 | 学院 | 一个学院可以有多个专业，一个专业只能位于一个学院下           |
 | 专业 | 一个专业只能位于一个学院下，一个专业可以有多个课程           |
-| 课程 | 一个课程可以位于多个专业下，一个课程可以有多场考试，一个老师可以创建多个课程，一个课程只能对应一个老师 |
+| 课程 | 一个课程只能位于一个专业下，一个课程可以有多场考试，一个老师可以创建多个课程，一个课程只能对应一个老师 |
 | 考试 | 一场考试只能位于一个课程下，一场考试只能有一张试卷           |
 | 试卷 | 一张试卷可位于多场考试下（可跨专业，跨学院）                 |
-| 题目 | 一道题目可位于多张试卷中，题目分为 选择，判断，填空，简答    |
 
 
 
@@ -63,9 +62,19 @@ BasePage
 	FrontPage
 	HomePage
 		Teacher_OperateClass
+			Teacher_AllDepartmentPage_index
+			Teacher_AllSubjectPage_index
+			Teacher_AllCoursePage_index
+			Teacher_AllExamPage_index
+			Teacher_ExamDetailPage_index
 		Teacher_MyClass
 		Teacher_MyExam
 		Student_ChooseClass
+			Student_AllDepartmentPage_index
+			Student_AllSubjectPage_index
+			Student_AllCoursePage_index
+			Student_AllExamPage_index
+			Student_ExamDetailPage_index
 		Student_MyClass
 		Student_MyExam
 	LoginPage
@@ -200,64 +209,19 @@ BasePage
 
 #### 	试卷 ( sys_paper )
 
-| 字段名       | 类型     | 不为NULL | 是否主键 | 说明                                             |
-| ------------ | -------- | -------- | -------- | ------------------------------------------------ |
-| id           | bigint   | 是       | 是       | 雪花算法                                         |
-| name         | string   | 是       |          | 试卷名，可重复                                   |
-| description  | string   | 是       |          | 该试卷的描述                                     |
-| teachby      | bigint   | 是       |          | 创建该试卷的老师的 id                            |
-| score        | int      | 是       |          | 该试卷的满分分数 (根据题目改变)                  |
-| published    | int      | 是       |          | 表示该试卷是否被发布，0 表示未发布，1 表示已发布 |
-| created_time | datetime | 是       |          | 该试卷创建的时间                                 |
+| 字段名       | 类型     | 不为NULL | 是否主键 | 说明                            |
+| ------------ | -------- | -------- | -------- | ------------------------------- |
+| id           | bigint   | 是       | 是       | 雪花算法                        |
+| name         | string   | 是       |          | 试卷名，可重复                  |
+| description  | string   | 是       |          | 该试卷的描述                    |
+| teachby      | bigint   | 是       |          | 创建该试卷的老师的 id           |
+| score        | int      | 是       |          | 该试卷的满分分数 (根据题目改变) |
+| path         | string   | 是       |          | 该试卷在服务器上的路径          |
+| created_time | datetime | 是       |          | 该试卷创建的时间                |
 
 说明：上述表为考试系统角色
 
 ------
-
-#### 	题目 - 选择题 ( sys_multiple_choice_question )
-
-| 字段名        | 类型   | 不为NULL | 是否主键 | 说明                                |
-| ------------- | ------ | -------- | -------- | ----------------------------------- |
-| id            | bigint | 是       | 是       | 雪花算法                            |
-| title         | string | 否       |          | 题目的标题 (可为空)                 |
-| content       | string | 是       |          | 题目的内容 (不可为空)               |
-| contain_image | int    | 否       |          | 题目包含图片的数量，0表示没有包含， |
-| answer        | string | 是       |          | 题目的答案                          |
-| option_1      | string | 是       |          | 题目的其中一个选项                  |
-| option_2      | string | 是       |          | 题目的其中一个选项                  |
-| option_3      | string | 是       |          | 题目的其中一个选项                  |
-| option_4      | string | 是       |          | 题目的其中一个选项                  |
-
-#### 	题目 - 填空题 ( sys_blank_fill_question )
-
-| 字段名        | 类型   | 不为NULL | 是否主键 | 说明                              |
-| ------------- | ------ | -------- | -------- | --------------------------------- |
-| id            | bigint | 是       | 是       | 雪花算法                          |
-| title         | string | 否       |          | 题目的标题 (可为空)               |
-| content       | string | 是       |          | 题目的内容 (不可为空)             |
-| contain_image | int    | 否       |          | 题目包含图片的数量，0表示没有包含 |
-| answer        | string | 是       |          | 题目的答案                        |
-
-#### 	题目 - 判断题 ( sys_true_false_question )
-
-| 字段名        | 类型   | 不为NULL | 是否主键 | 说明                              |
-| ------------- | ------ | -------- | -------- | --------------------------------- |
-| id            | bigint | 是       | 是       | 雪花算法                          |
-| title         | string | 否       |          | 题目的标题 (可为空)               |
-| content       | string | 是       |          | 题目的内容 (不可为空)             |
-| contain_image | int    | 否       |          | 题目包含图片的数量，0表示没有包含 |
-| answer        | int    | 是       |          | 题目的答案 (0表示错误，1表示正确) |
-
-#### 	题目 - 简答题 ( sys_short_answer_question )
-
-| 字段名        | 类型   | 不为NULL | 是否主键 | 说明                              |
-| ------------- | ------ | -------- | -------- | --------------------------------- |
-| id            | bigint | 是       | 是       | 雪花算法                          |
-| title         | string | 否       |          | 题目的标题 (可为空)               |
-| content       | string | 是       |          | 题目的内容 (不可为空)             |
-| contain_image | int    | 否       |          | 题目包含图片的数量，0表示没有包含 |
-
-
 
 ### 数据库表设计 - 角色间关系
 
@@ -285,16 +249,6 @@ BasePage
 | exam_id  | bigint | 是       |          | 对应关系中考试的 id |
 | paper_id | bigint | 是       |          | 对应关系中试卷的 id |
 
-#### 	试卷 - 题目 对应表 ( relation_paper_question )
-
-| 字段名      | 类型   | 不为NULL | 是否主键 | 说明                     |
-| ----------- | ------ | -------- | -------- | ------------------------ |
-| id          | bigint | 是       | 是       | 雪花算法                 |
-| paper_id    | bigint | 是       |          | 对应关系中试卷的 id      |
-| question_id | bigint | 是       |          | 对应关系中题目的 id      |
-| question_no | int    | 是       |          | 该题目在对应试卷中的题号 |
-| score       | int    | 是       |          | 改题目在该试卷中的分数   |
-
 #### 课程 - 学生 对应表 ( relation_course_student )
 
 | 字段名     | 类型     | 不为NULL | 是否主键 | 说明                 |
@@ -308,94 +262,6 @@ BasePage
 
 ------
 
-#### 学生答案表 - 选择题 ( answer_result_multiple_choice_question )
-
-| 字段名         | 类型   | 不为NULL | 是否主键 | 说明                   |
-| -------------- | ------ | -------- | -------- | ---------------------- |
-| id             | bigint | 是       | 是       | 雪花算法               |
-| student_id     | bigint | 是       |          | 做这题的学生的 id      |
-| exam_id        | bigint | 是       |          | 该题所在考试的 id      |
-| question_id    | bigint | 是       |          | 该题的 id              |
-| answer         | string | 是       |          | 该学生回答这题时的答案 |
-| answer_correct | string | 是       |          | 该选择题的答案         |
-| score_mine     | int    | 是       |          | 学生在这道题得到的分数 |
-| score_full     | int    | 是       |          | 该题目的满分分数       |
-
-#### 学生答案表 - 填空题 ( answer_result_blank_fill_question )
-
-| 字段名         | 类型   | 不为NULL | 是否主键 | 说明                   |
-| -------------- | ------ | -------- | -------- | ---------------------- |
-| id             | bigint | 是       | 是       | 雪花算法               |
-| student_id     | bigint | 是       |          | 做这题的学生的 id      |
-| exam_id        | bigint | 是       |          | 该题所在考试的 id      |
-| question_id    | bigint | 是       |          | 该题的 id              |
-| answer         | string | 是       |          | 该学生回答这题时的答案 |
-| answer_correct | string | 是       |          | 该填空题的答案         |
-| score_mine     | int    | 是       |          | 学生在这道题得到的分数 |
-| score_full     | int    | 是       |          | 该题目的满分分数       |
-
-#### 学生答案表 - 判断题 ( answer_result_true_false_question )
-
-| 字段名         | 类型   | 不为NULL | 是否主键 | 说明                   |
-| -------------- | ------ | -------- | -------- | ---------------------- |
-| id             | bigint | 是       | 是       | 雪花算法               |
-| student_id     | bigint | 是       |          | 做这题的学生的 id      |
-| exam_id        | bigint | 是       |          | 该题所在考试的 id      |
-| question_id    | bigint | 是       |          | 该题的 id              |
-| answer         | int    | 是       |          | 该学生回答这题时的答案 |
-| answer_correct | int    | 是       |          | 该判断题的答案         |
-| score_mine     | int    | 是       |          | 学生在这道题得到的分数 |
-| score_full     | int    | 是       |          | 该题目的满分分数       |
-
-#### 学生答案表 - 简答题 ( answer_short_answer_question )
-
-| 字段名      | 类型   | 不为NULL | 是否主键 | 说明                   |
-| ----------- | ------ | -------- | -------- | ---------------------- |
-| id          | bigint | 是       | 是       | 雪花算法               |
-| student_id  | bigint | 是       |          | 做这题的学生的 id      |
-| exam_id     | bigint | 是       |          | 该题所在考试的 id      |
-| question_id | bigint | 是       |          | 该题的 id              |
-| answer      | string | 是       |          | 该学生回答这题时的答案 |
-
-**说明**：上述表为答案表，在学生提交试卷时就已经生成。其中 选择，填空，判断 需要在后端进行一次简单的判断，得出最后学生得到的分数后再存入数据库中，而简答题则是直接存入，因简答题需要老师手动批阅，见下方的 **试卷批阅表 - 简答题**
-
-------
-
-#### 试卷批阅表 - 简答题 ( result_short_answer_question )
-
-| 字段名      | 类型   | 不为NULL | 是否主键 | 说明                           |
-| ----------- | ------ | -------- | -------- | ------------------------------ |
-| id          | bigint | 是       | 是       | 雪花算法                       |
-| student_id  | bigint | 是       |          | 做这题的学生的 id              |
-| exam_id     | bigint | 是       |          | 该题所在考试的 id              |
-| question_id | bigint | 是       |          | 该题的 id                      |
-| answer      | string | 是       |          | 该学生回答这题时的答案         |
-| score_mine  | int    | 是       |          | 学生在这道题得到的分数         |
-| score_full  | int    | 是       |          | 该题目的满分分数               |
-| comment     | string | 否       |          | 老师对该题目答案的批注，可为空 |
-
-**说明**：上表为老师批改学生答案后才生成。老师批改时查看的是 **学生答案表 - 简答题** 中查询的数据。上表和上一节中的四张表只有在该考试的批卷模式是自动批卷时才会涉及。
-
-------
-
-#### 学生考试记录表 ( history_exam_student )
-
-| 字段名        | 类型     | 不为NULL | 是否主键 | 说明                                                         |
-| ------------- | -------- | -------- | -------- | ------------------------------------------------------------ |
-| id            | bigint   | 是       | 是       | 雪花算法                                                     |
-| student_id    | bigint   | 是       |          | 参与考试的学生的 id                                          |
-| exam_id       | bigint   | 是       |          | 该考试的 id                                                  |
-| enter_time    | datetime | 是       |          | 学生开始考试的时间 (进场时间)                                |
-| leave_time    | datetime | 是       |          | 学生交卷的时间 (离场时间)                                    |
-| type          | int      | 是       |          | 该次考试的类型，0 为自动批卷，1 为手动批卷                   |
-| answer_submit | int      | 是       |          | 表示该学生参加的这场考试有没有交答卷，0 表示 未交卷，1 表示已交卷 |
-| score_mine    | int      | 是       |          | 学生的分数                                                   |
-| score_full    | int      | 是       |          | 该次考试的满分                                               |
-
-**说明**：上表记录在学生点击交卷后生成 (自动批卷模式)，或是在考试结束时自动生成 (手动批卷模式，该模式中自动生成的记录的 enter_time 为考试开始时间，leave_time 为考试结束时间)
-
-------
-
 #### 学生答卷表 ( respondent_exam_student )
 
 | 字段名          | 类型   | 不为NULL | 是否主键 | 说明                    |
@@ -404,6 +270,8 @@ BasePage
 | student_id      | bigint | 是       |          | 参与考试的学生的 id     |
 | exam_id         | bigint | 是       |          | 该考试的 id             |
 | respondent_path | string | 是       |          | 学生上传的PDF答卷的路径 |
+| final_score     | int    | 是（-1） |          | 学生提交的答卷的分数    |
+| sha256_value    | string | 是       |          | 学生提交的答卷的签名    |
 
 **说明**：该记录在学生的答题卷上传完成时生成，答卷会存放在服务端本地，老师可从网页上查看答卷并打分。该表只在考试模式为手动批卷的考试中会涉及。
 
@@ -428,10 +296,6 @@ BasePage
 - CoursePO
 - ExamPO
 - PaperPO
-- MultipleChoiceQuestionPO
-- BlankFillQuestionPO
-- TrueFalseQuestionPO
-- ShortAnswerQuestionPO
 
 ### POJO.BO
 
@@ -440,14 +304,7 @@ BasePage
 - RelationSubjectCourseBO
 - RelationCourseExamBO
 - RelationExamPaperBO
-- RelationPaperQuestionBO
 - RelationCourseStudentBO
-- AnswerResultMultipleChoiceQuestionBO
-- AnswerResultBlankFillQuestionBO
-- AnswerResultTrueFalseQuestionBO
-- AnswerShortAnswerQuestionBO
-- ResultShortAnswerQuestionBO
-- HistoryExamStudentBO
 - RespondentExamStudentBO
 
 ### POJO.VO
@@ -464,6 +321,8 @@ BasePage
 - AES 加密相关
 - SHA-256 签名相关
 - 雪花算法相关
+- 日期处理相关
+- Redis工具类
 
 ### Interceptor
 
@@ -477,6 +336,7 @@ BasePage
 - UserController：包含 用户 信息修改相关接口
 - SchoolController：包含 学院，专业，课程 之间的关系以及增删改查相关接口，报课退课 相关接口
 - ExamController：包含 考试，题目 相关增删改查相关接口，试卷批改相关接口，参加考试，查看结果相关接口
+- ExceptionController：负责全局异常处理
 
 ### Service 层
 
@@ -497,21 +357,10 @@ BasePage
 - CourseMapper
 - ExamMapper
 - PaperMapper
-- MultipleChoiceQuestionMapper
-- BlankFillQuestionMapper
-- TrueFalseQuestionMapper
-- ShortAnswerQuestionMapper
 - RelationSubjectCourseMapper
 - RelationCourseExamMapper
 - RelationExamPaperMapper
-- RelationPaperQuestionMapper
 - RelationCourseStudentMapper
-- AnswerResultMultipleChoiceQuestionMapper
-- AnswerResultBlankFillQuestionMapper
-- AnswerResultTrueFalseQuestionMapper
-- AnswerShortAnswerQuestionMapper
-- ResultShortAnswerQuestionMapper
-- HistoryExamStudentMapper
 - RespondentExamStudentMapper
 
 
@@ -539,7 +388,11 @@ BasePage
 
 1. #### 前端Number精度丢失：在前端JS中，Number的存储为8个字节，而后端雪花算法算出的id值有19为，传到前端时会导致精度丢失，故id传回前端时使用String类型
 
-1. #### Mysql Join：在实际项目开发中，不推荐使用join，因此多表联合查询在后端用代码逻辑实现
+1. #### Mysql Join：在实际项目开发中，不推荐使用join，多表联合查询应在后端用代码逻辑实现
+
+1. #### CSS污染：在编写前端代码时，在嵌套的前端组件编写时中不严谨的使用了相同的类名，导致样式出现覆盖，解决方法为在react中自动生成的webpack文件中，使用CSS-module可以消除全局污染的问题，只对引用的目录下的样式文件进行编译。
+
+1. #### Springboot内部错误重定向：前端发送一个复杂请求，莫名其妙被拦截器拦截了，debug发现路径为/error。原因：SpringBoot 默认提供了一个全局的 handler 来处理所有的 HTTP 错误, 并把它映射为 /error。当发生一个 HTTP 错误, 例如 404 错误时, SpringBoot 内部的机制会将页面重定向到 /error 中。解决办法：写一个全局异常处理类，用@ControllerAdvice注解，可捕获类里面明确的任何异常和子类异常，便于debug。
 
 
 

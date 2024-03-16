@@ -1,14 +1,17 @@
 package com.zoom.exam_sys_backend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zoom.exam_sys_backend.pojo.bo.CourseExamBO;
+import com.zoom.exam_sys_backend.pojo.bo.ExamPaperBO;
+import com.zoom.exam_sys_backend.pojo.bo.RespondentExamStudentBO;
 import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
-import com.zoom.exam_sys_backend.pojo.po.CoursePO;
-import com.zoom.exam_sys_backend.pojo.po.DepartmentPO;
-import com.zoom.exam_sys_backend.pojo.po.StudentPO;
-import com.zoom.exam_sys_backend.pojo.po.SubjectPO;
+import com.zoom.exam_sys_backend.pojo.po.*;
+import com.zoom.exam_sys_backend.pojo.vo.CourseVO;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -38,4 +41,37 @@ public interface StudentMapper extends BaseMapper<StudentPO> {
     //select a.*, b.*, c.* from sys_subject a inner join relation_subject_course b on a.id = b.subject_id inner join sys_course c on b.course_id = c.id;
     @Select("SELECT * FROM sys_course WHERE id=#{courseId}")
     CoursePO studentGetSingleCourse(Long courseId);
+
+    @Select("SELECT * FROM relation_course_exam WHERE course_id=#{courseId}")
+    List<CourseExamBO> studentGetAllCourseExamRelation(Long courseId);
+
+    @Select("SELECT * FROM sys_exam WHERE id=#{examId}")
+    ExamPO studentGetSingleExam(Long examId);
+
+    @Select("SELECT * FROM relation_course_exam WHERE exam_id=#{examId}")
+    CourseExamBO studentGetCourseExamRelationByExamId(Long examId);
+
+    @Select("SELECT * FROM relation_exam_paper WHERE exam_id=#{examId}")
+    ExamPaperBO studentGetExamPaperRelationByExamId(Long examId);
+
+    @Select("SELECT * FROM sys_paper WHERE id=#{paperId}")
+    PaperPO studentGetPaperInfo(Long paperId);
+
+    @Select("SELECT COUNT(*) FROM respondent_exam_student WHERE exam_id=#{examId} AND student_id=#{studentId}")
+    int checkIfStudentFinishedExam(Long examId, Long studentId);
+
+    @Select("SELECT COUNT(*) FROM relation_course_student WHERE course_id=#{courseId} AND student_id=#{studentId}")
+    int StudentCheckIfSignedCourse(Long studentId, Long courseId);
+
+    @Insert("INSERT INTO relation_course_student(id,course_id,student_id) VALUES(#{relationId},#{courseId},#{studentId})")
+    int StudentSignCourse(Long relationId, Long studentId, Long courseId);
+
+    @Select("SELECT * FROM sys_course WHERE id=#{courseId}")
+    CoursePO StudentGetCourseInfo(Long courseId);
+
+    @Select("SELECT * FROM respondent_exam_student WHERE exam_id=#{examId} AND student_id=#{studentId}")
+    RespondentExamStudentBO StudentGetRespondentInfo(Long examId, Long studentId);
+
+    @Insert("INSERT INTO respondent_exam_student(id,exam_id,student_id,respondent_path,final_score,sha256_code) VALUES(#{respondentId},#{examId},#{studentId},#{respondentFileName},#{finalScore},#{sha256Value})")
+    int StudentAddRespondent(Long respondentId, Long examId, Long studentId, String respondentFileName, int finalScore, String sha256Value);
 }

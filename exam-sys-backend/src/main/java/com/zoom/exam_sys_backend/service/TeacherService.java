@@ -1,15 +1,11 @@
 package com.zoom.exam_sys_backend.service;
 
-import com.zoom.exam_sys_backend.pojo.po.CoursePO;
-import com.zoom.exam_sys_backend.pojo.po.DepartmentPO;
-import com.zoom.exam_sys_backend.pojo.po.SubjectPO;
-import com.zoom.exam_sys_backend.pojo.vo.CourseVO;
-import com.zoom.exam_sys_backend.pojo.vo.DepartmentVO;
-import com.zoom.exam_sys_backend.pojo.vo.SubjectVO;
-import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
+import com.zoom.exam_sys_backend.pojo.vo.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -24,4 +20,8 @@ public interface TeacherService {
     List<DepartmentVO> TeacherGetAllDepartment();
     List<SubjectVO> TeacherGetAllSubject(Long departmentId);
     List<CourseVO> TeacherGetAllCourse(Long subjectId);
+    List<ExamVO> TeacherGetAllExam(Long courseId);
+    TeacherExtendedExamVO TeacherGetSingleExamInfo(Long examId);
+    String TeacherUploadExamPaperFile(MultipartFile multipartFile) throws IOException;
+    TeacherAddExamResultVO TeacherAddExam(String examName, String examDescription, String examStartDateTime, String examEndDateTime, String paperFileName, String paperName, String paperDescription, int paperScore, Long teachby, Long courseId) throws ParseException;
 }

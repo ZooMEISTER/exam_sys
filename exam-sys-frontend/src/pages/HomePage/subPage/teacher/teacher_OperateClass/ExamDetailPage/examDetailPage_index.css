@@ -1,0 +1,58 @@
+
+.exam-detail-root{
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.exam-detail-base{
+    margin: auto;
+    margin-top: 40px;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 60%;
+}
+
+.exam-detail-div{
+    display: flex;
+    flex-direction: column;
+}
+
+.exam-detail-name{
+    font-size: 40px;
+
+    margin-top: 10px;
+}
+.exam-detail-description{
+    font-size: 20px;
+
+    margin-top: 10px;
+}
+.exam-detail-start-end{
+    font-size: 15px;
+
+    margin-top: 10px;
+}
+
+.paper-card{
+    margin-top: 20px;
+
+    display: flex;
+    flex-direction: column;
+}
+.paper-detail-text{
+    font-size: 20px;
+}
+
+.paper-detail-button-div{
+    display: flex;
+    flex-direction: row;
+
+    margin-top: 10px;
+}
+.paper-detail-button{
+    margin-right: 20px;
+}

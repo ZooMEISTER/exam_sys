@@ -1,0 +1,51 @@
+
+.student-exam-detail-root{
+    display: flex;
+}
+
+.student-back-to-all-exam-button{
+    margin-top: 25px;
+    margin-left: 40px;
+}
+
+.student-exam-detail-card{
+    display: flex;
+    flex-direction: column;
+
+    width: 40%;
+    margin: auto;
+    margin-top: 100px;
+}
+.student-exam-detail-card-info{
+    display: flex;
+    flex-direction: column;
+}
+
+.exam-info-form-row{
+    margin-bottom: 0px;
+}
+
+.student-inner-paper-card{
+    margin-top: 20px;
+}
+
+.student-paper-detail-button-div{
+    display: flex;
+}
+.student-upload-respondent{
+    margin-top: 20px;
+    margin-left: 50px;
+}
+
+.student-paper-status{
+    margin-left: auto;
+    width: 200px;
+    font-size: 20px;
+}
+
+.respondent-uploader{
+    display: flex;
+    flex-direction: column;
+    width: auto !important;
+    height: 100px;
+}

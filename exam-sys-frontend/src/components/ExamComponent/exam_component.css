@@ -1,0 +1,47 @@
+
+.exam-card{
+    height: 50px;
+    margin-top: 10px;
+
+    border: solid;
+    border-width: 1px;
+    border-color: rgb(233, 233, 233);
+
+    display: flex;
+}
+.exam-card:hover{
+    /* background-color: rgb(245, 245, 245); */
+    box-shadow: 0px 0px 3px grey;
+}
+
+.exam-card-content{
+    width: 100%;
+    margin: auto;
+    display: flex;
+}
+.exam-name{
+    margin: auto;
+    margin-left: 40px;
+    font-size: 20px;
+}
+.exam-start{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 40px;
+}
+.exam-end{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 40px;
+}
+
+.exam-status-tag{
+    margin-top: auto;
+}
+.latter-exam-status-tag{
+    margin-right: 40px;
+}
+.exam-status-tag-not-start{
+    margin-top: auto;
+    margin-right: 120px;
+}

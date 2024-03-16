@@ -37,8 +37,14 @@ const Teacher_AllCoursePage_index = () => {
 	}, []);
 
     const jumpBackToSubjects = () =>{
-        navigate('/home/teacher-operate-class/subject', {state: {departmentId: state.state.departmentId, departmentName: state.state.departmentName}})
-        console.log('aaa')
+        navigate('/home/teacher-operate-class/subject', 
+            {state:    
+                {
+                    departmentId: state.state.departmentId, 
+                    departmentName: state.state.departmentName
+                }
+            }
+        )
     }
 
     return(
@@ -61,10 +67,13 @@ const Teacher_AllCoursePage_index = () => {
                         icon={item.icon}
                         name={item.name}
                         description={item.description}
-                        course_count={item.course_count}
+                        teachby={item.teachby}
+                        created_time={item.created_time}
                         
                         departmentId={state.state.departmentId}
-                        subjectId={state.state.subjectId}/>
+                        departmentName={state.state.departmentName}
+                        subjectId={state.state.subjectId}
+                        subjectName={state.state.subjectName}/>
                 ))}
                 
             </div>

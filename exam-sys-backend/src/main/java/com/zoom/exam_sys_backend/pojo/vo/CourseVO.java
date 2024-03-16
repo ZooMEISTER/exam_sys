@@ -16,9 +16,9 @@ public class CourseVO {
     private String name;
     private String description;
     private String teachby;
-    private Date created_time;
+    private String created_time;
 
-    public CourseVO(String id, String icon, String name, String description, String teachby, Date created_time) {
+    public CourseVO(String id, String icon, String name, String description, String teachby, String created_time) {
         this.id = id;
         this.icon = icon;
         this.name = name;
@@ -67,11 +67,23 @@ public class CourseVO {
         this.teachby = teachby;
     }
 
-    public Date getCreated_time() {
+    public String getCreated_time() {
         return created_time;
     }
 
-    public void setCreated_time(Date created_time) {
+    public void setCreated_time(String created_time) {
         this.created_time = created_time;
+    }
+
+    @Override
+    public String toString() {
+        return "CourseVO{" +
+                "id='" + id + '\'' +
+                ", icon='" + icon + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", teachby='" + teachby + '\'' +
+                ", created_time='" + created_time + '\'' +
+                '}';
     }
 }

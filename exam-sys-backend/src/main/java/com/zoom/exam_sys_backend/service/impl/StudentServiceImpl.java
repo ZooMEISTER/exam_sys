@@ -1,25 +1,35 @@
 package com.zoom.exam_sys_backend.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.zoom.exam_sys_backend.comparator.ExamVOComparator;
+import com.zoom.exam_sys_backend.comparator.StudentExamVOComparator;
+import com.zoom.exam_sys_backend.constant.ExamStatusStudent;
 import com.zoom.exam_sys_backend.exception.code.StudentResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.StudentMapper;
+import com.zoom.exam_sys_backend.pojo.bo.CourseExamBO;
+import com.zoom.exam_sys_backend.pojo.bo.ExamPaperBO;
+import com.zoom.exam_sys_backend.pojo.bo.RespondentExamStudentBO;
 import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
-import com.zoom.exam_sys_backend.pojo.po.CoursePO;
-import com.zoom.exam_sys_backend.pojo.po.DepartmentPO;
-import com.zoom.exam_sys_backend.pojo.po.StudentPO;
-import com.zoom.exam_sys_backend.pojo.po.SubjectPO;
-import com.zoom.exam_sys_backend.pojo.vo.CourseVO;
-import com.zoom.exam_sys_backend.pojo.vo.DepartmentVO;
-import com.zoom.exam_sys_backend.pojo.vo.SubjectVO;
-import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
+import com.zoom.exam_sys_backend.pojo.po.*;
+import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.StudentService;
+import com.zoom.exam_sys_backend.util.FileUtils;
 import com.zoom.exam_sys_backend.util.JWTUtils;
+import com.zoom.exam_sys_backend.util.SnowflakeIdWorker;
+import com.zoom.exam_sys_backend.util.TimeTransferUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +40,15 @@ import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
+    @Value("${file.dataFolder}")
+    String fileDataFolderPath;
+
+    @Value("${data.examPaperFolder}")
+    String examPaperFolderPath;
+
+    @Value("${data.examAnswerPaperFolder}")
+    String examAnswerPaperFolderPath;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -45,6 +64,7 @@ public class StudentServiceImpl implements StudentService {
     * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO
     */
     @Override
+    @Transactional
     public TouristLoginResultVO StudentUpdateProfile(Long userid, String newAvatar, String newUsername, String newRealname, String newPhone, String newEmail, String newPassword) {
         TouristLoginResultVO requestSenderVO = JSONObject.parseObject(String.valueOf(redisTemplate.opsForValue().get(String.valueOf(userid))), TouristLoginResultVO.class);
         if(requestSenderVO == null){
@@ -171,9 +191,201 @@ public class StudentServiceImpl implements StudentService {
                     coursePO.getName(),
                     coursePO.getDescription(),
                     coursePO.getTeachby().toString(),
-                    coursePO.getCreated_time()
+                    TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time())
             ));
         }
         return courseVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取某个课程下所有考试的方法
+    * @DateTime: 2024/3/14 17:34
+    * @Params: [courseId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.ExamVO>
+    */
+    @Override
+    public List<StudentExamVO> StudentGetAllExam(Long courseId, Long studentId) {
+        List<CourseExamBO> courseExamBOList = studentMapper.studentGetAllCourseExamRelation(courseId);
+        List<StudentExamVO> studentExamVOList = new ArrayList<>();
+        for(CourseExamBO i : courseExamBOList){
+            ExamPO examPO = studentMapper.studentGetSingleExam(i.getExam_id());
+            SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date currentDateTime = new Date(System.currentTimeMillis());
+            int examStatus = 0; // 对学生来说，考试的状态
+            if(currentDateTime.before(examPO.getStart_time())){
+                // 该考试未开始
+                examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_NOT_START;
+            }
+            else if(currentDateTime.after(examPO.getEnd_time())){
+                // 该考试已结束
+                int respondentCount = studentMapper.checkIfStudentFinishedExam(examPO.getId(), studentId);
+                if(respondentCount > 0){
+                    examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_ENDED_DONE;
+                }
+                else{
+                    examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_ENDED_UNDO;
+                }
+            }
+            else{
+                // 该考试正在进行
+                int respondentCount = studentMapper.checkIfStudentFinishedExam(examPO.getId(), studentId);
+                if(respondentCount > 0){
+                    examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_STARTED_DONE;
+                }
+                else{
+                    examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_STARTED_UNDO;
+                }
+            }
+
+            studentExamVOList.add(new StudentExamVO(
+                    examPO.getId().toString(),
+                    examPO.getName(),
+                    examPO.getDescription(),
+                    TimeTransferUtils.TransferTime2LocalTime(examPO.getStart_time()),
+                    TimeTransferUtils.TransferTime2LocalTime(examPO.getEnd_time()),
+                    examPO.getTeachby().toString(),
+                    examPO.getType(),
+                    examPO.getPublished(),
+                    TimeTransferUtils.TransferTime2LocalTime(examPO.getCreated_time()),
+                    examStatus));
+        }
+        Collections.sort(studentExamVOList, new StudentExamVOComparator());
+        return studentExamVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获得某个考试详细信息方法
+    * @DateTime: 2024/3/15 16:39
+    * @Params: [examId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ExtendedExamVO
+    */
+    @Override
+    public StudentExtendedExamVO StudentGetSingleExamInfo(Long examId, Long studentId) {
+        ExamPO examPO = studentMapper.studentGetSingleExam(examId);
+        CourseExamBO courseExamBO = studentMapper.studentGetCourseExamRelationByExamId(examId);
+        CoursePO coursePO = studentMapper.studentGetSingleCourse(courseExamBO.getCourse_id());
+        ExamPaperBO examPaperBO = studentMapper.studentGetExamPaperRelationByExamId(examId);
+        PaperPO paperPO = studentMapper.studentGetPaperInfo(examPaperBO.getPaper_id());
+        RespondentExamStudentBO respondentExamStudentBO = studentMapper.StudentGetRespondentInfo(examId, studentId);
+        int finalScore = -1;
+        if(respondentExamStudentBO != null) finalScore = respondentExamStudentBO.getFinal_score();
+
+        return new StudentExtendedExamVO(examPO.getId().toString(),
+                examPO.getName(),
+                examPO.getDescription(),
+                TimeTransferUtils.TransferTime2LocalTime(examPO.getStart_time()),
+                TimeTransferUtils.TransferTime2LocalTime(examPO.getEnd_time()),
+                examPO.getTeachby().toString(),
+                examPO.getType(),
+                examPO.getPublished(),
+                TimeTransferUtils.TransferTime2LocalTime(examPO.getCreated_time()),
+                coursePO.getId().toString(),
+                coursePO.getName(),
+                paperPO.getId().toString(),
+                paperPO.getName(),
+                paperPO.getDescription(),
+                paperPO.getPath(),
+                paperPO.getScore(),
+                finalScore
+        );
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生查询自己是否报名该课程方法
+    * @DateTime: 2024/3/16 15:39
+    * @Params: [studentId, courseId]
+    * @Return int
+    */
+    @Override
+    public int StudentCheckIfSignedCourse(Long studentId, Long courseId) {
+        return studentMapper.StudentCheckIfSignedCourse(studentId, courseId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生报名课程方法
+    * @DateTime: 2024/3/16 17:20
+    * @Params: [studentId, courseId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.StudentSignCourseResultVO
+    */
+    @Override
+    public StudentSignCourseResultVO StudentSignCourse(Long studentId, Long courseId) {
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+        Long relationId = idWorker.nextId();
+        int res = studentMapper.StudentSignCourse(relationId, studentId, courseId);
+        if(res > 0){
+            return new StudentSignCourseResultVO(StudentResultCode.STUDENT_SIGN_COURSE_SUCCESS, "报名课程成功", res);
+        }
+        else {
+            return new StudentSignCourseResultVO(StudentResultCode.STUDENT_SIGN_COURSE_FAIL, "报名课程失败", res);
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取某个课程详细信息方法
+    * @DateTime: 2024/3/16 18:46
+    * @Params: [courseId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.CourseVO
+    */
+    @Override
+    public CourseVO StudentGetCourseInfo(Long courseId) {
+        CoursePO coursePO = studentMapper.StudentGetCourseInfo(courseId);
+        return new CourseVO(coursePO.getId().toString(),
+                            coursePO.getIcon(),
+                            coursePO.getName(),
+                            coursePO.getDescription(),
+                            coursePO.getTeachby().toString(),
+                            TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time()));
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生上传答卷方法
+    * @DateTime: 2024/3/16 19:46
+    * @Params: [multipartFile]
+    * @Return java.lang.String
+    */
+    @Override
+    public String StudentUploadRespondentFile(MultipartFile multipartFile) throws IOException {
+        // 判断文件是否为空
+        if(multipartFile == null){
+            return "null respondent file";
+        }
+        // 获取文件名
+        String originalFileName = multipartFile.getOriginalFilename();
+        String fileName = multipartFile.getName();
+        // 获取文件后缀
+        String suffixName = originalFileName.substring(originalFileName.lastIndexOf('.'));
+        // 生成随机字符串
+        String rndStr = FileUtils.getRandomString(32);
+
+        // 把文件保存到本地
+        FileUtils.saveFile(multipartFile, fileDataFolderPath + examAnswerPaperFolderPath, rndStr + originalFileName);
+
+        return rndStr + originalFileName;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生添加答卷记录方法
+    * @DateTime: 2024/3/16 20:09
+    * @Params: [examId, studentId, respondentFileName, sha256Value]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.StudentAddRespondentResultVO
+    */
+    @Override
+    public StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value) {
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+        Long respondentId = idWorker.nextId();
+        int res = studentMapper.StudentAddRespondent(respondentId, examId, studentId, respondentFileName, -1, sha256Value);
+        if(res > 0){
+            return new StudentAddRespondentResultVO(StudentResultCode.STUDENT_ADD_RESPONDENT_SUCCESS, "交卷成功");
+        }
+        else{
+            return new StudentAddRespondentResultVO(StudentResultCode.STUDENT_ADD_RESPONDENT_FAIL, "交卷失败");
+        }
     }
 }

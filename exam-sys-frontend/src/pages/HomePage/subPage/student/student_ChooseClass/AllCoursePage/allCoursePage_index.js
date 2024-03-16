@@ -60,10 +60,13 @@ const Student_AllCoursePage_index = () => {
                         icon={item.icon}
                         name={item.name}
                         description={item.description}
-                        course_count={item.course_count}
+                        teachby={item.teachby}
+                        created_time={item.created_time}
                         
                         departmentId={state.state.departmentId}
-                        subjectId={state.state.subjectId}/>
+                        departmentName={state.state.departmentName}
+                        subjectId={state.state.subjectId}
+                        subjectName={state.state.subjectName}/>
                 ))}
                 
             </div>

@@ -21,19 +21,26 @@ const Department_Component = (props) => {
     })
 
     return(
-        <div className='root-div'>
+        <div className='comp-root-div'>
             <Card 
                 onClick={ClickDepartment}
                 className='department-card' 
                 hoverable
+                bordered={false}
                 cover={
-                    <img className='cover-img' alt='No Img' src={props.icon}/>
+                    <img className='department-cover-img' alt='No Img' src={props.icon}/>
                 }
             >
-                {props.id} <br/>
+                {/* {props.id} <br/>
                 {props.name} <br/>
                 {props.description} <br/>
-                {props.subject_count} <br/>
+                {props.subject_count} <br/> */}
+                <div className='department-card-info-div'>
+                    <label className='department-card-title'>{props.name}</label>
+                    <label className='department-card-description'>{props.description}</label>
+                    <label className='department-card-subject-count'>专业数：{props.subject_count}</label>
+                </div>
+                
             </Card>
         </div>
     )

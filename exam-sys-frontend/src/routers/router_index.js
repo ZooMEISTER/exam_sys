@@ -7,6 +7,8 @@ import HomePage from "../pages/HomePage/homePage_index";
         import Student_AllDepartmentPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllDepartmentPage/allDepartmentPage_index";
         import Student_AllSubjectPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllSubjectPage/allSubjectPage_index";
         import Student_AllCoursePage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllCoursePage/allCoursePage_index";
+        import Student_AllExamPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllExamPage/allExamPage_index";
+        import Student_ExamDetailPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/ExamDetailPage/examDetailPage_index";
     import Student_MyClass from "../pages/HomePage/subPage/student/student_MyClass/student_MyClass_index"
     import Student_MyExam from "../pages/HomePage/subPage/student/student_MyExam/student_MyExam_index"
 
@@ -14,6 +16,8 @@ import HomePage from "../pages/HomePage/homePage_index";
         import Teacher_AllDepartmentPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllDepartmentPage/allDepartmentPage_index";
         import Teacher_AllSubjectPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllSubjectPage/allSubjectPage_index";
         import Teacher_AllCoursePage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllCoursePage/allCoursePage_index";
+        import Teacher_AllExamPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllExamPage/allExamPage_index";
+        import Teacher_ExamDetailPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/ExamDetailPage/examDetailPage_index";
     import Teacher_MyClass from "../pages/HomePage/subPage/teacher/teacher_MyClass/teacher_MyClass_index"
     import Teacher_MyExam from "../pages/HomePage/subPage/teacher/teacher_MyExam/teacher_MyExam_index"
 
@@ -54,6 +58,14 @@ const router = createBrowserRouter([
                             {
                                 path: "course",
                                 element: <Teacher_AllCoursePage_index/>
+                            },
+                            {
+                                path: "exam",
+                                element: <Teacher_AllExamPage_index/>
+                            },
+                            {
+                                path: "exam-detail",
+                                element: <Teacher_ExamDetailPage_index/>
                             }
                         ]
                     },
@@ -81,6 +93,14 @@ const router = createBrowserRouter([
                             {
                                 path: "course",
                                 element: <Student_AllCoursePage_index/>
+                            },
+                            {
+                                path: "exam",
+                                element: <Student_AllExamPage_index/>
+                            },
+                            {
+                                path: "exam-detail",
+                                element: <Student_ExamDetailPage_index/>
                             }
                         ]
                     },

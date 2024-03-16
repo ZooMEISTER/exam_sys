@@ -11,6 +11,7 @@ import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
 import com.zoom.exam_sys_backend.service.TouristService;
 import com.zoom.exam_sys_backend.util.JWTUtils;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -75,7 +76,7 @@ public class UserRequestInterceptor implements HandlerInterceptor {
         }
 
         // 判断发送的请求是否需要鉴权
-        if(expectPermissionLevel > 0){
+        if(expectPermissionLevel > 0 && request.getHeader("Authorization") != null){
             // 获取请求头中的 token
             //String token = request.getHeader("exam-sys-login-token");
             String token = request.getHeader("Authorization").substring(7);
@@ -124,7 +125,7 @@ public class UserRequestInterceptor implements HandlerInterceptor {
                     throw new NoPermissionException();
                 }
                 // 验证全部通过 放行
-                return HandlerInterceptor.super.preHandle(request, response, handler);
+                return true;
             }
             catch (Exception e){
                 // 返回给前端的 JSON
@@ -150,6 +151,11 @@ public class UserRequestInterceptor implements HandlerInterceptor {
                     jsonObject.put("resultCode", InterceptorResultCode.INTERCEPTED_NO_PERMISSION);
                     jsonObject.put("msg", "没有权限");
                 }
+                else if(e instanceof ExpiredJwtException){
+                    // token过期
+                    jsonObject.put("resultCode", InterceptorResultCode.INTERCEPTED_TOKEN_EXPIRED);
+                    jsonObject.put("msg", "TOKEN 已过期");
+                }
 
                 String jsonObjectStr = JSONObject.toJSONString(jsonObject);
                 ReturnJson(response, jsonObjectStr);
@@ -160,7 +166,7 @@ public class UserRequestInterceptor implements HandlerInterceptor {
         else if(expectPermissionLevel == 0){
             // 目前 tourist 开头的请求直接放行
             // 之后可能会做 ip 黑名单，防止某 ip 恶意访问
-            return HandlerInterceptor.super.preHandle(request, response, handler);
+            return true;
         }
         else{
             // 非法请求，直接拦截

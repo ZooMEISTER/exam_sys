@@ -5,7 +5,7 @@ import "./student_ChooseClass_index.css"
 
 const Student_ChooseClass = () => {
     return(
-        <div>
+        <div className='root-div'>
             <Outlet/>
         </div>
     )
