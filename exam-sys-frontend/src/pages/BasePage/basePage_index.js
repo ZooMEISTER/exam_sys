@@ -153,7 +153,11 @@ const BasePage = () => {
     return (
         <div>
             {/* 这是 BasePage,包含了 header（导航栏） 和 footer（信息栏） */}
-            <Menu onClick={onClick} selectedKeys={[currentSelectedMenuItem]} mode="horizontal" 
+            <Menu onClick={onClick} 
+                selectedKeys={[currentSelectedMenuItem]} 
+                theme="light" 
+                mode="horizontal" 
+                className='base-page-base-menu'
                 items={permissionLevel > 0 ? mainMenuItems_Logged : mainMenuItems_NoLogin}
             />
 
@@ -164,7 +168,7 @@ const BasePage = () => {
                 <span className='base-page-footer-div-text'>Made by ZooMEISTER with 💩</span>
             </div>
 
-            <Modal title="Basic Modal" open={isLogoutModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="退出" open={isLogoutModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <p>你确定要退出登陆吗</p>
             </Modal>
         </div>

@@ -1,9 +1,7 @@
 package com.zoom.exam_sys_backend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zoom.exam_sys_backend.pojo.bo.CourseExamBO;
-import com.zoom.exam_sys_backend.pojo.bo.ExamPaperBO;
-import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
+import com.zoom.exam_sys_backend.pojo.bo.*;
 import com.zoom.exam_sys_backend.pojo.po.*;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -66,4 +64,43 @@ public interface TeacherMapper extends BaseMapper<TeacherPO> {
 
     @Insert("INSERT INTO relation_course_exam(id,course_id,exam_id) VALUES(#{relationId},#{courseId},#{newExamId})")
     int teacherAddNewCourseExamRelation(Long relationId, Long courseId, Long newExamId);
+
+    @Select("SELECT * FROM sys_course WHERE id=#{courseId}")
+    CoursePO TeacherGetCourseInfo(Long courseId);
+
+    @Select("SELECT COUNT(*) FROM relation_course_student WHERE course_id=#{courseId}")
+    int TeacherGetCourseStudentCount(Long courseId);
+
+    @Select("SELECT COUNT(*) FROM respondent_exam_student WHERE exam_id=#{examId}")
+    int TeacherGetExamFinishedStudentCount(Long examId);
+
+    @Select("SELECT * FROM relation_course_student WHERE course_id=#{courseId}")
+    List<CourseStudentBO> TeacherGetAllCourseStudentRelationByCourseId(Long courseId);
+
+    @Select("SELECT * FROM user_student WHERE id=#{studentId}")
+    StudentPO TeacherGetSingleStudent(Long studentId);
+
+    @Select("SELECT * FROM respondent_exam_student WHERE exam_id=#{examId}")
+    List<RespondentExamStudentBO> TeacherGetAllFinishedRespondentInfo(Long examId);
+
+    @Select("SELECT course_id FROM relation_course_exam WHERE exam_id=#{examId}")
+    Long TeacherGetExamCourseIdByExamId(Long examId);
+
+    @Select("SELECT COUNT(*) FROM respondent_exam_student WHERE exam_id=#{examId} AND student_id=#{studentId}")
+    int TeacherGetStudentRespondentCount(Long examId, Long studentId);
+
+    @Select("SELECT * FROM sys_course WHERE teachby=#{teacherId}")
+    List<CoursePO> TeacherGetAllMyClass(Long teacherId);
+
+    @Select("SELECT * FROM relation_subject_course WHERE course_id=#{courseId}")
+    SubjectCourseBO TeacherGetSubjectCourseRelationByCourseId(Long courseId);
+
+    @Select("SELECT * FROM sys_subject WHERE id=#{subjectId}")
+    SubjectPO TeacherGetSubjectPOById(Long subjectId);
+
+    @Select("SELECT * FROM sys_department WHERE id=#{departmentId}")
+    DepartmentPO TeacherGetDepartmentPOById(Long departmentId);
+
+    @Select("SELECT COUNT(*) FROM relation_course_exam WHERE course_id=#{courseId}")
+    int TeacherGetCourseExamCountByCourseId(Long courseId);
 }

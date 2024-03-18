@@ -1,13 +1,12 @@
 package com.zoom.exam_sys_backend.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.zoom.exam_sys_backend.comparator.ExamVOComparator;
+import com.zoom.exam_sys_backend.comparator.TeacherExamVOComparator;
+import com.zoom.exam_sys_backend.constant.ExamStatusTeacher;
 import com.zoom.exam_sys_backend.exception.code.TeacherResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.TeacherMapper;
-import com.zoom.exam_sys_backend.pojo.bo.CourseExamBO;
-import com.zoom.exam_sys_backend.pojo.bo.ExamPaperBO;
-import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
+import com.zoom.exam_sys_backend.pojo.bo.*;
 import com.zoom.exam_sys_backend.pojo.po.*;
 import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.TeacherService;
@@ -203,12 +202,27 @@ public class TeacherServiceImpl implements TeacherService {
     * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.ExamVO>
     */
     @Override
-    public List<ExamVO> TeacherGetAllExam(Long courseId) {
+    public List<TeacherExamVO> TeacherGetAllExam(Long courseId) {
         List<CourseExamBO> courseExamBOList = teacherMapper.teacherGetAllCourseExamRelation(courseId);
-        List<ExamVO> examVOList = new ArrayList<>();
+        List<TeacherExamVO> teacherExamVOList = new ArrayList<>();
+
         for(CourseExamBO i : courseExamBOList){
             ExamPO examPO = teacherMapper.teacherGetSingleExam(i.getExam_id());
-            examVOList.add(new ExamVO(
+            int finishedStudentCount = teacherMapper.TeacherGetExamFinishedStudentCount(i.getExam_id());
+            int totalStudentCount = teacherMapper.TeacherGetCourseStudentCount(courseId);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date currentDateTime = new Date(System.currentTimeMillis());
+            int examStatus = -1; // 对老师来说，考试的状态
+            if(currentDateTime.before(examPO.getStart_time())){
+                examStatus = ExamStatusTeacher.EXAM_STATUS_TEACHER_NOT_START;
+            }
+            else if(currentDateTime.after(examPO.getStart_time()) && currentDateTime.before(examPO.getEnd_time())){
+                examStatus = ExamStatusTeacher.EXAM_STATUS_TEACHER_ON_GOING;
+            }
+            else if(currentDateTime.after(examPO.getEnd_time())){
+                examStatus = ExamStatusTeacher.EXAM_STATUS_TEACHER_ENDED;
+            }
+            teacherExamVOList.add(new TeacherExamVO(
                     examPO.getId().toString(),
                     examPO.getName(),
                     examPO.getDescription(),
@@ -217,11 +231,14 @@ public class TeacherServiceImpl implements TeacherService {
                     examPO.getTeachby().toString(),
                     examPO.getType(),
                     examPO.getPublished(),
-                    TimeTransferUtils.TransferTime2LocalTime(examPO.getCreated_time())
+                    TimeTransferUtils.TransferTime2LocalTime(examPO.getCreated_time()),
+                    examStatus,
+                    finishedStudentCount,
+                    totalStudentCount
             ));
         }
-        Collections.sort(examVOList, new ExamVOComparator());
-        return examVOList;
+        Collections.sort(teacherExamVOList, new TeacherExamVOComparator());
+        return teacherExamVOList;
     }
 
     /**
@@ -238,6 +255,17 @@ public class TeacherServiceImpl implements TeacherService {
         CoursePO coursePO = teacherMapper.teacherGetSingleCourse(courseExamBO.getCourse_id());
         ExamPaperBO examPaperBO = teacherMapper.teacherGetExamPaperRelationByExamId(examId);
         PaperPO paperPO = teacherMapper.teacherGetPaperInfo(examPaperBO.getPaper_id());
+        Date currentDateTime = new Date(System.currentTimeMillis());
+        int examStatus = -1; // 对老师来说，考试的状态
+        if(currentDateTime.before(examPO.getStart_time())){
+            examStatus = ExamStatusTeacher.EXAM_STATUS_TEACHER_NOT_START;
+        }
+        else if(currentDateTime.after(examPO.getStart_time()) && currentDateTime.before(examPO.getEnd_time())){
+            examStatus = ExamStatusTeacher.EXAM_STATUS_TEACHER_ON_GOING;
+        }
+        else if(currentDateTime.after(examPO.getEnd_time())){
+            examStatus = ExamStatusTeacher.EXAM_STATUS_TEACHER_ENDED;
+        }
         return new TeacherExtendedExamVO(examPO.getId().toString(),
                 examPO.getName(),
                 examPO.getDescription(),
@@ -253,7 +281,8 @@ public class TeacherServiceImpl implements TeacherService {
                 paperPO.getName(),
                 paperPO.getDescription(),
                 paperPO.getPath(),
-                paperPO.getScore()
+                paperPO.getScore(),
+                examStatus
         );
     }
 
@@ -315,5 +344,151 @@ public class TeacherServiceImpl implements TeacherService {
         else{
             return new TeacherAddExamResultVO(TeacherResultCode.TEACHER_ADD_NEW_EXAM_FAIL, "考试添加失败");
         }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个课程详细信息方法
+    * @DateTime: 2024/3/17 14:43
+    * @Params: [courseId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.CourseVO
+    */
+    @Override
+    public TeacherExtendedCourseVO TeacherGetCourseInfo(Long courseId) {
+        CoursePO coursePO = teacherMapper.TeacherGetCourseInfo(courseId);
+        int studentCount = teacherMapper.TeacherGetCourseStudentCount(courseId);
+        return new TeacherExtendedCourseVO(coursePO.getId().toString(),
+                coursePO.getIcon(),
+                coursePO.getName(),
+                coursePO.getDescription(),
+                coursePO.getTeachby().toString(),
+                TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time()),
+                studentCount);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个课程下所有报名学生信息的方法
+    * @DateTime: 2024/3/17 17:56
+    * @Params: [courseId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.StudentVO>
+    */
+    @Override
+    public List<StudentVO> TeacherGetAllCourseSignedStudent(Long courseId) {
+        List<CourseStudentBO> courseStudentBOList = teacherMapper.TeacherGetAllCourseStudentRelationByCourseId(courseId);
+        List<StudentVO> studentVOList = new ArrayList<>();
+        for(CourseStudentBO i : courseStudentBOList){
+            StudentPO studentPO = teacherMapper.TeacherGetSingleStudent(i.getStudent_id());
+            studentVOList.add(new StudentVO(
+                    studentPO.getId().toString(),
+                    studentPO.getAvatar(),
+                    studentPO.getUsername(),
+                    studentPO.getRealname(),
+                    studentPO.getPhone(),
+                    studentPO.getEmail(),
+                    studentPO.getDeleted(),
+                    studentPO.getProfilev()));
+        }
+        return studentVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个考试所有已交卷的答卷，学生信息方法
+    * @DateTime: 2024/3/17 21:44
+    * @Params: [examId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.FinishedRespondentExamStudentVO>
+    */
+    @Override
+    public List<FinishedRespondentExamStudentVO> TeacherGetAllFinishedRespondentExamStudentInfo(Long examId) {
+        List<RespondentExamStudentBO> respondentExamStudentBOList = teacherMapper.TeacherGetAllFinishedRespondentInfo(examId);
+        List<FinishedRespondentExamStudentVO> finishedRespondentExamStudentVOList = new ArrayList<>();
+        for(RespondentExamStudentBO i : respondentExamStudentBOList){
+            StudentPO studentPO = teacherMapper.TeacherGetSingleStudent(i.getStudent_id());
+            finishedRespondentExamStudentVOList.add(new FinishedRespondentExamStudentVO(
+                    i.getId().toString(),
+                    i.getExam_id().toString(),
+                    i.getStudent_id().toString(),
+                    i.getRespondent_path(),
+                    i.getFinal_score(),
+                    i.getSha256_code(),
+                    i.getCreated_time(),
+                    studentPO.getId().toString(),
+                    studentPO.getAvatar(),
+                    studentPO.getUsername(),
+                    studentPO.getRealname(),
+                    studentPO.getPhone(),
+                    studentPO.getEmail()
+            ));
+        }
+        return finishedRespondentExamStudentVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个考试所有未交卷的答卷，学生信息方法
+    * @DateTime: 2024/3/17 21:52
+    * @Params: [examId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.StudentVO>
+    */
+    @Override
+    public List<StudentVO> TeacherGetAllUnFinishedRespondentExamStudentInfo(Long examId) {
+        Long courseId = teacherMapper.TeacherGetExamCourseIdByExamId(examId);
+        List<StudentPO> studentPOList = new ArrayList<>();
+        List<CourseStudentBO> courseStudentBOList = teacherMapper.TeacherGetAllCourseStudentRelationByCourseId(courseId);
+        for(CourseStudentBO i : courseStudentBOList){
+            studentPOList.add(teacherMapper.TeacherGetSingleStudent(i.getStudent_id()));
+        }
+        List<StudentVO> studentVOList = new ArrayList<>();
+        for(StudentPO i : studentPOList){
+            if(teacherMapper.TeacherGetStudentRespondentCount(examId, i.getId()) <= 0){
+                studentVOList.add(new StudentVO(
+                        i.getId().toString(),
+                        i.getAvatar(),
+                        i.getUsername(),
+                        i.getRealname(),
+                        i.getPhone(),
+                        i.getEmail(),
+                        i.getDeleted(),
+                        i.getProfilev()
+                ));
+            }
+        }
+        return studentVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获得所有我的课程方法
+    * @DateTime: 2024/3/18 19:20
+    * @Params: [teacherId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.TeacherMyCourseVO>
+    */
+    @Override
+    public List<MyCourseVO> TeacherGetAllMyCourse(Long teacherId) {
+        List<CoursePO> coursePOList = teacherMapper.TeacherGetAllMyClass(teacherId);
+        List<MyCourseVO> myCourseVOList = new ArrayList<>();
+        for(CoursePO i : coursePOList){
+            int totalStudentCount = teacherMapper.TeacherGetCourseStudentCount(i.getId());
+            int examCount = teacherMapper.TeacherGetCourseExamCountByCourseId(i.getId());
+            SubjectCourseBO subjectCourseBO = teacherMapper.TeacherGetSubjectCourseRelationByCourseId(i.getId());
+            SubjectPO subjectPO = teacherMapper.TeacherGetSubjectPOById(subjectCourseBO.getSubject_id());
+            DepartmentPO departmentPO = teacherMapper.TeacherGetDepartmentPOById(subjectPO.getBelongto());
+            myCourseVOList.add(new MyCourseVO(
+                    i.getId().toString(),
+                    i.getIcon(),
+                    i.getName(),
+                    i.getDescription(),
+                    i.getTeachby().toString(),
+                    TimeTransferUtils.TransferTime2LocalTime(i.getCreated_time()),
+                    totalStudentCount,
+                    examCount,
+                    departmentPO.getId().toString(),
+                    departmentPO.getName(),
+                    subjectPO.getId().toString(),
+                    subjectPO.getName()
+            ));
+        }
+        return myCourseVOList;
     }
 }

@@ -5,8 +5,26 @@
     height: 100%;
 }
 
+.home-page-menu-outer-div{
+    min-height: 815px;
+}
+
 .home-page-menu{
     height: 100%;
     width: 250px;
     min-width: 250px;
+
+    /* background-color: #003261; */
+}
+
+
+
+/* 这段用来将list的分页放到整个list的最底下，该样式整个项目所有list共享 */
+div.ant-list-pagination.ant-list-pagination-align-end{
+    margin-top: auto;
+    margin-bottom: 0px;
+    height: 50px;
+    display: flex;
+    align-items: end;
+    /* margin-left: auto; */
 }

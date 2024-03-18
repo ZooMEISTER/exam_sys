@@ -7,10 +7,7 @@ import com.zoom.exam_sys_backend.constant.ExamStatusStudent;
 import com.zoom.exam_sys_backend.exception.code.StudentResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.StudentMapper;
-import com.zoom.exam_sys_backend.pojo.bo.CourseExamBO;
-import com.zoom.exam_sys_backend.pojo.bo.ExamPaperBO;
-import com.zoom.exam_sys_backend.pojo.bo.RespondentExamStudentBO;
-import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
+import com.zoom.exam_sys_backend.pojo.bo.*;
 import com.zoom.exam_sys_backend.pojo.po.*;
 import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.StudentService;
@@ -271,6 +268,33 @@ public class StudentServiceImpl implements StudentService {
         RespondentExamStudentBO respondentExamStudentBO = studentMapper.StudentGetRespondentInfo(examId, studentId);
         int finalScore = -1;
         if(respondentExamStudentBO != null) finalScore = respondentExamStudentBO.getFinal_score();
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDateTime = new Date(System.currentTimeMillis());
+        int examStatus = 0; // 对学生来说，考试的状态
+        if(currentDateTime.before(examPO.getStart_time())){
+            // 该考试未开始
+            examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_NOT_START;
+        }
+        else if(currentDateTime.after(examPO.getEnd_time())){
+            // 该考试已结束
+            int respondentCount = studentMapper.checkIfStudentFinishedExam(examPO.getId(), studentId);
+            if(respondentCount > 0){
+                examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_ENDED_DONE;
+            }
+            else{
+                examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_ENDED_UNDO;
+            }
+        }
+        else{
+            // 该考试正在进行
+            int respondentCount = studentMapper.checkIfStudentFinishedExam(examPO.getId(), studentId);
+            if(respondentCount > 0){
+                examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_STARTED_DONE;
+            }
+            else{
+                examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_STARTED_UNDO;
+            }
+        }
 
         return new StudentExtendedExamVO(examPO.getId().toString(),
                 examPO.getName(),
@@ -288,7 +312,8 @@ public class StudentServiceImpl implements StudentService {
                 paperPO.getDescription(),
                 paperPO.getPath(),
                 paperPO.getScore(),
-                finalScore
+                finalScore,
+                examStatus
         );
     }
 
@@ -387,5 +412,41 @@ public class StudentServiceImpl implements StudentService {
         else{
             return new StudentAddRespondentResultVO(StudentResultCode.STUDENT_ADD_RESPONDENT_FAIL, "交卷失败");
         }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取所有自己参加的课的方法
+    * @DateTime: 2024/3/18 21:54
+    * @Params: [studentId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.MyCourseVO>
+    */
+    @Override
+    public List<MyCourseVO> StudentGetAllMyCourse(Long studentId) {
+        List<MyCourseVO> myCourseVOList = new ArrayList<>();
+        List<CourseStudentBO> courseStudentBOList = studentMapper.StudentGetAllCourseStudentRelation(studentId);
+        for(CourseStudentBO i : courseStudentBOList){
+            int totalStudentCount = studentMapper.StudentGetCourseStudentCount(i.getCourse_id());
+            int examCount = studentMapper.StudentGetCourseExamCountByCourseId(i.getCourse_id());
+            CoursePO coursePO = studentMapper.StudentGetCourseInfo(i.getCourse_id());
+            SubjectCourseBO subjectCourseBO = studentMapper.StudentGetSubjectCourseRelationByCourseId(i.getCourse_id());
+            SubjectPO subjectPO = studentMapper.StudentGetSubjectPOById(subjectCourseBO.getSubject_id());
+            DepartmentPO departmentPO = studentMapper.StudentGetDepartmentPOById(subjectPO.getBelongto());
+            myCourseVOList.add(new MyCourseVO(
+                    coursePO.getId().toString(),
+                    coursePO.getIcon(),
+                    coursePO.getName(),
+                    coursePO.getDescription(),
+                    coursePO.getTeachby().toString(),
+                    TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time()),
+                    totalStudentCount,
+                    examCount,
+                    departmentPO.getId().toString(),
+                    departmentPO.getName(),
+                    subjectPO.getId().toString(),
+                    subjectPO.getName()
+            ));
+        }
+        return myCourseVOList;
     }
 }

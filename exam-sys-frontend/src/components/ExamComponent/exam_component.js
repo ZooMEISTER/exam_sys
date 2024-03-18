@@ -70,6 +70,16 @@ const Exam_Component = (props) => {
                 >
                     <div className='exam-card-content'>
                         <text className='exam-name'>{props.name}</text>
+                        {props.status == 0 ? 
+                            <Tag icon={<ClockCircleOutlined />} color='default' className='teacher-exam-status-tag'>未开始</Tag> : <div></div>
+                        }
+                        {props.status == 1 ? 
+                            <Tag icon={<SyncOutlined spin />} color="processing" className='teacher-exam-status-tag'>正在进行</Tag> : <div></div>
+                        }
+                        {props.status == 2 ? 
+                            <Tag icon={<MinusCircleOutlined />} color="error" className='teacher-exam-status-tag'>已结束</Tag> : <div></div>
+                        }
+                        <text className='exam-finish-situation'>完成情况：{props.finishedStudentCount} / {props.totalStudentCount}</text>
                         <text className='exam-start'>开始：{props.start_time}</text>
                         <text className='exam-end'>结束：{props.end_time}</text>
                     </div>

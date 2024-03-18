@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.util.Date;
+
 /**
  * @Author ZooMEISTER
  * @Description: TODO
@@ -19,14 +21,16 @@ public class RespondentExamStudentBO {
     private String respondent_path;
     private int final_score;
     private String sha256_code;
+    private Date created_time;
 
-    public RespondentExamStudentBO(Long id, Long exam_id, Long student_id, String respondent_path, int final_score, String sha256_code) {
+    public RespondentExamStudentBO(Long id, Long exam_id, Long student_id, String respondent_path, int final_score, String sha256_code, Date created_time) {
         this.id = id;
         this.exam_id = exam_id;
         this.student_id = student_id;
         this.respondent_path = respondent_path;
         this.final_score = final_score;
         this.sha256_code = sha256_code;
+        this.created_time = created_time;
     }
 
     public Long getId() {
@@ -77,6 +81,14 @@ public class RespondentExamStudentBO {
         this.sha256_code = sha256_code;
     }
 
+    public Date getCreated_time() {
+        return created_time;
+    }
+
+    public void setCreated_time(Date created_time) {
+        this.created_time = created_time;
+    }
+
     @Override
     public String toString() {
         return "RespondentExamStudentBO{" +
@@ -86,6 +98,7 @@ public class RespondentExamStudentBO {
                 ", respondent_path='" + respondent_path + '\'' +
                 ", final_score=" + final_score +
                 ", sha256_code='" + sha256_code + '\'' +
+                ", created_time=" + created_time +
                 '}';
     }
 }

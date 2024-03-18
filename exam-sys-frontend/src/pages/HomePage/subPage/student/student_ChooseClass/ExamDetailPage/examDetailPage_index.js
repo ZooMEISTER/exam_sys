@@ -145,7 +145,9 @@ const Student_ExamDetailPage_index = () => {
 
     return(
         <div className='student-exam-detail-root'>
-            <Button type='link' onClick={backToAllExam} className='student-back-to-all-exam-button'>返回</Button>
+            <div className='student-back-to-all-exam-div'>
+                <Button type='link' onClick={backToAllExam} className='student-back-to-all-exam-button'>返回</Button>
+            </div>
             <Card title={examInfo.name} className='student-exam-detail-card'>
                 <Form name="basic"
                     labelCol={{span: 4}}
@@ -201,22 +203,22 @@ const Student_ExamDetailPage_index = () => {
                             <label className='student-paper-detail-text'>{examInfo.paperScore}</label> <br/>
                         </Form.Item>
                     </Form>
-                    {state.state.examStatus == 0 && 
+                    {examInfo.status == 0 && 
                         <div className='student-paper-status'>
                             <label>考试未开始</label>
                         </div>
                     }
-                    {state.state.examStatus == 1 || state.state.examStatus== 3 && 
+                    {(examInfo.status == 1 || examInfo.status == 3) && !justAddRespondent &&
                         <div className='student-paper-detail-button-div'>
                             <Button type='default' className='student-upload-respondent' onClick={uploadAnswerPaper}>上传答卷</Button>
                         </div>
                     }
-                    {(state.state.examStatus == 2 || state.state.examStatus== 4 || justAddRespondent) && examInfo.finalScore < 0 && 
+                    {(examInfo.status == 2 || examInfo.status== 4 || justAddRespondent) && examInfo.finalScore < 0 && 
                         <div className='student-paper-status'>
                             已交卷, 等待批阅
                         </div>
                     }
-                    {(state.state.examStatus == 2 || state.state.examStatus== 4) && examInfo.finalScore >= 0 && 
+                    {(examInfo.status == 2 || examInfo.status == 4) && examInfo.finalScore >= 0 && 
                         <div className='student-paper-status'>
                             你的得分为：{examInfo.finalScore}
                         </div>
@@ -240,18 +242,10 @@ const Student_ExamDetailPage_index = () => {
                 >
                 <Form
                     name="basic"
-                        labelCol={{
-                        span: 6,
-                    }}
-                    wrapperCol={{
-                        span: 20,
-                    }}
-                    style={{
-                        maxWidth: 600,
-                    }}
-                    initialValues={{
-                        remember: true,
-                    }}
+                    labelCol={{span: 6}}
+                    wrapperCol={{span: 20}}
+                    style={{maxWidth: 600}}
+                    initialValues={{remember: true}}
                     autoComplete="off"
                 >
                     <Form.Item

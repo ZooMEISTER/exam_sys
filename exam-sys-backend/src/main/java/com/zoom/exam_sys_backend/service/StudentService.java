@@ -27,4 +27,5 @@ public interface StudentService {
     CourseVO StudentGetCourseInfo(Long courseId);
     String StudentUploadRespondentFile(MultipartFile multipartFile) throws IOException;
     StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value);
+    List<MyCourseVO> StudentGetAllMyCourse(Long studentId);
 }

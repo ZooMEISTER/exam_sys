@@ -1,0 +1,40 @@
+
+.teacher-myclass-root-div{
+    display: flex;
+    flex-direction: column;
+
+    width: 95%;
+    height: 100%;
+    margin: auto;
+}
+.teacher-myclass-label-div{
+    margin-top: 35px;
+}
+.teacher-myclass-label{
+    font-size: 20px;
+}
+
+.teacher-myclass-list-div{
+    margin-top: 20px;
+}
+.teacher-myclass-list{
+    min-height: 650px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.teacher-myclass-list-item-icon{
+    height: 125px;
+    width: 200px;
+    object-fit: contain;
+    margin-right: 20px;
+}
+
+.teacher-myclass-course-name{
+    color: black;
+}
+.teacher-myclass-course-path-url{
+    color: grey;
+}

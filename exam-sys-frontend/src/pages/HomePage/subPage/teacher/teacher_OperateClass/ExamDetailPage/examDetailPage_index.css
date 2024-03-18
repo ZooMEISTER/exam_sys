@@ -1,58 +1,35 @@
 
-.exam-detail-root{
-    display: flex;
-    flex-direction: column;
+.teacher-back-to-all-exam-button{
 
-    width: 100%;
 }
 
-.exam-detail-base{
+.teacher-exam-detail-card{
+    display: flex;
+    flex-direction: column;
+}
+.teacher-exam-detail-base{
+    width: 95%;
     margin: auto;
-    margin-top: 40px;
-
-    display: flex;
-    flex-direction: column;
-
-    width: 60%;
-}
-
-.exam-detail-div{
-    display: flex;
-    flex-direction: column;
-}
-
-.exam-detail-name{
-    font-size: 40px;
-
-    margin-top: 10px;
-}
-.exam-detail-description{
-    font-size: 20px;
-
-    margin-top: 10px;
-}
-.exam-detail-start-end{
-    font-size: 15px;
-
-    margin-top: 10px;
-}
-
-.paper-card{
     margin-top: 20px;
-
+}
+.teacher-exam-detail-div{
     display: flex;
     flex-direction: column;
+
+    margin-bottom: 10px;
 }
-.paper-detail-text{
+.teacher-exam-detail-description{
     font-size: 20px;
 }
-
-.paper-detail-button-div{
-    display: flex;
-    flex-direction: row;
-
-    margin-top: 10px;
+.teacher-exam-detail-start-end{
+    color: grey;
 }
-.paper-detail-button{
-    margin-right: 20px;
+
+
+
+.teacher-paper-card{
+
+}
+.teacher-paper-detail-text{
+    font-size: 15px;
 }

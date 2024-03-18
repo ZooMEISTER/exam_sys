@@ -2,7 +2,7 @@ import {
     Menu
 } from "antd";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from "react-router-dom"
 
 import { useSelector } from "react-redux";
@@ -11,10 +11,13 @@ import { homePageMenuItems_Teacher, homePageMenuItems_Student } from "../../cons
 
 //该页的样式文件
 import './homePage_index.css'
+import userEvent from "@testing-library/user-event";
 
 const HomePage = () => {
     const navigate = useNavigate()
     const [currentSelectedMenuItem, setCurrentSelectedMenuItem] = useState("");
+
+    const userid = useSelector(state => state.userid.value)
     const permissionLevel = useSelector(state => state.permissionLevel.value)
 
     const onMenuClick = (e) => {
@@ -25,17 +28,31 @@ const HomePage = () => {
     };
 
 
+    // 组件加载时自动执行
+    useEffect(() => {
+        if(userid == 1){
+            navigate('/home/student-choose-class')
+        }
+        else if(userid == 2){
+            navigate('/home/teacher-operate-class')
+        }
+	}, []);
+
+
     if(permissionLevel > 0){
         if(permissionLevel === 1){
             // navigate("/home/student-choose-class")
             return (
                 <div className="home-page-root">
-                    <Menu className="home-page-menu"
-                        onClick={onMenuClick} 
-                        selectedKeys={[currentSelectedMenuItem]} 
-                        mode="inline" 
-                        items={homePageMenuItems_Student}
-                    />
+                    <div className="home-page-menu-outer-div">
+                        <Menu className="home-page-menu"
+                            onClick={onMenuClick} 
+                            selectedKeys={[currentSelectedMenuItem]} 
+                            mode="inline" 
+                            theme="light"
+                            items={homePageMenuItems_Student}
+                        />
+                    </div>
                     <Outlet/>
                 </div>
             )
@@ -45,12 +62,15 @@ const HomePage = () => {
             // navigate("/home/teacher-operate-class")
             return (
                 <div className="home-page-root">
-                    <Menu className="home-page-menu"
-                        onClick={onMenuClick} 
-                        selectedKeys={[currentSelectedMenuItem]} 
-                        mode="inline" 
-                        items={homePageMenuItems_Teacher}
-                    />
+                    <div className="home-page-menu-outer-div">
+                        <Menu className="home-page-menu"
+                            onClick={onMenuClick} 
+                            selectedKeys={[currentSelectedMenuItem]} 
+                            mode="inline" 
+                            theme="light"
+                            items={homePageMenuItems_Teacher}
+                        />
+                    </div>
                     <Outlet/>
                 </div>
             )

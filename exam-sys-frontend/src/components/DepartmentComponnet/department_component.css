@@ -15,6 +15,7 @@
 .department-cover-img{
     height: 200px;
     width: 300px;
+    object-fit: contain;
 }
 
 .department-card-info-div{

@@ -20,8 +20,13 @@ public interface TeacherService {
     List<DepartmentVO> TeacherGetAllDepartment();
     List<SubjectVO> TeacherGetAllSubject(Long departmentId);
     List<CourseVO> TeacherGetAllCourse(Long subjectId);
-    List<ExamVO> TeacherGetAllExam(Long courseId);
+    List<TeacherExamVO> TeacherGetAllExam(Long courseId);
     TeacherExtendedExamVO TeacherGetSingleExamInfo(Long examId);
     String TeacherUploadExamPaperFile(MultipartFile multipartFile) throws IOException;
     TeacherAddExamResultVO TeacherAddExam(String examName, String examDescription, String examStartDateTime, String examEndDateTime, String paperFileName, String paperName, String paperDescription, int paperScore, Long teachby, Long courseId) throws ParseException;
+    TeacherExtendedCourseVO TeacherGetCourseInfo(Long courseId);
+    List<StudentVO> TeacherGetAllCourseSignedStudent(Long courseId);
+    List<FinishedRespondentExamStudentVO> TeacherGetAllFinishedRespondentExamStudentInfo(Long examId);
+    List<StudentVO> TeacherGetAllUnFinishedRespondentExamStudentInfo(Long examId);
+    List<MyCourseVO> TeacherGetAllMyCourse(Long teacherId);
 }

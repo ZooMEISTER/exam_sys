@@ -28,7 +28,9 @@ public class TeacherExtendedExamVO {
     private String paperPath;
     private int paperScore;
 
-    public TeacherExtendedExamVO(String id, String name, String description, String start_time, String end_time, String teachby, int type, int published, String created_time, String courseId, String courseName, String paperId, String paperName, String paperDescription, String paperPath, int paperScore) {
+    private int status;
+
+    public TeacherExtendedExamVO(String id, String name, String description, String start_time, String end_time, String teachby, int type, int published, String created_time, String courseId, String courseName, String paperId, String paperName, String paperDescription, String paperPath, int paperScore, int status) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,6 +47,7 @@ public class TeacherExtendedExamVO {
         this.paperDescription = paperDescription;
         this.paperPath = paperPath;
         this.paperScore = paperScore;
+        this.status = status;
     }
 
     public String getId() {
@@ -175,6 +178,14 @@ public class TeacherExtendedExamVO {
         this.paperScore = paperScore;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "TeacherExtendedExamVO{" +
@@ -194,6 +205,7 @@ public class TeacherExtendedExamVO {
                 ", paperDescription='" + paperDescription + '\'' +
                 ", paperPath='" + paperPath + '\'' +
                 ", paperScore=" + paperScore +
+                ", status=" + status +
                 '}';
     }
 }

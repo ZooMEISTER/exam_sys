@@ -30,6 +30,7 @@ public class StudentController {
     * @Return java.lang.String
     */
     @GetMapping("/test")
+    @ResponseBody
     public String StudentControllerTest(){
         return "Student controller test success";
     }
@@ -178,5 +179,17 @@ public class StudentController {
                                                             @RequestParam("respondentFileName") String respondentFileName,
                                                             @RequestParam("sha256Value") String sha256Value){
         return studentService.StudentAddRespondent(examId, studentId, respondentFileName, sha256Value);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取所有自己参加的课的接口
+    * @DateTime: 2024/3/18 21:55
+    * @Params: [studentId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.MyCourseVO>
+    */
+    @PostMapping("/get-all-my-course")
+    public List<MyCourseVO> StudentGetAllMyCourse(@RequestParam("studentId") Long studentId){
+        return studentService.StudentGetAllMyCourse(studentId);
     }
 }

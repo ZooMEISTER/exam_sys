@@ -11,6 +11,7 @@ const Teacher_OperateClass = () => {
     return(
         <div className='root-div'>
             <Outlet/>
+            <div className='btm-spc-div'></div>
         </div>
     )
 }

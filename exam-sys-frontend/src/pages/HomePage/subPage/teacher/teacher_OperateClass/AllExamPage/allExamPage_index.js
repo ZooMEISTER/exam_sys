@@ -4,11 +4,13 @@ import { useLocation } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 
 import Exam_Component from '../../../../../../components/ExamComponent/exam_component';
+import Student_Component from '../../../../../../components/StudentComponent/student_component_index';
+import NumericInput from '../../../../../../components/NumericInput/numeric_input_index';
 
 import { touristRequest, userRequest, userFileUploadRequest } from '../../../../../../utils/request';
 
 import { UploadOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, message, Modal, Form, Input, DatePicker, TimePicker, Upload } from 'antd';
+import { Breadcrumb, Button, message, Modal, Form, Input, DatePicker, TimePicker, Upload, Tabs } from 'antd';
 
 import "./allExamPage_index.css"
 
@@ -17,8 +19,13 @@ const Teacher_AllExamPage_index = () =>{
     const navigate = useNavigate()
     const { TextArea } = Input;
 
+    const [courseInfo, setCourseInfo] = useState({})
+    const [showExamStatus, setShowExamStatus] = useState(0)
+
     const userid = useSelector(state => state.userid.value)
     const [allExamInfo, setAllExamInfo] = useState([])
+    const [allSignedStudentInfo, setAllSignedStudentInfo] = useState([])
+
     const [paperFileName, setPaperFileName] = useState("")
     const [examName, setExamName] = useState("")
     const [examDescription, setExamDescription] = useState("")
@@ -59,6 +66,12 @@ const Teacher_AllExamPage_index = () =>{
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleOk = () => {
+        var startDateTime = new Date(examStartDate + " " + examStartTime)
+        var endDateTime = new Date(examEndDate + " " + examEndTime)
+        console.log(startDateTime)
+        console.log(endDateTime)
+        console.log(startDateTime.getTime())
+        console.log(endDateTime.getTime())
         // 添加考试方法
         if(paperFileName == ""){
             message.info("发布考试需要一张试卷")
@@ -81,8 +94,17 @@ const Teacher_AllExamPage_index = () =>{
         else if(paperName == ""){
             message.info("请输入试卷名称")
         }
-        else if(paperScore == 0){
+        else if(paperScore == ""){
+            message.info("试卷的分数不能为空")
+        }
+        else if(paperScore <= 0){
             message.info("试卷的分数不能为0分")
+        }
+        else if(isNaN(paperScore)){
+            message.info("试卷的分数必须为数字")
+        }
+        else if(!(startDateTime.getTime() < endDateTime.getTime())){
+            message.info("考试结束时间必须晚于考试开始时间")
         }
         else{
             console.log(examName)
@@ -111,6 +133,16 @@ const Teacher_AllExamPage_index = () =>{
                 console.log(response)
                 if(response.resultCode == 12010){
                     message.success("考试添加成功")
+                    setIsModalOpen(false);
+                    setPaperFileName("");
+                    setExamStartDate("")
+                    setExamStartTime("")
+                    setExamEndDate("")
+                    setExamEndTime("")
+                    setPaperName("")
+                    setPaperDescription("")
+                    setPaperScore(0)
+
                     getAllExam()
                 }
                 else if(response.resultCode == 12011){
@@ -122,17 +154,6 @@ const Teacher_AllExamPage_index = () =>{
                 message.error("考试添加失败，请查看控制台")
             })
         }
-        
-
-        setIsModalOpen(false);
-        setPaperFileName("");
-        setExamStartDate("")
-        setExamStartTime("")
-        setExamEndDate("")
-        setExamEndTime("")
-        setPaperName("")
-        setPaperDescription("")
-        setPaperScore(0)
     };
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -160,9 +181,39 @@ const Teacher_AllExamPage_index = () =>{
         })
     }
 
+    // 获取该课程信息方法
+    const getCourseInfo = () =>{
+        userRequest.post("/teacher/get-course-info", {
+            courseId: state.state.courseId,
+        })
+        .then( function(response) {
+            console.log(response)
+            setCourseInfo(response)
+        })
+        .catch( function (error) {
+            console.log(error)
+        })
+    }
+
+    // 获取该课程的所有报名学生信息
+    const getAllSignedStudentInfo = () => {
+        userRequest.post("/teacher/get-all-signed-student-info", {
+            courseId: state.state.courseId,
+        })
+        .then( function(response) {
+            console.log(response)
+            setAllSignedStudentInfo(response)
+        })
+        .catch( function (error) {
+            console.log(error)
+        })
+    }
+
     // 组件加载时自动执行
     useEffect(() => {
         getAllExam()
+        getCourseInfo()
+        getAllSignedStudentInfo()
 	}, []);
 
     const jumpBackToSubjects = () =>{
@@ -237,9 +288,15 @@ const Teacher_AllExamPage_index = () =>{
     const paperDescriptionInputChange = (event) => {
         setPaperDescription(event.target.value)
     }
-    // 新考试的试卷的描述改变
+    // 新考试的试卷的分数改变
     const paperScoreInputChange = (event) => {
         setPaperScore(event.target.value)
+    }
+
+    // 老师更改Tab的显示
+    const examTabChange = (tabKey) => {
+        console.log(tabKey)
+        setShowExamStatus(tabKey)
     }
 
     return(
@@ -256,49 +313,87 @@ const Teacher_AllExamPage_index = () =>{
             />
             {/* 在下面显示该课程信息 */}
             <div className='teacher-course-info-div'>
-                <img className='teacher-course-info-img' src={state.state.courseIcon}/> 
+                <img className='teacher-course-info-img' src={courseInfo.icon}/> 
                 <div className='teacher-course-info-sub-div'>
-                    <text className='teacher-course-info-name'>{state.state.courseName}</text>
-                    <text className='teacher-course-info-teachby'>由{state.state.courseTeachby}教学</text>
-                    <text className='teacher-course-info-createdtime'>{state.state.courseCreated_time}</text>
+                    <text className='teacher-course-info-name'>{courseInfo.name}</text>
+                    <text className='teacher-course-info-description'>{courseInfo.description}</text>
+                    <text className='teacher-course-info-teachby'>由{courseInfo.teachby}教学</text>
+                    <text className='teacher-course-info-createdtime'>{courseInfo.created_time}</text>
+                </div>
+                <div className='add-exam-button-div'>
                     <Button className='add-exam-button' type='default' onClick={addNewExam}>创建考试</Button>
                 </div>
-
             </div>
-            <div className='info-div'>
-                <text className='info-text'>所有考试</text>
-            </div>
-            {/* 在下面显示该课程的所有考试 */}
-            <div className='show-all-exam-div'>
-                {allExamInfo.map(item => (
-                    <Exam_Component
-                        className='exam-info-component'
+            <Tabs
+                className='teacher-exam-tabs'
+                defaultActiveKey="0"
+                onChange={examTabChange}
+                items={[
+                    {
+                        label: '全部考试',
+                        key: '0',
+                    },
+                    {
+                        label: '报名学生',
+                        key: '1',
+                    },
+                ]}    
+            ></Tabs>
+            {showExamStatus == 0 && 
+                /* 在下面显示该课程的所有考试 */
+                <div className='show-all-exam-div'>
+                    {allExamInfo.map(item => (
+                        <Exam_Component
+                            className='exam-info-component'
 
-                        key={item.id}
-                        id={item.id}
-                        name={item.name}
-                        description={item.description}
-                        start_time={item.start_time}
-                        end_time={item.end_time}
-                        teachby={item.teachby}
-                        type={item.type}
-                        published={item.publihed}
-                        created_time={item.created_time}
+                            key={item.id}
+                            id={item.id}
+                            name={item.name}
+                            description={item.description}
+                            start_time={item.start_time}
+                            end_time={item.end_time}
+                            teachby={item.teachby}
+                            type={item.type}
+                            published={item.publihed}
+                            created_time={item.created_time}
+                            status={item.status}
+                            finishedStudentCount={item.finishedStudentCount}
+                            totalStudentCount={item.totalStudentCount}
 
-                        departmentId={state.state.departmentId}
-                        departmentName={state.state.subjectName}
-                        subjectId={state.state.subjectId}
-                        subjectName={state.state.departmentName}
-                        courseId={state.state.courseId}
-                        courseName={state.state.courseName}
-                    />
-            ))}
-            </div>
+                            departmentId={state.state.departmentId}
+                            departmentName={state.state.subjectName}
+                            subjectId={state.state.subjectId}
+                            subjectName={state.state.departmentName}
+                            courseId={state.state.courseId}
+                            courseName={state.state.courseName}
+                        />
+                ))}
+                </div>
+            }
+            {showExamStatus == 1 && 
+                /* 在下面显示该课程的所有同学 */
+                <div className='show-all-course-student-div'>
+                    {allSignedStudentInfo.map(item => (
+                        <Student_Component
+                            className='student-info-component'
+
+                            key={item.id}
+                            id={item.id}
+                            avatar={item.avatar}
+                            username={item.username}
+                            realname={item.realname}
+                            phone={item.phone}
+                            email={item.email}
+                        />
+                    ))}
+                </div>
+            }
             
             {/* 添加新考试的弹窗 */}
             <Modal title="添加新考试" 
                 open={isModalOpen} 
                 destroyOnClose={true}
+                onCancel={handleCancel}
                 footer={[
                     <Button onClick={handleCancel}>
                         取消
@@ -308,19 +403,11 @@ const Teacher_AllExamPage_index = () =>{
                     </Button>
                 ]}>
                 <Form
-                    name="basic"
-                        labelCol={{
-                        span: 6,
-                    }}
-                    wrapperCol={{
-                        span: 20,
-                    }}
-                    style={{
-                        maxWidth: 600,
-                    }}
-                    initialValues={{
-                        remember: true,
-                    }}
+                    name="添加考试"
+                    labelCol={{span: 6,}}
+                    wrapperCol={{span: 20}}
+                    style={{maxWidth: 600}}
+                    initialValues={{remember: true}}
                     autoComplete="off"
                 >
                     <Form.Item

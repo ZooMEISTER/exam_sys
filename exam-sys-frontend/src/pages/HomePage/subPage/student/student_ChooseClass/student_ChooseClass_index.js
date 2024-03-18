@@ -7,6 +7,7 @@ const Student_ChooseClass = () => {
     return(
         <div className='root-div'>
             <Outlet/>
+            <div className='btm-spc-div'></div>
         </div>
     )
 }

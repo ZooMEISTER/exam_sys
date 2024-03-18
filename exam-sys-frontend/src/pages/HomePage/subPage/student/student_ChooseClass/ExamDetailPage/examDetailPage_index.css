@@ -1,20 +1,25 @@
 
 .student-exam-detail-root{
     display: flex;
+    flex-direction: column;
 }
 
+.student-back-to-all-exam-div{
+    width: 95%;
+    margin: auto;
+    display: flex;
+}
 .student-back-to-all-exam-button{
     margin-top: 25px;
-    margin-left: 40px;
+    margin-left: 0px;
 }
 
 .student-exam-detail-card{
     display: flex;
     flex-direction: column;
 
-    width: 40%;
+    width: 95%;
     margin: auto;
-    margin-top: 100px;
 }
 .student-exam-detail-card-info{
     display: flex;

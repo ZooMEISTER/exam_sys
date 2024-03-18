@@ -1,0 +1,29 @@
+
+.student-component-root-div{
+
+}
+
+.teacher-student-card{
+    width: 125px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+    border: solid;
+    border-color: #e5e5e5af;
+    border-width: 1px;
+}
+
+.teacher-student-card-avatar{
+    height: 125px;
+}
+
+.teacher-student-card-info-div{
+    display: flex;
+    flex-direction: column;
+}
+.teacher-student-card-username{
+    margin: auto;
+}
+.teacher-student-card-realname{
+    margin: auto;
+}

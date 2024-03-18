@@ -1,10 +1,7 @@
 package com.zoom.exam_sys_backend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zoom.exam_sys_backend.pojo.bo.CourseExamBO;
-import com.zoom.exam_sys_backend.pojo.bo.ExamPaperBO;
-import com.zoom.exam_sys_backend.pojo.bo.RespondentExamStudentBO;
-import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
+import com.zoom.exam_sys_backend.pojo.bo.*;
 import com.zoom.exam_sys_backend.pojo.po.*;
 import com.zoom.exam_sys_backend.pojo.vo.CourseVO;
 import org.apache.ibatis.annotations.Insert;
@@ -74,4 +71,25 @@ public interface StudentMapper extends BaseMapper<StudentPO> {
 
     @Insert("INSERT INTO respondent_exam_student(id,exam_id,student_id,respondent_path,final_score,sha256_code) VALUES(#{respondentId},#{examId},#{studentId},#{respondentFileName},#{finalScore},#{sha256Value})")
     int StudentAddRespondent(Long respondentId, Long examId, Long studentId, String respondentFileName, int finalScore, String sha256Value);
+
+    @Select("SELECT * FROM sys_course WHERE teachby=#{teacherId}")
+    List<CoursePO> StudentGetAllMyClass(Long teacherId);
+
+    @Select("SELECT * FROM relation_subject_course WHERE course_id=#{courseId}")
+    SubjectCourseBO StudentGetSubjectCourseRelationByCourseId(Long courseId);
+
+    @Select("SELECT * FROM sys_subject WHERE id=#{subjectId}")
+    SubjectPO StudentGetSubjectPOById(Long subjectId);
+
+    @Select("SELECT * FROM sys_department WHERE id=#{departmentId}")
+    DepartmentPO StudentGetDepartmentPOById(Long departmentId);
+
+    @Select("SELECT COUNT(*) FROM relation_course_student WHERE course_id=#{courseId}")
+    int StudentGetCourseStudentCount(Long courseId);
+
+    @Select("SELECT * FROM relation_course_student WHERE student_id=#{studentId}")
+    List<CourseStudentBO> StudentGetAllCourseStudentRelation(Long studentId);
+
+    @Select("SELECT COUNT(*) FROM relation_course_exam WHERE course_id=#{courseId}")
+    int StudentGetCourseExamCountByCourseId(Long courseId);
 }

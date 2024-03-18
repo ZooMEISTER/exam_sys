@@ -3,6 +3,8 @@ import FrontPage from "../pages/FrontPage/frontPage_index"
 import BasePage from "../pages/BasePage/basePage_index";
 
 import HomePage from "../pages/HomePage/homePage_index";
+    import Default_SubPage from "../pages/HomePage/defaultSubPage/default_sub_page";
+
     import Student_ChooseClass from "../pages/HomePage/subPage/student/student_ChooseClass/student_ChooseClass_index"
         import Student_AllDepartmentPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllDepartmentPage/allDepartmentPage_index";
         import Student_AllSubjectPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllSubjectPage/allSubjectPage_index";
@@ -43,6 +45,10 @@ const router = createBrowserRouter([
                 path: "home",
                 element: <HomePage/>,
                 children: [
+                    {
+                        index: true,
+                        element: <Default_SubPage/>
+                    },
                     {
                         path: "teacher-operate-class",
                         element: <Teacher_OperateClass/>,

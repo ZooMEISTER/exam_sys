@@ -1,5 +1,7 @@
 package com.zoom.exam_sys_backend.pojo.vo;
 
+import java.util.Date;
+
 /**
  * @Author ZooMEISTER
  * @Description: TODO
@@ -13,14 +15,16 @@ public class RespondentExamStudentVO {
     private String respondent_path;
     private int final_score;
     private String sha256_code;
+    private Date created_time;
 
-    public RespondentExamStudentVO(String id, String exam_id, String student_id, String respondent_path, int final_score, String sha256_code) {
+    public RespondentExamStudentVO(String id, String exam_id, String student_id, String respondent_path, int final_score, String sha256_code, Date created_time) {
         this.id = id;
         this.exam_id = exam_id;
         this.student_id = student_id;
         this.respondent_path = respondent_path;
         this.final_score = final_score;
         this.sha256_code = sha256_code;
+        this.created_time = created_time;
     }
 
     public String getId() {
@@ -71,6 +75,14 @@ public class RespondentExamStudentVO {
         this.sha256_code = sha256_code;
     }
 
+    public Date getCreated_time() {
+        return created_time;
+    }
+
+    public void setCreated_time(Date created_time) {
+        this.created_time = created_time;
+    }
+
     @Override
     public String toString() {
         return "RespondentExamStudentVO{" +
@@ -80,6 +92,7 @@ public class RespondentExamStudentVO {
                 ", respondent_path='" + respondent_path + '\'' +
                 ", final_score=" + final_score +
                 ", sha256_code='" + sha256_code + '\'' +
+                ", created_time=" + created_time +
                 '}';
     }
 }

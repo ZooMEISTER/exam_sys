@@ -13,10 +13,24 @@ const Department_Component = (props) => {
     const ClickDepartment = (() => {
         console.log(props.id)
         if(permissionLevel === 2){
-            navigate('/home/teacher-operate-class/subject', {state: {departmentId: props.id, departmentName: props.name}})
+            navigate('/home/teacher-operate-class/subject', 
+            {
+                state: 
+                {
+                    departmentId: props.id, 
+                    departmentName: props.name
+                }
+            })
         }
         else if(permissionLevel === 1){
-            navigate('/home/student-choose-class/subject', {state: {departmentId: props.id, departmentName: props.name}})
+            navigate('/home/student-choose-class/subject', 
+            {
+                state: 
+                {
+                    departmentId: props.id, 
+                    departmentName: props.name
+                }
+            })
         }
     })
 

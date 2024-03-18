@@ -24,6 +24,11 @@
     margin-left: 40px;
     font-size: 20px;
 }
+.exam-finish-situation{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 40px;
+}
 .exam-start{
     margin-top: auto;
     margin-bottom: auto;
@@ -44,4 +49,9 @@
 .exam-status-tag-not-start{
     margin-top: auto;
     margin-right: 120px;
+}
+
+.teacher-exam-status-tag{
+    margin-right: 40px;
+    margin-top: auto;
 }

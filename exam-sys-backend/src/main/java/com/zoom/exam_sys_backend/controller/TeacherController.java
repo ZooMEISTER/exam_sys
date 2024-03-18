@@ -97,7 +97,7 @@ public class TeacherController {
     * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.ExamVO>
     */
     @PostMapping("/get-all-exam")
-    public List<ExamVO> TeacherGetAllExam(@RequestParam("courseId") Long courseId){
+    public List<TeacherExamVO> TeacherGetAllExam(@RequestParam("courseId") Long courseId){
         return teacherService.TeacherGetAllExam(courseId);
     }
 
@@ -145,5 +145,65 @@ public class TeacherController {
                                                  @RequestParam("teachby") Long teachby,
                                                  @RequestParam("courseId") Long courseId) throws ParseException {
         return teacherService.TeacherAddExam(examName, examDescription, examStartDateTime, examEndDateTime, paperFileName, paperName, paperDescription, paperScore, teachby, courseId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个课程详细信息接口
+    * @DateTime: 2024/3/17 14:43
+    * @Params: [courseId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.CourseVO
+    */
+    @PostMapping("/get-course-info")
+    public TeacherExtendedCourseVO TeacherGetCourseInfo(@RequestParam("courseId") Long courseId){
+        return teacherService.TeacherGetCourseInfo(courseId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个课程所有报名学生信息的接口
+    * @DateTime: 2024/3/17 17:26
+    * @Params: [courseId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.StudentVO
+    */
+    @PostMapping("/get-all-signed-student-info")
+    public List<StudentVO> TeacherGetAllCourseSignedStudent(@RequestParam("courseId") Long courseId){
+        return teacherService.TeacherGetAllCourseSignedStudent(courseId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个考试所有已交卷的答卷，学生信息接口
+    * @DateTime: 2024/3/17 21:44
+    * @Params: [examId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.FinishedRespondentExamStudentVO>
+    */
+    @PostMapping("/get-finished-respondent")
+    public List<FinishedRespondentExamStudentVO> TeacherGetAllFinishedRespondentExamStudentInfo(@RequestParam("examId") Long examId){
+        return teacherService.TeacherGetAllFinishedRespondentExamStudentInfo(examId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个考试所有未交卷的答卷，学生信息接口
+    * @DateTime: 2024/3/17 21:52
+    * @Params: [examId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.StudentVO>
+    */
+    @PostMapping("/get-unfinished-respondent")
+    public List<StudentVO> TeacherGetAllUnFinishedRespondentExamStudentInfo(@RequestParam("examId") Long examId){
+        return teacherService.TeacherGetAllUnFinishedRespondentExamStudentInfo(examId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取所有我的课程接口
+    * @DateTime: 2024/3/18 19:19
+    * @Params: [teacherId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.TeacherMyCourseVO>
+    */
+    @PostMapping("/get-all-my-course")
+    public List<MyCourseVO> TeacherGetAllMyCourse(@RequestParam("teacherId") Long teacherId){
+        return teacherService.TeacherGetAllMyCourse(teacherId);
     }
 }

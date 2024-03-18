@@ -14,6 +14,7 @@
 .course-cover-img{
     height: 200px;
     width: 300px;
+    object-fit: contain;
 }
 
 .course-card-info-div{
