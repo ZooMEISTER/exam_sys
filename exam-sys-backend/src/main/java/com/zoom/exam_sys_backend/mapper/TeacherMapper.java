@@ -53,8 +53,8 @@ public interface TeacherMapper extends BaseMapper<TeacherPO> {
     @Select("SELECT * FROM sys_paper WHERE id=#{paperId}")
     PaperPO teacherGetPaperInfo(Long paperId);
 
-    @Insert("INSERT INTO sys_paper(id,name,description,teachby,score,path) VALUES(#{newPaperId},#{newPaperName},#{newPaperDescription},#{teachby},#{newPaperScore},#{newPaperPath})")
-    int teacherAddNewPaper(Long newPaperId, String newPaperName, String newPaperDescription, Long teachby, int newPaperScore, String newPaperPath);
+    @Insert("INSERT INTO sys_paper(id,name,description,teachby,score,path,aes_key) VALUES(#{newPaperId},#{newPaperName},#{newPaperDescription},#{teachby},#{newPaperScore},#{newPaperPath},#{aesKey})")
+    int teacherAddNewPaper(Long newPaperId, String newPaperName, String newPaperDescription, Long teachby, int newPaperScore, String newPaperPath, String aesKey);
 
     @Insert("INSERT INTO sys_exam(id,name,description,start_time,end_time,teachby,type,published) VALUES(#{newExamId},#{newExamName},#{newExamDescription},#{newExamStartDateTime},#{newExamEndDateTime},#{teachby},#{type},#{published})")
     int teacherAddNewExam(Long newExamId, String newExamName, String newExamDescription, Date newExamStartDateTime, Date newExamEndDateTime, Long teachby, int type, int published);
@@ -103,4 +103,22 @@ public interface TeacherMapper extends BaseMapper<TeacherPO> {
 
     @Select("SELECT COUNT(*) FROM relation_course_exam WHERE course_id=#{courseId}")
     int TeacherGetCourseExamCountByCourseId(Long courseId);
+
+    @Select("SELECT * FROM relation_course_exam WHERE course_id=#{courseId}")
+    List<CourseExamBO> TeacherGetAllCourseExamRelation(Long courseId);
+
+    @Select("SELECT * FROM user_teacher WHERE id=#{teacherId}")
+    TeacherPO TeacherGetTeacherPOById(Long teacherId);
+
+    @Select("SELECT * FROM user_student WHERE id=#{studentId}")
+    TeacherPO TeacherGetStudentPOById(Long studentId);
+
+    @Insert("INSERT INTO application_add_course(id,subject_id,icon,name,description,teachby) VALUES(#{applicationId},#{subjectId},#{newCourseIcon},#{newCourseName},#{newCourseDescription},#{teachby})")
+    int TeacherAddNewCourse(Long applicationId, String newCourseIcon, String newCourseName, String newCourseDescription, Long teachby, Long subjectId);
+
+    @Select("SELECT * FROM application_add_course WHERE teachby=#{teacherId}")
+    List<TeacherAddCourseBO> TeacherGetAllMyAddCourseApplication(Long teacherId);
+
+    @Select("SELECT aes_key FROM sys_paper WHERE id=#{paperId}")
+    String TeacherGetExamAesKey(Long paperId);
 }

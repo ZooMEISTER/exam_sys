@@ -61,6 +61,7 @@ const Student_AllCoursePage_index = () => {
                         name={item.name}
                         description={item.description}
                         teachby={item.teachby}
+                        teacherRealname={item.teacherRealname}
                         created_time={item.created_time}
                         
                         departmentId={state.state.departmentId}

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useLocation } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 
-import { touristRequest, userRequest, userFileUploadRequest } from '../../../../../../utils/request';
+import { touristRequest, userRequest, userFileUploadRequest, userFileDownloadRequest } from '../../../../../../utils/request';
 
 import { UploadOutlined } from '@ant-design/icons';
 import { Card, Button, Modal, Form, Input, Upload, message } from 'antd';
@@ -143,6 +143,69 @@ const Student_ExamDetailPage_index = () => {
         setSha256Value(event.target.value)
     }
 
+
+    // 老师获取AES密钥
+    const getAeskey = () => {
+        userRequest.post("/student/get-exam-aes-key", {
+            paperId: examInfo.paperId
+        })
+        .then( function(response) {
+            console.log(response)
+            if(response.resultCode == 12011){
+                message.error(response.msg);
+            }
+            else if(response.resultCode == 12010){
+                const type = "text/plain";
+                const blob = new Blob([response], { type });
+                const data = [new ClipboardItem({ [type]: blob })];
+                navigator.clipboard.write(data).then(
+                    () => {
+                        /* success */
+                        message.success("AES密钥已复制到剪切板")
+                    },
+                    () => {
+                        /* failure */
+                        message.error("AES密钥复制失败")
+                    },
+                );
+            }
+            else{
+                message.error("未知错误");
+            }
+        })
+        .catch( function (error) {
+            console.log(error)
+        })
+    }
+
+    // 老师下载试卷
+    const downloadExamPaper = () => {
+        message.loading("正在下载试卷...")
+        userFileDownloadRequest.post("/student/download-exam-paper", {
+            paperName: examInfo.paperPath
+        })
+        .then(function(response) {
+            console.log(response)
+            var fileNameEncode = response.headers['content-disposition']
+                .split('filename=')[1]
+                .split(';')[0];
+            var fileNameDecode = decodeURI(fileNameEncode);
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileNameDecode);
+            document.body.appendChild(link);
+            link.click();
+
+            message.success("下载成功")
+        })
+        .catch( function (error) {
+            console.log(error)
+
+            message.error("下载失败")
+        })
+    }
+
     return(
         <div className='student-exam-detail-root'>
             <div className='student-back-to-all-exam-div'>
@@ -165,7 +228,7 @@ const Student_ExamDetailPage_index = () => {
                         name="exam-info"
                         className='exam-info-form-row'
                     >
-                        <label className='student-exam-detail-card-start-end'>由 {examInfo.teachby} 于 {examInfo.created_time} 发布</label>
+                        <label className='student-exam-detail-card-start-end'>由 {examInfo.teacherRealname} 于 {examInfo.created_time} 发布</label>
                     </Form.Item>
                     <Form.Item
                         label="开始时间"
@@ -183,7 +246,13 @@ const Student_ExamDetailPage_index = () => {
                     </Form.Item>
                 </Form>
                 
-                <Card type="inner" title={examInfo.paperName} extra={<a href={examInfo.paperPath} target="_blank">下载试卷</a>} className='student-inner-paper-card'>
+                <Card className='student-inner-paper-card' type="inner" title={examInfo.paperName} extra={
+                    <div>
+                        <a onClick={getAeskey} target="_blank">复制AES密钥</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a onClick={downloadExamPaper} target="_blank">下载试卷</a>
+                    </div>
+                }>
                     <Form name="basic"
                         labelCol={{span: 4}}
                         wrapperCol={{span: 16}}

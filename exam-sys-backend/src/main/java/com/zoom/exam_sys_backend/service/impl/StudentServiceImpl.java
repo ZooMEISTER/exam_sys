@@ -2,8 +2,10 @@ package com.zoom.exam_sys_backend.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.zoom.exam_sys_backend.comparator.ExamVOComparator;
+import com.zoom.exam_sys_backend.comparator.MyExamVOComparator;
 import com.zoom.exam_sys_backend.comparator.StudentExamVOComparator;
 import com.zoom.exam_sys_backend.constant.ExamStatusStudent;
+import com.zoom.exam_sys_backend.constant.ExamSysConstants;
 import com.zoom.exam_sys_backend.exception.code.StudentResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.StudentMapper;
@@ -15,6 +17,7 @@ import com.zoom.exam_sys_backend.util.FileUtils;
 import com.zoom.exam_sys_backend.util.JWTUtils;
 import com.zoom.exam_sys_backend.util.SnowflakeIdWorker;
 import com.zoom.exam_sys_backend.util.TimeTransferUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,7 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -182,12 +186,15 @@ public class StudentServiceImpl implements StudentService {
         List<CourseVO> courseVOList = new ArrayList<>();
         for(SubjectCourseBO i : subjectCoursePOList){
             CoursePO coursePO = studentMapper.studentGetSingleCourse(i.getCourse_id());
+            TeacherPO teacherPO = studentMapper.StudentGetTeacherPOById(coursePO.getTeachby());
             courseVOList.add(new CourseVO(
                     coursePO.getId().toString(),
                     coursePO.getIcon(),
                     coursePO.getName(),
                     coursePO.getDescription(),
                     coursePO.getTeachby().toString(),
+                    teacherPO.getUsername(),
+                    teacherPO.getRealname(),
                     TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time())
             ));
         }
@@ -266,6 +273,7 @@ public class StudentServiceImpl implements StudentService {
         ExamPaperBO examPaperBO = studentMapper.studentGetExamPaperRelationByExamId(examId);
         PaperPO paperPO = studentMapper.studentGetPaperInfo(examPaperBO.getPaper_id());
         RespondentExamStudentBO respondentExamStudentBO = studentMapper.StudentGetRespondentInfo(examId, studentId);
+        TeacherPO teacherPO = studentMapper.StudentGetTeacherPOById(coursePO.getTeachby());
         int finalScore = -1;
         if(respondentExamStudentBO != null) finalScore = respondentExamStudentBO.getFinal_score();
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -305,6 +313,8 @@ public class StudentServiceImpl implements StudentService {
                 examPO.getType(),
                 examPO.getPublished(),
                 TimeTransferUtils.TransferTime2LocalTime(examPO.getCreated_time()),
+                teacherPO.getUsername(),
+                teacherPO.getRealname(),
                 coursePO.getId().toString(),
                 coursePO.getName(),
                 paperPO.getId().toString(),
@@ -359,12 +369,16 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public CourseVO StudentGetCourseInfo(Long courseId) {
         CoursePO coursePO = studentMapper.StudentGetCourseInfo(courseId);
-        return new CourseVO(coursePO.getId().toString(),
-                            coursePO.getIcon(),
-                            coursePO.getName(),
-                            coursePO.getDescription(),
-                            coursePO.getTeachby().toString(),
-                            TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time()));
+        TeacherPO teacherPO = studentMapper.StudentGetTeacherPOById(coursePO.getTeachby());
+        return new CourseVO(
+                coursePO.getId().toString(),
+                coursePO.getIcon(),
+                coursePO.getName(),
+                coursePO.getDescription(),
+                coursePO.getTeachby().toString(),
+                teacherPO.getUsername(),
+                teacherPO.getRealname(),
+                TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time()));
     }
 
     /**
@@ -432,6 +446,7 @@ public class StudentServiceImpl implements StudentService {
             SubjectCourseBO subjectCourseBO = studentMapper.StudentGetSubjectCourseRelationByCourseId(i.getCourse_id());
             SubjectPO subjectPO = studentMapper.StudentGetSubjectPOById(subjectCourseBO.getSubject_id());
             DepartmentPO departmentPO = studentMapper.StudentGetDepartmentPOById(subjectPO.getBelongto());
+            TeacherPO teacherPO = studentMapper.StudentGetTeacherPOById(coursePO.getTeachby());
             myCourseVOList.add(new MyCourseVO(
                     coursePO.getId().toString(),
                     coursePO.getIcon(),
@@ -439,6 +454,8 @@ public class StudentServiceImpl implements StudentService {
                     coursePO.getDescription(),
                     coursePO.getTeachby().toString(),
                     TimeTransferUtils.TransferTime2LocalTime(coursePO.getCreated_time()),
+                    teacherPO.getUsername(),
+                    teacherPO.getRealname(),
                     totalStudentCount,
                     examCount,
                     departmentPO.getId().toString(),
@@ -448,5 +465,179 @@ public class StudentServiceImpl implements StudentService {
             ));
         }
         return myCourseVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取所有我参加的考试方法
+    * @DateTime: 2024/3/19 12:56
+    * @Params: [studentId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.MyExamVO>
+    */
+    @Override
+    public List<MyExamVO> StudentGetAllMyExam(Long studentId) {
+        List<MyExamVO> myExamVOList = new ArrayList<>();
+        List<CourseStudentBO> courseStudentBOList = studentMapper.StudentGetAllCourseStudentRelation(studentId);
+        for(CourseStudentBO i : courseStudentBOList){
+            CoursePO coursePO = studentMapper.StudentGetCourseInfo(i.getCourse_id());
+            SubjectCourseBO subjectCourseBO = studentMapper.StudentGetSubjectCourseRelationByCourseId(i.getCourse_id());
+            SubjectPO subjectPO = studentMapper.StudentGetSubjectPOById(subjectCourseBO.getSubject_id());
+            DepartmentPO departmentPO = studentMapper.StudentGetDepartmentPOById(subjectPO.getBelongto());
+            List<CourseExamBO> courseExamBOList = studentMapper.studentGetAllCourseExamRelation(i.getCourse_id());
+            TeacherPO teacherPO = studentMapper.StudentGetTeacherPOById(coursePO.getTeachby());
+            for(CourseExamBO m : courseExamBOList){
+                ExamPO examPO = studentMapper.studentGetSingleExam(m.getExam_id());
+                Date currentDateTime = new Date(System.currentTimeMillis());
+                int examStatus = 0; // 对学生来说，考试的状态
+                int respondentCount = studentMapper.checkIfStudentFinishedExam(examPO.getId(), studentId);
+                if(currentDateTime.before(examPO.getStart_time())){
+                    // 该考试未开始
+                    examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_NOT_START;
+                }
+                else if(currentDateTime.after(examPO.getEnd_time())){
+                    // 该考试已结束
+                    if(respondentCount > 0){
+                        examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_ENDED_DONE;
+                    }
+                    else{
+                        examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_ENDED_UNDO;
+                    }
+                }
+                else{
+                    // 该考试正在进行
+                    if(respondentCount > 0){
+                        examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_STARTED_DONE;
+                    }
+                    else{
+                        examStatus = ExamStatusStudent.EXAM_STATUS_STUDENT_STARTED_UNDO;
+                    }
+                }
+                int final_score = -1;
+                if(respondentCount > 0){
+                    final_score = studentMapper.StudentGetRespondentInfo(examPO.getId(), studentId).getFinal_score();
+                }
+                myExamVOList.add(new MyExamVO(
+                        examPO.getId().toString(),
+                        examPO.getName(),
+                        examPO.getDescription(),
+                        TimeTransferUtils.TransferTime2LocalTime(examPO.getStart_time()),
+                        TimeTransferUtils.TransferTime2LocalTime(examPO.getEnd_time()),
+                        examPO.getTeachby().toString(),
+                        examPO.getType(),
+                        examPO.getPublished(),
+                        TimeTransferUtils.TransferTime2LocalTime(examPO.getCreated_time()),
+                        teacherPO.getUsername(),
+                        teacherPO.getRealname(),
+                        examStatus,
+                        final_score,
+                        -1,
+                        -1,
+                        departmentPO.getId().toString(),
+                        departmentPO.getName(),
+                        subjectPO.getId().toString(),
+                        subjectPO.getName(),
+                        coursePO.getId().toString(),
+                        coursePO.getName()
+                ));
+            }
+        }
+
+        Collections.sort(myExamVOList, new MyExamVOComparator());
+        return myExamVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生申请成为老师的方法
+    * @DateTime: 2024/3/26 16:01
+    * @Params: [studentId, description]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.StudentToTeacherResultVO
+    */
+    @Override
+    @Transactional
+    public StudentToTeacherResultVO StudentApplyTobeTeacher(Long studentId, String description) {
+        int applicationCount = studentMapper.StudentGetToTeacherApplicationCount(studentId, 0);
+        if(applicationCount > 0){
+            // 已有pending的申请
+            return new StudentToTeacherResultVO(StudentResultCode.STUDENT_TO_TEACHER_APPLICATION_ALREADY_EXIST, "已存在等待批准的申请");
+        }
+        else{
+            // 添加申请
+            SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+            Long applicationId = idWorker.nextId();
+            int res = studentMapper.StudentAddNewToTeacherApplication(applicationId, studentId, description);
+            if(res > 0){
+                return new StudentToTeacherResultVO(StudentResultCode.STUDENT_TO_TEACHER_APPLICATION_ADDED, "已发送申请,等待管理员批准");
+            }
+            else{
+                return new StudentToTeacherResultVO(StudentResultCode.STUDENT_TO_TEACHER_APPLICATION_ADD_FAIL, "添加申请失败");
+            }
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取考试试卷aes密钥的方法
+    * @DateTime: 2024/4/16 18:33
+    * @Params: [paperId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.StudentGetExamPaperAesKeyResultVO
+    */
+    @Override
+    public StudentGetExamPaperAesKeyResultVO StudentGetExamAesKey(Long paperId) {
+        ExamPaperBO examPaperBO = studentMapper.StudentGetExamPaperBOByPaperId(paperId);
+        ExamPO examPO = studentMapper.studentGetSingleExam(examPaperBO.getExam_id());
+
+        if (examPO.getStart_time().getTime() - System.currentTimeMillis() > ExamSysConstants.AES_KEY_AHEAD_AVAILABLE_TIME) {
+            return new StudentGetExamPaperAesKeyResultVO(StudentResultCode.STUDENT_GET_AES_KEY_FAIL, "err", "获取aesKey失败：未到考试时间");
+        }
+        else {
+            String aesKey = studentMapper.StudentGetExamAesKey(paperId);
+            return new StudentGetExamPaperAesKeyResultVO(StudentResultCode.STUDENT_GET_AES_KEY_SUCCESS, aesKey, "aesKey获取成功");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生下载试卷方法
+    * @DateTime: 2024/4/16 18:29
+    * @Params: [paperName, response]
+    * @Return void
+    */
+    @Override
+    public void StudentDownloadExamPaper(String paperName, HttpServletResponse response) {
+        String filePath = fileDataFolderPath + examPaperFolderPath + "e/" + paperName;
+
+        try {
+            // path是指想要下载的文件的路径
+            File file = new File(filePath);
+            // 获取文件名
+            String filename = file.getName();
+            // 获取文件后缀名
+            String ext = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
+
+            // 将文件写入输入流
+            FileInputStream fileInputStream = new FileInputStream(file);
+            InputStream fis = new BufferedInputStream(fileInputStream);
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+
+            // 清空response
+            response.reset();
+            // 设置response的Header
+            response.setCharacterEncoding("UTF-8");
+            //Content-Disposition的作用：告知浏览器以何种方式显示响应返回的文件，用浏览器打开还是以附件的形式下载到本地保存
+            //attachment表示以附件方式下载   inline表示在线打开   "Content-Disposition: inline; filename=文件名.mp3"
+            // filename表示文件的默认名称，因为网络传输只支持URL编码的相关支付，因此需要将文件名URL编码后进行传输,前端收到后需要反编码才能获取到真正的名称
+            response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
+            // 告知浏览器文件的大小
+            response.addHeader("Content-Length", "" + file.length());
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            outputStream.write(buffer);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

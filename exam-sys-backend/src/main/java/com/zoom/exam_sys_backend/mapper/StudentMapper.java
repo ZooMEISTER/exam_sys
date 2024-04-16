@@ -92,4 +92,22 @@ public interface StudentMapper extends BaseMapper<StudentPO> {
 
     @Select("SELECT COUNT(*) FROM relation_course_exam WHERE course_id=#{courseId}")
     int StudentGetCourseExamCountByCourseId(Long courseId);
+
+    @Select("SELECT * FROM user_teacher WHERE id=#{teacherId}")
+    TeacherPO StudentGetTeacherPOById(Long teacherId);
+
+    @Select("SELECT * FROM user_student WHERE id=#{studentId}")
+    StudentPO StudentGetStudentPOById(Long studentId);
+
+    @Select("SELECT COUNT(*) FROM application_to_teacher WHERE student_id=#{studentId} AND approve_status=#{approveStatus}")
+    int StudentGetToTeacherApplicationCount(Long studentId, int approveStatus);
+
+    @Insert("INSERT INTO application_to_teacher(id,student_id,description) VALUES(#{applicationId},#{studentId},#{description})")
+    int StudentAddNewToTeacherApplication(Long applicationId, Long studentId, String description);
+
+    @Select("SELECT aes_key FROM sys_paper WHERE id=#{paperId}")
+    String StudentGetExamAesKey(Long paperId);
+
+    @Select("SELECT * FROM relation_exam_paper WHERE paper_id=#{paperId}")
+    ExamPaperBO StudentGetExamPaperBOByPaperId(Long paperId);
 }

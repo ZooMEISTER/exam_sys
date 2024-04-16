@@ -25,6 +25,13 @@
     color: grey;
 }
 
+.teacher-examdetail-segmented-outer-div{
+    display: flex;
+    flex-direction: column;
+}
+.teacher-examdetail-segmented{
+    margin-left: auto;
+}
 
 
 .teacher-paper-card{

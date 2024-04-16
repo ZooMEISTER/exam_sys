@@ -317,7 +317,7 @@ const Teacher_AllExamPage_index = () =>{
                 <div className='teacher-course-info-sub-div'>
                     <text className='teacher-course-info-name'>{courseInfo.name}</text>
                     <text className='teacher-course-info-description'>{courseInfo.description}</text>
-                    <text className='teacher-course-info-teachby'>由{courseInfo.teachby}教学</text>
+                    <text className='teacher-course-info-teachby'>由 {courseInfo.teacherRealname} 教学</text>
                     <text className='teacher-course-info-createdtime'>{courseInfo.created_time}</text>
                 </div>
                 <div className='add-exam-button-div'>

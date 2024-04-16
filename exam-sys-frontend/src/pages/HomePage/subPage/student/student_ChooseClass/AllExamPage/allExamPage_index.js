@@ -143,7 +143,7 @@ const Student_AllExamPage_index = () =>{
                 <div className='student-course-info-sub-div'>
                     <text className='student-course-info-name'>{courseInfo.name}</text>
                     <text className='student-course-info-description'>{courseInfo.description}</text>
-                    <text className='student-course-info-teachby'>由{courseInfo.teachby}教学</text>
+                    <text className='student-course-info-teachby'>由 {courseInfo.teacherRealname} 教学</text>
                     <text className='student-course-info-createdtime'>创建于{courseInfo.created_time}</text>
                 </div>
                 <div className='student-sign-course-div'>

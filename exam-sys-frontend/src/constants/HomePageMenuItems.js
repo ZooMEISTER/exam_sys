@@ -19,6 +19,12 @@ const homePageMenuItems_Teacher = [
                 "我的考试"
             ),
             key: "/home/teacher-my-exam",
+        },
+        {
+            label: (
+                "我的申请"
+            ),
+            key: "/home/teacher-my-application",
         }]
     }
 ]

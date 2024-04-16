@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 
-import { touristRequest, userRequest } from '../../../../../../utils/request';
+import { touristRequest, userFileDownloadRequest, userRequest } from '../../../../../../utils/request';
 
 import UserInfo_Component from '../../../../../../components/UserInfoComponent/userinfo_component_index';
 
 import { MinusCircleOutlined, CloseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { Card, Button, Tabs, List, Avatar, Radio, Segmented, Skeleton, Tag } from 'antd';
+import { Card, Button, Tabs, List, Avatar, Radio, Segmented, Skeleton, Tag, message } from 'antd';
 
 import "./examDetailPage_index.css"
 
@@ -26,6 +26,13 @@ const Teacher_ExamDetailPage_index = () => {
     const [showRespondentStatus, setShowRespondentStatus] = useState(0)
     
     const [paginationSize, setPaginationSize] = useState(10)
+
+    const [userAvatr, setUserAvatar] = useState("")
+    const [userUsername, setUserUsername] = useState("")
+    const [userRealname, setUserRealname] = useState("")
+    const [userPhone, setUserPhone] = useState("")
+    const [userEmail, setUserEmail] = useState("")
+
 
     // 获取该考试的具体信息
     const getExamInfo = () => {
@@ -114,6 +121,87 @@ const Teacher_ExamDetailPage_index = () => {
         setShowRespondentStatus(tabKey)
     }
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    // 打开显示用户信息的Modal
+    const openUserInfoModal = (item, type) => {
+        console.log(item)
+        console.log(type)
+        if(type == 0){
+            setUserAvatar(item.studentAvatar)
+            setUserUsername(item.studentUsername)
+            setUserRealname(item.studentRealname)
+            setUserPhone(item.studentPhone)
+            setUserEmail(item.studentEmail)
+        }
+        else if(type == 1){
+            setUserAvatar(item.avatar)
+            setUserUsername(item.username)
+            setUserRealname(item.realname)
+            setUserPhone(item.phone)
+            setUserEmail(item.email)
+        }
+
+        setIsModalOpen(true);
+    }
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+
+    // 老师获取AES密钥
+    const getAeskey = () => {
+        userRequest.post("/teacher/get-exam-aes-key", {
+            paperId: examInfo.paperId
+        })
+        .then( function(response) {
+            console.log(response)
+            const type = "text/plain";
+            const blob = new Blob([response], { type });
+            const data = [new ClipboardItem({ [type]: blob })];
+            navigator.clipboard.write(data).then(
+                () => {
+                    /* success */
+                    message.success("AES密钥已复制到剪切板")
+                },
+                () => {
+                    /* failure */
+                    message.error("AES密钥复制失败")
+                },
+            );
+        })
+        .catch( function (error) {
+            console.log(error)
+        })
+    }
+
+    // 老师下载试卷
+    const downloadExamPaper = () => {
+        message.loading("正在下载试卷...")
+        userFileDownloadRequest.post("/teacher/download-exam-paper", {
+            paperName: examInfo.paperPath
+        })
+        .then(function(response) {
+            console.log(response)
+            var fileNameEncode = response.headers['content-disposition']
+                .split('filename=')[1]
+                .split(';')[0];
+            var fileNameDecode = decodeURI(fileNameEncode);
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileNameDecode);
+            document.body.appendChild(link);
+            link.click();
+
+            message.success("下载成功")
+        })
+        .catch( function (error) {
+            console.log(error)
+
+            message.error("下载失败")
+        })
+    }
+
     return(
         <div className='exam-detail-root'>
             <div className='teacher-exam-detail-base'>
@@ -123,12 +211,19 @@ const Teacher_ExamDetailPage_index = () => {
                         <label className='teacher-exam-detail-description'>{examInfo.description}</label>
                     </div>
                     <div className='teacher-exam-detail-div'>
-                        <label className='teacher-exam-detail-start-end'>由 {examInfo.teachby} 于 {examInfo.created_time} 发布</label>
+                        <label className='teacher-exam-detail-start-end'>由 {examInfo.teacherRealname} 于 {examInfo.created_time} 发布</label>
                         <label className='teacher-exam-detail-start-end'>开始时间：{examInfo.start_time}</label>
                         <label className='teacher-exam-detail-start-end'>结束时间：{examInfo.end_time}</label>
                     </div>
 
-                    <Card className='teacher-paper-card' type="inner" title={examInfo.paperName} extra={<a href={examInfo.paperPath} target="_blank">下载试卷</a>}>
+                    <Card className='teacher-paper-card' type="inner" title={examInfo.paperName} extra={
+                        <div>
+                            <a onClick={getAeskey} target="_blank">复制AES密钥</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a onClick={downloadExamPaper} target="_blank">下载试卷</a>
+                            {/* <a href={examInfo.paperPath} target="_blank">下载试卷</a> */}
+                        </div>
+                    }>
                         <label className='teacher-paper-detail-text'>试卷描述：{examInfo.paperDescription}</label> <br/>
                         <label className='teacher-paper-detail-text'>试卷分数：{examInfo.paperScore}</label> <br/>
                         <div className='teacher-paper-detail-finished-situation-div'>
@@ -149,8 +244,9 @@ const Teacher_ExamDetailPage_index = () => {
                             ></Tabs>
 
                             {showIfFinishedRespondentStatus == 0 && 
-                                <div>
+                                <div className='teacher-examdetail-segmented-outer-div'>
                                     <Segmented
+                                        className='teacher-examdetail-segmented'
                                         options={[
                                             { label: '全部', value: '0', icon: <MinusCircleOutlined /> },
                                             { label: '未批改', value: '1', icon: <CloseCircleOutlined /> },
@@ -171,7 +267,7 @@ const Teacher_ExamDetailPage_index = () => {
                                                     <Skeleton avatar title={false} loading={item.loading} active>
                                                         <List.Item.Meta
                                                             avatar={<Avatar shape="square" size={48} src={item.studentAvatar} />}
-                                                            title={item.studentUsername}
+                                                            title={<a onClick={(e) => openUserInfoModal(item, 0)}>{item.studentUsername}</a>}
                                                             description={item.studentRealname}
                                                         />
                                                         {item.final_score >= 0 && (item.final_score >= examInfo.paperScore * 0.6) &&
@@ -200,7 +296,7 @@ const Teacher_ExamDetailPage_index = () => {
                                                 >
                                                     <List.Item.Meta
                                                         avatar={<Avatar shape="square" size={48} src={item.studentAvatar} />}
-                                                        title={item.studentUsername}
+                                                        title={<a onClick={(e) => openUserInfoModal(item, 0)}>{item.studentUsername}</a>}
                                                         description={item.studentRealname}
                                                     />
                                                 </List.Item>
@@ -220,7 +316,7 @@ const Teacher_ExamDetailPage_index = () => {
                                                     <Skeleton avatar title={false} loading={item.loading} active>
                                                         <List.Item.Meta
                                                             avatar={<Avatar shape="square" size={48} src={item.studentAvatar} />}
-                                                            title={item.studentUsername}
+                                                            title={<a onClick={(e) => openUserInfoModal(item, 0)}>{item.studentUsername}</a>}
                                                             description={item.studentRealname}
                                                         />
                                                         {(item.final_score >= examInfo.paperScore * 0.6) &&
@@ -246,7 +342,7 @@ const Teacher_ExamDetailPage_index = () => {
                                         <List.Item>
                                             <List.Item.Meta
                                                 avatar={<Avatar shape="square" size={48} src={item.avatar} />}
-                                                title={item.username}
+                                                title={<a onClick={(e) => openUserInfoModal(item, 1)}>{item.username}</a>}
                                                 description={item.realname}
                                             />
                                         </List.Item>
@@ -258,6 +354,17 @@ const Teacher_ExamDetailPage_index = () => {
                     </Card>
                 </Card>
             </div>
+
+            <UserInfo_Component
+                modalName="学生信息"
+                isModalOpen={isModalOpen}
+                handleCancel={handleCancel}
+                avatar={userAvatr}
+                username={userUsername}
+                realname={userRealname}
+                phone={userPhone}
+                email={userEmail}
+            />
         </div>
     )
 }

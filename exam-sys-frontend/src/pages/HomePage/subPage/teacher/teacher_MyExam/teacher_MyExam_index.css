@@ -1,0 +1,40 @@
+.teacher-myexam-root-div{
+    display: flex;
+    flex-direction: column;
+
+    width: 95%;
+    height: 100%;
+    margin: auto;
+}
+.teacher-myexam-label-div{
+    margin-top: 35px;
+    display: flex;
+    flex-direction: row;
+}
+.teacher-myexam-label{
+    font-size: 20px;
+}
+.teacher-myexam-segmented{
+    margin-left: auto;
+}
+
+.teacher-myexam-list-div{
+    margin-top: 20px;
+}
+.teacher-myexam-list{
+    min-height: 650px;
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-myexam-course-name{
+    color: black;
+}
+.teacher-myexam-course-path-url{
+    color: grey;
+}
+
+.teacher-myexam-exam-status-tag-div{
+    display: flex;
+    flex-direction: row;
+}

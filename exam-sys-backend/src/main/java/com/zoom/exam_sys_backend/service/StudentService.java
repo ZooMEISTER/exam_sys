@@ -1,6 +1,7 @@
 package com.zoom.exam_sys_backend.service;
 
 import com.zoom.exam_sys_backend.pojo.vo.*;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,4 +29,9 @@ public interface StudentService {
     String StudentUploadRespondentFile(MultipartFile multipartFile) throws IOException;
     StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value);
     List<MyCourseVO> StudentGetAllMyCourse(Long studentId);
+    List<MyExamVO> StudentGetAllMyExam(Long studentId);
+    StudentToTeacherResultVO StudentApplyTobeTeacher(Long studentId, String description);
+    StudentGetExamPaperAesKeyResultVO StudentGetExamAesKey(Long paperId);
+    void StudentDownloadExamPaper(String paperName, HttpServletResponse response);
+
 }

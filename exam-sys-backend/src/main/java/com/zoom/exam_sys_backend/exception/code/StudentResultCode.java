@@ -13,4 +13,10 @@ public interface StudentResultCode {
     public static final int STUDENT_SIGN_COURSE_FAIL = 12003;
     public static final int STUDENT_ADD_RESPONDENT_SUCCESS = 12004;
     public static final int STUDENT_ADD_RESPONDENT_FAIL = 12005;
+    public static final int STUDENT_TO_TEACHER_APPLICATION_ALREADY_EXIST = 12006;
+    public static final int STUDENT_TO_TEACHER_APPLICATION_ADDED = 12007;
+    public static final int STUDENT_TO_TEACHER_APPLICATION_ADD_FAIL = 12008;
+    public static final int STUDENT_GET_AES_KEY_SUCCESS = 12010;
+    public static final int STUDENT_GET_AES_KEY_FAIL = 12011;
+
 }

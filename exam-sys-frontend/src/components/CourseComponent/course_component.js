@@ -67,7 +67,7 @@ const Course_Component = (props) => {
                 <div className='course-card-info-div'>
                     <label className='course-card-title'>{props.name}</label>
                     <label className='course-card-description'>{props.description}</label>
-                    <label className='course-card-teachby'>由 {props.teachby} 教学</label>
+                    <label className='course-card-teachby'>由 {props.teacherRealname} 教学</label>
                     <label className='course-card-created-time'>创建：{props.created_time}</label>
                 </div>
             </Card>

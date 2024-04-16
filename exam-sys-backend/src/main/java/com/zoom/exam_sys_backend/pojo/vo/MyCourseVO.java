@@ -13,6 +13,10 @@ public class MyCourseVO {
     private String description;
     private String teachby;
     private String created_time;
+
+    private String teacherUsername;
+    private String teacherRealname;
+
     private int studentCount;
     private int examCount;
     private String departmentId;
@@ -20,13 +24,15 @@ public class MyCourseVO {
     private String subjectId;
     private String subjectName;
 
-    public MyCourseVO(String id, String icon, String name, String description, String teachby, String created_time, int studentCount, int examCount, String departmentId, String departmentName, String subjectId, String subjectName) {
+    public MyCourseVO(String id, String icon, String name, String description, String teachby, String created_time, String teacherUsername, String teacherRealname, int studentCount, int examCount, String departmentId, String departmentName, String subjectId, String subjectName) {
         this.id = id;
         this.icon = icon;
         this.name = name;
         this.description = description;
         this.teachby = teachby;
         this.created_time = created_time;
+        this.teacherUsername = teacherUsername;
+        this.teacherRealname = teacherRealname;
         this.studentCount = studentCount;
         this.examCount = examCount;
         this.departmentId = departmentId;
@@ -81,6 +87,22 @@ public class MyCourseVO {
 
     public void setCreated_time(String created_time) {
         this.created_time = created_time;
+    }
+
+    public String getTeacherUsername() {
+        return teacherUsername;
+    }
+
+    public void setTeacherUsername(String teacherUsername) {
+        this.teacherUsername = teacherUsername;
+    }
+
+    public String getTeacherRealname() {
+        return teacherRealname;
+    }
+
+    public void setTeacherRealname(String teacherRealname) {
+        this.teacherRealname = teacherRealname;
     }
 
     public int getStudentCount() {
@@ -140,6 +162,8 @@ public class MyCourseVO {
                 ", description='" + description + '\'' +
                 ", teachby='" + teachby + '\'' +
                 ", created_time='" + created_time + '\'' +
+                ", teacherUsername='" + teacherUsername + '\'' +
+                ", teacherRealname='" + teacherRealname + '\'' +
                 ", studentCount=" + studentCount +
                 ", examCount=" + examCount +
                 ", departmentId='" + departmentId + '\'' +

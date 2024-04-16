@@ -12,4 +12,7 @@ public interface ExamSysConstants {
     public static final int TEACHER_PERMISSION_LEVEL = 2;
     public static final int STUDENT_PERMISSION_LEVEL = 1;
     public static final int TOURIST_PERMISSION_LEVEL = 0;
+
+    // 学生可以在考试开始之前提前拿到aeskey的时间（ms）
+    public static final long AES_KEY_AHEAD_AVAILABLE_TIME = 60000;
 }

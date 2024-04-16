@@ -59,6 +59,10 @@ const ProfilePage = () =>{
     const [newPassword, setNewPassword] = useState("NOT_CHANGE")
     const [newPassword_, setNewPassword_] = useState("NOT_CHANGE")
 
+
+    const [toTeacherApplicationDescription, setToTeacherApplicationDescription] = useState("")
+    const [isToTeacherApplicationModal, setIsToTeacherApplicationModal] = useState(false);
+
     const [form] = Form.useForm(); // 对表单的引用
     const [imageUrl, setImageUrl] = useState(newAvatar); // 头像的url（base64）
     const navigate = useNavigate()
@@ -229,6 +233,11 @@ const ProfilePage = () =>{
         setIsPasswordModalOpen(true)
     }
 
+    const sendToTeacherApplication = () => {
+        setIsToTeacherApplicationModal(true)
+    }
+
+
     const newUsernameInputChange = (event) => {
         setNewUsername(event.target.value)
     }
@@ -247,6 +256,11 @@ const ProfilePage = () =>{
     const newPassword_InputChange = (event) => {
         setNewPassword_(event.target.value)
     }
+
+    const toTeacherApplicationDescriptionInputChange = (event) => {
+        setToTeacherApplicationDescription(event.target.value)
+    }
+
 
     // 密码表单验证
     const handlePasswordOk = () => {
@@ -294,6 +308,35 @@ const ProfilePage = () =>{
         setNewPassword("NOT_CHANGE")
         setNewPassword_("NOT_CHANGE")
         setIsPasswordModalOpen(false)
+    }
+
+    // 学生申请成为老师的modal相关按钮事件
+    const handleToTeacherApplicationOk = () => {
+        userRequest.post("/student/to-teacher", {
+            studentId: userid,
+            description: toTeacherApplicationDescription,
+        })
+        .then( function(response) {
+            console.log(response)
+            if(response.resultCode == 12006){
+                message.info(response.msg)
+            }
+            else if(response.resultCode == 12007){
+                message.success(response.msg)
+            }
+            else if(response.resultCode == 12008){
+                message.error(response.msg)
+            }
+            setToTeacherApplicationDescription("")
+            setIsToTeacherApplicationModal(false)
+        })
+        .catch( function (error) {
+            console.log(error)
+        })
+    }
+    const handleToTeacherApplicationModalClose = () => {
+        setToTeacherApplicationDescription("")
+        setIsToTeacherApplicationModal(false)
     }
 
     return (
@@ -404,6 +447,17 @@ const ProfilePage = () =>{
                         </Space>
                     </Form.Item>
                 </Form>
+                {permissionLevel == 1 && 
+                    <div>
+                        <Button onClick={sendToTeacherApplication}>
+                            我是老师
+                        </Button>
+                        <Modal title="申请为老师" open={isToTeacherApplicationModal} onOk={handleToTeacherApplicationOk} onCancel={handleToTeacherApplicationModalClose}>
+                            <label>请输入申请的描述</label>
+                            <Input value={toTeacherApplicationDescription} onChange={toTeacherApplicationDescriptionInputChange}/>
+                        </Modal>
+                    </div>
+                }
             </Card>
         </div>
     )

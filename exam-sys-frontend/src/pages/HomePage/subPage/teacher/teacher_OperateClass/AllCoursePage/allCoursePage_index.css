@@ -1,14 +1,42 @@
 
-.navigate-breadcrumb{
+.teacher-all-course-page-title-div{
     margin-top: 30px;
     margin-left: 40px;
 
+    display: flex;
+    flex-direction: row;
+}
+.teacher-all-course-page-navigate-breadcrumb{
     font-size: 20px;
 }
+.teacher-all-course-page-add-course-button{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: 80px;
+}
+
 .show-all-course-div{
     margin-top: 10px;
     margin-left: 40px;
 
     display: flex;
     flex-wrap: wrap;
+}
+
+.teacher-add-new-course-card{
+    display: flex;
+}
+.teacher-add-new-course-icon-outer-div{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+.teacher-add-new-course-icon{
+    margin: auto;
+    color: grey;
+}
+
+div.ant-card-body{
+    width: 100%;
 }

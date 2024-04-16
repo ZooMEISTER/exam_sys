@@ -1,12 +1,17 @@
 package com.zoom.exam_sys_backend.controller;
 
+import com.zoom.exam_sys_backend.pojo.bo.TeacherAddCourseBO;
 import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.TeacherService;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.List;
 
@@ -121,7 +126,7 @@ public class TeacherController {
     * @Return java.lang.String
     */
     @PostMapping("/upload-paper")
-    public String TeacherUploadExamPaperFile(@RequestParam("examPaper") MultipartFile multipartFile) throws IOException {
+    public String TeacherUploadExamPaperFile(@RequestParam("examPaper") MultipartFile multipartFile) throws Exception {
         return teacherService.TeacherUploadExamPaperFile(multipartFile);
     }
 
@@ -143,7 +148,7 @@ public class TeacherController {
                                                  @RequestParam("paperDescription") String paperDescription,
                                                  @RequestParam("paperScore") int paperScore,
                                                  @RequestParam("teachby") Long teachby,
-                                                 @RequestParam("courseId") Long courseId) throws ParseException {
+                                                 @RequestParam("courseId") Long courseId) throws Exception {
         return teacherService.TeacherAddExam(examName, examDescription, examStartDateTime, examEndDateTime, paperFileName, paperName, paperDescription, paperScore, teachby, courseId);
     }
 
@@ -205,5 +210,70 @@ public class TeacherController {
     @PostMapping("/get-all-my-course")
     public List<MyCourseVO> TeacherGetAllMyCourse(@RequestParam("teacherId") Long teacherId){
         return teacherService.TeacherGetAllMyCourse(teacherId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取自己的所有考试接口
+    * @DateTime: 2024/3/19 15:23
+    * @Params: [teacherId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.MyExamVO>
+    */
+    @PostMapping("/get-all-my-exam")
+    public List<MyExamVO> TeacherGetAllMyExam(@RequestParam("teacherId") Long teacherId){
+        return teacherService.TeacherGetAllMyExam(teacherId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师添加新课程申请接口
+    * @DateTime: 2024/3/19 19:59
+    * @Params: [newCourseIcon, newCourseName, newCourseDescription, teachby]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.TeacherAddNewCourseApplyResultVO
+    */
+    @PostMapping("/add-course")
+    public TeacherAddNewCourseApplyResultVO TeacherAddNewCourse(@RequestParam("icon") String newCourseIcon,
+                                                                @RequestParam("name") String newCourseName,
+                                                                @RequestParam("description") String newCourseDescription,
+                                                                @RequestParam("teachby") Long teachby,
+                                                                @RequestParam("subjectId") Long subjectId){
+        return teacherService.TeacherAddNewCourse(newCourseIcon, newCourseName, newCourseDescription, teachby, subjectId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取所有自己申请添加课程的申请接口
+    * @DateTime: 2024/3/19 21:13
+    * @Params: [teacherId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.bo.TeacherAddCourseBO>
+    */
+    @PostMapping("/get-all-my-addcourse-application")
+    public List<TeacherAddCourseVO> TeacherGetAllMyAddCourseApplication(@RequestParam("teacherId") Long teacherId){
+        return teacherService.TeacherGetAllMyAddCourseApplication(teacherId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师获取某个考试试卷的aes密钥接口
+    * @DateTime: 2024/4/16 16:36
+    * @Params: [examId]
+    * @Return java.lang.String
+    */
+    @PostMapping("/get-exam-aes-key")
+    public String TeacherGetExamAesKey(@RequestParam("paperId") Long paperId){
+        return teacherService.TeacherGetExamAesKey(paperId);
+    }
+
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师下载试卷接口
+    * @DateTime: 2024/4/16 18:25
+    * @Params: [paperName, response]
+    * @Return void
+    */
+    @RequestMapping("/download-exam-paper")
+    public void downloadLocal(String paperName, HttpServletResponse response) throws IOException {
+        teacherService.TeacherDownloadExamPaper(paperName, response);
     }
 }

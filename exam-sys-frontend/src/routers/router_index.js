@@ -22,6 +22,7 @@ import HomePage from "../pages/HomePage/homePage_index";
         import Teacher_ExamDetailPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/ExamDetailPage/examDetailPage_index";
     import Teacher_MyClass from "../pages/HomePage/subPage/teacher/teacher_MyClass/teacher_MyClass_index"
     import Teacher_MyExam from "../pages/HomePage/subPage/teacher/teacher_MyExam/teacher_MyExam_index"
+    import Teacher_MyApplication from "../pages/HomePage/subPage/teacher/teacher_MyApplication/teacher_MyAppliation_index";
 
 import LoginPage from "../pages/LoginPage/loginPage_index";
 
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
                     {
                         path: "teacher-my-exam",
                         element: <Teacher_MyExam/>
+                    },
+                    {
+                        path: "teacher-my-application",
+                        element: <Teacher_MyApplication/>
                     },
 
                     {   

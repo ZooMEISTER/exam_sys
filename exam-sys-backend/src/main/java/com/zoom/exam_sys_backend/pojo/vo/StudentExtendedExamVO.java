@@ -17,6 +17,9 @@ public class StudentExtendedExamVO {
     private int published;
     private String created_time;
 
+    private String teacherUsername;
+    private String teacherRealname;
+
     private String courseId;
     private String courseName;
 
@@ -29,7 +32,7 @@ public class StudentExtendedExamVO {
     private int finalScore;
     private int status;
 
-    public StudentExtendedExamVO(String id, String name, String description, String start_time, String end_time, String teachby, int type, int published, String created_time, String courseId, String courseName, String paperId, String paperName, String paperDescription, String paperPath, int paperScore, int finalScore, int status) {
+    public StudentExtendedExamVO(String id, String name, String description, String start_time, String end_time, String teachby, int type, int published, String created_time, String teacherUsername, String teacherRealname, String courseId, String courseName, String paperId, String paperName, String paperDescription, String paperPath, int paperScore, int finalScore, int status) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -39,6 +42,8 @@ public class StudentExtendedExamVO {
         this.type = type;
         this.published = published;
         this.created_time = created_time;
+        this.teacherUsername = teacherUsername;
+        this.teacherRealname = teacherRealname;
         this.courseId = courseId;
         this.courseName = courseName;
         this.paperId = paperId;
@@ -120,6 +125,22 @@ public class StudentExtendedExamVO {
 
     public void setCreated_time(String created_time) {
         this.created_time = created_time;
+    }
+
+    public String getTeacherUsername() {
+        return teacherUsername;
+    }
+
+    public void setTeacherUsername(String teacherUsername) {
+        this.teacherUsername = teacherUsername;
+    }
+
+    public String getTeacherRealname() {
+        return teacherRealname;
+    }
+
+    public void setTeacherRealname(String teacherRealname) {
+        this.teacherRealname = teacherRealname;
     }
 
     public String getCourseId() {
@@ -206,6 +227,8 @@ public class StudentExtendedExamVO {
                 ", type=" + type +
                 ", published=" + published +
                 ", created_time='" + created_time + '\'' +
+                ", teacherUsername='" + teacherUsername + '\'' +
+                ", teacherRealname='" + teacherRealname + '\'' +
                 ", courseId='" + courseId + '\'' +
                 ", courseName='" + courseName + '\'' +
                 ", paperId='" + paperId + '\'' +

@@ -2,6 +2,7 @@ package com.zoom.exam_sys_backend.controller;
 
 import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.StudentService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -191,5 +192,54 @@ public class StudentController {
     @PostMapping("/get-all-my-course")
     public List<MyCourseVO> StudentGetAllMyCourse(@RequestParam("studentId") Long studentId){
         return studentService.StudentGetAllMyCourse(studentId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取所有我参加的考试接口
+    * @DateTime: 2024/3/19 12:56
+    * @Params: [studentId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.MyExamVO>
+    */
+    @PostMapping("/get-all-my-exam")
+    public List<MyExamVO> StudentGetAllMyExam(@RequestParam("studentId") Long studentId){
+        return studentService.StudentGetAllMyExam(studentId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生申请成为老师的接口
+    * @DateTime: 2024/3/26 16:01
+    * @Params: [studentId, description]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.StudentToTeacherResultVO
+    */
+    @PostMapping("/to-teacher")
+    public StudentToTeacherResultVO StudentApplyTobeTeacher(@RequestParam("studentId") Long studentId,
+                                                            @RequestParam("description") String description){
+        return studentService.StudentApplyTobeTeacher(studentId, description);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生获取考试试卷的aes密钥的接口
+    * @DateTime: 2024/4/16 18:34
+    * @Params: [paperId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.StudentGetExamPaperAesKeyResultVO
+    */
+    @PostMapping("/get-exam-aes-key")
+    public StudentGetExamPaperAesKeyResultVO TeacherGetExamAesKey(@RequestParam("paperId") Long paperId){
+        return studentService.StudentGetExamAesKey(paperId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 学生下载试卷接口
+    * @DateTime: 2024/4/16 18:30
+    * @Params: [paperName, response]
+    * @Return void
+    */
+    @RequestMapping("/download-exam-paper")
+    public void downloadLocal(String paperName, HttpServletResponse response) throws IOException {
+        studentService.StudentDownloadExamPaper(paperName, response);
     }
 }

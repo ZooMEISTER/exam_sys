@@ -62,14 +62,14 @@ const Student_MyClass = () => {
     const seeSubjectDetail = (item) => {
         console.log(item)
         navigate('/home/student-choose-class/course', 
-            {
-                state: {
-                    departmentId: item.departmentId, 
-                    departmentName: item.departmentName, 
-                    subjectId: item.subjectId, 
-                    subjectName: item.subjectName
-                }
-            })
+        {
+            state: {
+                departmentId: item.departmentId, 
+                departmentName: item.departmentName, 
+                subjectId: item.subjectId, 
+                subjectName: item.subjectName
+            }
+        })
     }
     const seeDepartmentDetail = (item) => {
         console.log(item)
@@ -87,7 +87,7 @@ const Student_MyClass = () => {
         <div className='root-div'>
             <div className='student-myclass-root-div'>
                 <div className='student-myclass-label-div'>
-                    <label className='student-myclass-label'>我的课程</label>
+                    <label className='student-myclass-label'>我参加的课程</label>
                 </div>
                 <div className='student-myclass-list-div'>
                     <Card>
@@ -122,7 +122,14 @@ const Student_MyClass = () => {
                                     <Skeleton avatar title={false} loading={item.loading} active>
                                         <List.Item.Meta
                                             title={<div>&nbsp;&nbsp;<a className='student-myclass-course-name' onClick={(e) => seeMyClassDetail(item)}>{item.name}</a></div>}
-                                            description={<div>&nbsp;&nbsp;<a className='student-myclass-course-path-url'  onClick={(e) => seeDepartmentDetail(item)}>{item.departmentName}</a> - <a className='student-myclass-course-path-url'  onClick={(e) => seeSubjectDetail(item)}>{item.subjectName}</a></div>}
+                                            description={
+                                                <div>
+                                                    <label>&nbsp;&nbsp;教学：{item.teacherRealname}</label><br/>
+                                                    &nbsp;&nbsp;
+                                                    <a className='student-myclass-course-path-url'  onClick={(e) => seeDepartmentDetail(item)}>{item.departmentName}</a>
+                                                    &nbsp;&nbsp;-&nbsp;&nbsp;
+                                                    <a className='student-myclass-course-path-url'  onClick={(e) => seeSubjectDetail(item)}>{item.subjectName}</a>
+                                                </div>}
                                         />
                                         <label><div>&nbsp;&nbsp;{item.description}</div></label>
                                     </Skeleton>

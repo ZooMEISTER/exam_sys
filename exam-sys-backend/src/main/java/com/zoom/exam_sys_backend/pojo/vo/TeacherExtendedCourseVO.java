@@ -12,15 +12,19 @@ public class TeacherExtendedCourseVO {
     private String name;
     private String description;
     private String teachby;
+    private String teacherUsername;
+    private String teacherRealname;
     private String created_time;
     private int studentCount;
 
-    public TeacherExtendedCourseVO(String id, String icon, String name, String description, String teachby, String created_time, int studentCount) {
+    public TeacherExtendedCourseVO(String id, String icon, String name, String description, String teachby, String teacherUsername, String teacherRealname, String created_time, int studentCount) {
         this.id = id;
         this.icon = icon;
         this.name = name;
         this.description = description;
         this.teachby = teachby;
+        this.teacherUsername = teacherUsername;
+        this.teacherRealname = teacherRealname;
         this.created_time = created_time;
         this.studentCount = studentCount;
     }
@@ -65,6 +69,22 @@ public class TeacherExtendedCourseVO {
         this.teachby = teachby;
     }
 
+    public String getTeacherUsername() {
+        return teacherUsername;
+    }
+
+    public void setTeacherUsername(String teacherUsername) {
+        this.teacherUsername = teacherUsername;
+    }
+
+    public String getTeacherRealname() {
+        return teacherRealname;
+    }
+
+    public void setTeacherRealname(String teacherRealname) {
+        this.teacherRealname = teacherRealname;
+    }
+
     public String getCreated_time() {
         return created_time;
     }
@@ -89,6 +109,8 @@ public class TeacherExtendedCourseVO {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", teachby='" + teachby + '\'' +
+                ", teacherUsername='" + teacherUsername + '\'' +
+                ", teacherRealname='" + teacherRealname + '\'' +
                 ", created_time='" + created_time + '\'' +
                 ", studentCount=" + studentCount +
                 '}';
