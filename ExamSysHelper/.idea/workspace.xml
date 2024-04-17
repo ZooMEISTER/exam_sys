@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b37310bf-9040-43cc-a996-446a18857769" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AES_D.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AES_E.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Key1.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/zoom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/zoom/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/zoom/Utils/AesUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/zoom/Utils/AesUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/AesEDTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/AesEDTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Utils/AesUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Utils/AesUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/AesEDTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/AesEDTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2fDmfvejqZCW8RREYCjv93XgJGb" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\myPrograming\WEB\Exam_System\ExamSysHelper\src\test\java" />
+      <recent name="D:\myPrograming\WEB\Exam_System\ExamSysHelper\src\main\java\org\zoom\Utils" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="AesEDTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="AesEDTest" />
+      <module name="ExamSysHelper" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.zoom.Main" />
+      <module name="ExamSysHelper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.zoom.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.AesEDTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b37310bf-9040-43cc-a996-446a18857769" name="Changes" comment="" />
+      <created>1713344130723</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713344130723</updated>
+      <workItem from="1713344132192" duration="8796000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

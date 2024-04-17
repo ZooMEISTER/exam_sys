@@ -41,22 +41,32 @@ public class AesUtils {
             destFile.getParentFile().mkdirs();
         }
         destFile.createNewFile();
-        InputStream in = new FileInputStream(sourceFile);
-        OutputStream out = new FileOutputStream(destFile);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(mode, secretKeySpec);
-        // 对输出流包装
-        CipherOutputStream cout = new CipherOutputStream(out, cipher);
-        byte[] cache = new byte[1024];
-        int nRead = 0;
-        while ((nRead = in.read(cache)) != -1) {
-            cout.write(cache, 0, nRead);
-            cout.flush();
+        try(InputStream in = new FileInputStream(sourceFile);
+            OutputStream out = new FileOutputStream(destFile)){
+
+            SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(mode, secretKeySpec);
+            // 对输出流包装
+            try(CipherOutputStream cout = new CipherOutputStream(out, cipher)){
+                byte[] cache = new byte[1024];
+                int nRead = 0;
+                while ((nRead = in.read(cache)) != -1) {
+                    cout.write(cache, 0, nRead);
+                    cout.flush();
+                }
+            }
+            catch (Exception e){
+                throw e;
+            }
+//            cout.close();
+//            out.close();
+//            in.close();
         }
-        cout.close();
-        out.close();
-        in.close();
+        catch (Exception e){
+            e.toString();
+            throw e;
+        }
     }
 
     /**

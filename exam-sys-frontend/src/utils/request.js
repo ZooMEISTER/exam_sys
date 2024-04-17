@@ -86,7 +86,8 @@ userFileUploadRequest.interceptors.response.use((response) => {
 const userFileDownloadRequest = axios.create({
     baseURL: "http://localhost:3000",
     timeout: 20000,
-    headers: { 'content-type': 'application/x-www-form-urlencoded' }
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    responseType: "blob"
 })
 
 // 添加请求拦截器
