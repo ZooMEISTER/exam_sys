@@ -13,20 +13,21 @@ import com.zoom.exam_sys_backend.pojo.bo.*;
 import com.zoom.exam_sys_backend.pojo.po.*;
 import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.StudentService;
-import com.zoom.exam_sys_backend.util.FileUtils;
-import com.zoom.exam_sys_backend.util.JWTUtils;
-import com.zoom.exam_sys_backend.util.SnowflakeIdWorker;
-import com.zoom.exam_sys_backend.util.TimeTransferUtils;
+import com.zoom.exam_sys_backend.util.*;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +51,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Value("${data.examAnswerPaperFolder}")
     String examAnswerPaperFolderPath;
+
+    @Value("${data.respondentMappingPath}")
+    String respondentMappingPath;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -389,14 +393,17 @@ public class StudentServiceImpl implements StudentService {
     * @Return java.lang.String
     */
     @Override
-    public String StudentUploadRespondentFile(MultipartFile multipartFile) throws IOException {
+    public StudentUploadRespondentFileResultVO StudentUploadRespondentFile(MultipartFile multipartFile, Long lastModified) throws IOException {
         // 判断文件是否为空
         if(multipartFile == null){
-            return "null respondent file";
+            return new StudentUploadRespondentFileResultVO("null respondent file", "0");
         }
         // 获取文件名
         String originalFileName = multipartFile.getOriginalFilename();
         String fileName = multipartFile.getName();
+
+        System.out.println(lastModified);
+
         // 获取文件后缀
         String suffixName = originalFileName.substring(originalFileName.lastIndexOf('.'));
         // 生成随机字符串
@@ -405,7 +412,7 @@ public class StudentServiceImpl implements StudentService {
         // 把文件保存到本地
         FileUtils.saveFile(multipartFile, fileDataFolderPath + examAnswerPaperFolderPath, rndStr + originalFileName);
 
-        return rndStr + originalFileName;
+        return new StudentUploadRespondentFileResultVO(rndStr + originalFileName, String.valueOf(lastModified));
     }
 
     /**
@@ -416,14 +423,25 @@ public class StudentServiceImpl implements StudentService {
     * @Return com.zoom.exam_sys_backend.pojo.vo.StudentAddRespondentResultVO
     */
     @Override
-    public StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value) {
+    public StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value, Date lastModifiedTime) throws IOException, NoSuchAlgorithmException {
         SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
         Long respondentId = idWorker.nextId();
-        int res = studentMapper.StudentAddRespondent(respondentId, examId, studentId, respondentFileName, -1, sha256Value);
-        if(res > 0){
-            return new StudentAddRespondentResultVO(StudentResultCode.STUDENT_ADD_RESPONDENT_SUCCESS, "交卷成功");
+        int is_sha256_good = 0;
+        try{
+            byte[] sha256 = Sha256Utils.calculateSHA256(fileDataFolderPath + examAnswerPaperFolderPath + respondentFileName);
+            String sha256Hex = Sha256Utils.bytesToHex(sha256);
+            is_sha256_good = (sha256Hex.equals(sha256Value)) ? 1 : -1;
+//            File respondentFile = new File(fileDataFolderPath + examAnswerPaperFolderPath + respondentFileName);
+            int res = studentMapper.StudentAddRespondent(respondentId, examId, studentId, respondentFileName, -1, sha256Value, is_sha256_good, lastModifiedTime);
+            if(res > 0){
+                return new StudentAddRespondentResultVO(StudentResultCode.STUDENT_ADD_RESPONDENT_SUCCESS, "交卷成功");
+            }
+            else{
+                return new StudentAddRespondentResultVO(StudentResultCode.STUDENT_ADD_RESPONDENT_FAIL, "交卷失败");
+            }
         }
-        else{
+        catch (Exception e){
+            e.toString();
             return new StudentAddRespondentResultVO(StudentResultCode.STUDENT_ADD_RESPONDENT_FAIL, "交卷失败");
         }
     }

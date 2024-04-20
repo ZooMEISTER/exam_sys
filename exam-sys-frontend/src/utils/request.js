@@ -51,7 +51,7 @@ userRequest.interceptors.response.use((response) => {
 // 已登陆用户的上传文件的request
 // 需要带上jwt token
 const userFileUploadRequest = axios.create({
-    baseURL: "http://localhost:3001",
+    baseURL: "http://localhost:3000",
     timeout: 20000,
     headers: { 'content-type': 'multipart/form-data' }
 })

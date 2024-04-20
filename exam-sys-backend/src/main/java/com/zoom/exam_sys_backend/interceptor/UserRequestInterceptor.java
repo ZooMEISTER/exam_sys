@@ -54,6 +54,10 @@ public class UserRequestInterceptor implements HandlerInterceptor {
         // 实际的权限等级
         int actualPermissionLevel = -1;
 
+        if (requestPath.startsWith("/respondent")) {
+            return true;
+        }
+
         if(requestPath.startsWith("/superadmin")){
             // 超级管理员 请求
             expectPermissionLevel = ExamSysConstants.SUPER_ADMIN_PERMISSION_LEVEL;

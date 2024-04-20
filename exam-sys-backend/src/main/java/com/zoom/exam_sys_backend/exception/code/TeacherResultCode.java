@@ -13,4 +13,6 @@ public interface TeacherResultCode {
     public static final int TEACHER_ADD_NEW_EXAM_FAIL = 12011;
     public static final int TEACHER_ADD_NEW_COURSE_SUCESS = 12012;
     public static final int TEACHER_ADD_NEW_COURSE_FAIL = 12013;
+    public static final int TEACHER_CORRECT_RESPONDENT_SUCCESS = 12020;
+    public static final int TEACHER_CORRECT_RESPONDENT_FAIL = 12021;
 }

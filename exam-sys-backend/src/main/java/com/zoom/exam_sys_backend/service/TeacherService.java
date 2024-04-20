@@ -37,4 +37,6 @@ public interface TeacherService {
     List<TeacherAddCourseVO> TeacherGetAllMyAddCourseApplication(Long teacherId);
     String TeacherGetExamAesKey(Long paperId);
     void TeacherDownloadExamPaper(String paperName, HttpServletResponse response);
+    RespondentTeacherVO TeacherGetRespondentInfo(Long respondentId);
+    TeacherCorrectRespondentResultVO TeacherCorrectRespondent(Long respondentId, int finalScore);
 }

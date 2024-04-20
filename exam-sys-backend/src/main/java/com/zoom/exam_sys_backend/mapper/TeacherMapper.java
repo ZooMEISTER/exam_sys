@@ -3,10 +3,12 @@ package com.zoom.exam_sys_backend.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zoom.exam_sys_backend.pojo.bo.*;
 import com.zoom.exam_sys_backend.pojo.po.*;
+import com.zoom.exam_sys_backend.pojo.vo.RespondentTeacherVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -121,4 +123,10 @@ public interface TeacherMapper extends BaseMapper<TeacherPO> {
 
     @Select("SELECT aes_key FROM sys_paper WHERE id=#{paperId}")
     String TeacherGetExamAesKey(Long paperId);
+
+    @Select("SELECT * FROM respondent_exam_student WHERE id=#{respondentId}")
+    RespondentExamStudentBO TeacherGetRespondentInfo(Long respondentId);
+
+    @Update("UPDATE respondent_exam_student SET final_score=#{finalScore} WHERE id=#{respondentId}")
+    int TeacherCorrectRespondentScore(Long respondentId, int finalScore);
 }

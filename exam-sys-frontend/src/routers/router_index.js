@@ -1,34 +1,38 @@
-import FrontPage from "../pages/FrontPage/frontPage_index"
 
 import BasePage from "../pages/BasePage/basePage_index";
+    import FrontPage from "../pages/FrontPage/frontPage_index"
 
-import HomePage from "../pages/HomePage/homePage_index";
-    import Default_SubPage from "../pages/HomePage/defaultSubPage/default_sub_page";
+    import HomePage from "../pages/HomePage/homePage_index";
+        import Default_SubPage from "../pages/HomePage/defaultSubPage/default_sub_page";
 
-    import Student_ChooseClass from "../pages/HomePage/subPage/student/student_ChooseClass/student_ChooseClass_index"
-        import Student_AllDepartmentPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllDepartmentPage/allDepartmentPage_index";
-        import Student_AllSubjectPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllSubjectPage/allSubjectPage_index";
-        import Student_AllCoursePage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllCoursePage/allCoursePage_index";
-        import Student_AllExamPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllExamPage/allExamPage_index";
-        import Student_ExamDetailPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/ExamDetailPage/examDetailPage_index";
-    import Student_MyClass from "../pages/HomePage/subPage/student/student_MyClass/student_MyClass_index"
-    import Student_MyExam from "../pages/HomePage/subPage/student/student_MyExam/student_MyExam_index"
+        import Student_ChooseClass from "../pages/HomePage/subPage/student/student_ChooseClass/student_ChooseClass_index"
+            import Student_AllDepartmentPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllDepartmentPage/allDepartmentPage_index";
+            import Student_AllSubjectPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllSubjectPage/allSubjectPage_index";
+            import Student_AllCoursePage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllCoursePage/allCoursePage_index";
+            import Student_AllExamPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllExamPage/allExamPage_index";
+            import Student_ExamDetailPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/ExamDetailPage/examDetailPage_index";
+        import Student_MyClass from "../pages/HomePage/subPage/student/student_MyClass/student_MyClass_index"
+        import Student_MyExam from "../pages/HomePage/subPage/student/student_MyExam/student_MyExam_index"
 
-    import Teacher_OperateClass from "../pages/HomePage/subPage/teacher/teacher_OperateClass/teacher_OperateClass_index"
-        import Teacher_AllDepartmentPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllDepartmentPage/allDepartmentPage_index";
-        import Teacher_AllSubjectPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllSubjectPage/allSubjectPage_index";
-        import Teacher_AllCoursePage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllCoursePage/allCoursePage_index";
-        import Teacher_AllExamPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllExamPage/allExamPage_index";
-        import Teacher_ExamDetailPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/ExamDetailPage/examDetailPage_index";
-    import Teacher_MyClass from "../pages/HomePage/subPage/teacher/teacher_MyClass/teacher_MyClass_index"
-    import Teacher_MyExam from "../pages/HomePage/subPage/teacher/teacher_MyExam/teacher_MyExam_index"
-    import Teacher_MyApplication from "../pages/HomePage/subPage/teacher/teacher_MyApplication/teacher_MyAppliation_index";
+        import Teacher_OperateClass from "../pages/HomePage/subPage/teacher/teacher_OperateClass/teacher_OperateClass_index"
+            import Teacher_AllDepartmentPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllDepartmentPage/allDepartmentPage_index";
+            import Teacher_AllSubjectPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllSubjectPage/allSubjectPage_index";
+            import Teacher_AllCoursePage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllCoursePage/allCoursePage_index";
+            import Teacher_AllExamPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/AllExamPage/allExamPage_index";
+            import Teacher_ExamDetailPage_index from "../pages/HomePage/subPage/teacher/teacher_OperateClass/ExamDetailPage/examDetailPage_index";
+        import Teacher_MyClass from "../pages/HomePage/subPage/teacher/teacher_MyClass/teacher_MyClass_index"
+        import Teacher_MyExam from "../pages/HomePage/subPage/teacher/teacher_MyExam/teacher_MyExam_index"
+        import Teacher_MyApplication from "../pages/HomePage/subPage/teacher/teacher_MyApplication/teacher_MyAppliation_index";
 
-import LoginPage from "../pages/LoginPage/loginPage_index";
+    import TeacherCorrectRespondentPage_index from "../pages/HomePage/subPage/teacher/teacher_CorrectRespondent/teacherCorrectRespondentPage_index";
 
-import RegisterPage from "../pages/RegisterPage/registerPage_index";
+    import LoginPage from "../pages/LoginPage/loginPage_index";
 
-import ProfilePage from "../pages/ProfilePage/profilePage_index";
+    import RegisterPage from "../pages/RegisterPage/registerPage_index";
+
+    import ProfilePage from "../pages/ProfilePage/profilePage_index";
+
+
 
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -124,6 +128,10 @@ const router = createBrowserRouter([
                         element: <Student_MyExam/>
                     }
                 ]
+            },
+            {
+                path: "correct-respondent",
+                element: <TeacherCorrectRespondentPage_index/>
             },
             {
                 path: "login",

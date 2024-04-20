@@ -12,7 +12,7 @@ import java.io.*;
  * @DateTime 2024/4/16 16:05
  **/
 
-public class AESUtiles {
+public class AESUtils {
 
     public static void aesEncryptFile(String sourceFilePath, String destFilePath, String key) throws Exception {
         aesFile(sourceFilePath, destFilePath, key, Cipher.ENCRYPT_MODE);

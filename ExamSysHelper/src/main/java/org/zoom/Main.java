@@ -2,6 +2,7 @@ package org.zoom;
 
 import org.zoom.Utils.AesUtils;
 import org.zoom.Utils.ClipboardUtils;
+import org.zoom.Utils.Sha256Utils;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -16,6 +17,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -174,9 +177,23 @@ public class Main {
                     System.out.println(currentFile.getName());
                     System.out.println(currentFile.lastModified());
                     System.out.println(currentFile.getPath());
-                    System.out.println(currentFile.getParent());
 
+                    try {
+                        byte[] sha256 = Sha256Utils.calculateSHA256(currentFile.getPath());
+                        String sha256Hex = Sha256Utils.bytesToHex(sha256);
+                        System.out.println("SHA256: " + sha256Hex);
+                        sha256TextField.setText(sha256Hex);
 
+                        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date date = new Date(System.currentTimeMillis());
+                        statusLabel.setText(formatter.format(date) + " 答卷签名已生成...");
+                    } catch (IOException | NoSuchAlgorithmException er) {
+                        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date date = new Date(System.currentTimeMillis());
+                        statusLabel.setText(formatter.format(date) + " 答卷签名失败...");
+
+                        er.printStackTrace();
+                    }
                 }
             }
         });

@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,8 +70,8 @@ public interface StudentMapper extends BaseMapper<StudentPO> {
     @Select("SELECT * FROM respondent_exam_student WHERE exam_id=#{examId} AND student_id=#{studentId}")
     RespondentExamStudentBO StudentGetRespondentInfo(Long examId, Long studentId);
 
-    @Insert("INSERT INTO respondent_exam_student(id,exam_id,student_id,respondent_path,final_score,sha256_code) VALUES(#{respondentId},#{examId},#{studentId},#{respondentFileName},#{finalScore},#{sha256Value})")
-    int StudentAddRespondent(Long respondentId, Long examId, Long studentId, String respondentFileName, int finalScore, String sha256Value);
+    @Insert("INSERT INTO respondent_exam_student(id,exam_id,student_id,respondent_path,final_score,sha256_code,is_sha256_good,last_modified_time) VALUES(#{respondentId},#{examId},#{studentId},#{respondentFileName},#{finalScore},#{sha256Value},#{is_sha256_good},#{last_modified_time})")
+    int StudentAddRespondent(Long respondentId, Long examId, Long studentId, String respondentFileName, int finalScore, String sha256Value, int is_sha256_good, Date last_modified_time);
 
     @Select("SELECT * FROM sys_course WHERE teachby=#{teacherId}")
     List<CoursePO> StudentGetAllMyClass(Long teacherId);

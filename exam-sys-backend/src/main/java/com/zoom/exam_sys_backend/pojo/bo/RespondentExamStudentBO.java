@@ -21,16 +21,20 @@ public class RespondentExamStudentBO {
     private String respondent_path;
     private int final_score;
     private String sha256_code;
+    private int is_sha256_good;
     private Date created_time;
+    private Date last_modified_time;
 
-    public RespondentExamStudentBO(Long id, Long exam_id, Long student_id, String respondent_path, int final_score, String sha256_code, Date created_time) {
+    public RespondentExamStudentBO(Long id, Long exam_id, Long student_id, String respondent_path, int final_score, String sha256_code, int is_sha256_good, Date created_time, Date last_modified_time) {
         this.id = id;
         this.exam_id = exam_id;
         this.student_id = student_id;
         this.respondent_path = respondent_path;
         this.final_score = final_score;
         this.sha256_code = sha256_code;
+        this.is_sha256_good = is_sha256_good;
         this.created_time = created_time;
+        this.last_modified_time = last_modified_time;
     }
 
     public Long getId() {
@@ -81,12 +85,28 @@ public class RespondentExamStudentBO {
         this.sha256_code = sha256_code;
     }
 
+    public int getIs_sha256_good() {
+        return is_sha256_good;
+    }
+
+    public void setIs_sha256_good(int is_sha256_good) {
+        this.is_sha256_good = is_sha256_good;
+    }
+
     public Date getCreated_time() {
         return created_time;
     }
 
     public void setCreated_time(Date created_time) {
         this.created_time = created_time;
+    }
+
+    public Date getLast_modified_time() {
+        return last_modified_time;
+    }
+
+    public void setLast_modified_time(Date last_modified_time) {
+        this.last_modified_time = last_modified_time;
     }
 
     @Override
@@ -98,7 +118,9 @@ public class RespondentExamStudentBO {
                 ", respondent_path='" + respondent_path + '\'' +
                 ", final_score=" + final_score +
                 ", sha256_code='" + sha256_code + '\'' +
+                ", is_sha256_good=" + is_sha256_good +
                 ", created_time=" + created_time +
+                ", last_modified_time=" + last_modified_time +
                 '}';
     }
 }

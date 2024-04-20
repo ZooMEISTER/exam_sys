@@ -1,5 +1,6 @@
 package com.zoom.exam_sys_backend.controller;
 
+import com.zoom.exam_sys_backend.pojo.bo.RespondentExamStudentBO;
 import com.zoom.exam_sys_backend.pojo.bo.TeacherAddCourseBO;
 import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.TeacherService;
@@ -275,5 +276,30 @@ public class TeacherController {
     @RequestMapping("/download-exam-paper")
     public void downloadLocal(String paperName, HttpServletResponse response) throws IOException {
         teacherService.TeacherDownloadExamPaper(paperName, response);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师批卷时获取答卷信息接口
+    * @DateTime: 2024/4/20 17:25
+    * @Params: [respondentId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.RespondentTeacherVO
+    */
+    @PostMapping("/get-respondent-info")
+    public RespondentTeacherVO TeacherGetRespondentInfo(@RequestParam("respondentId") Long respondentId){
+        return teacherService.TeacherGetRespondentInfo(respondentId);
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师批改试卷接口
+    * @DateTime: 2024/4/20 20:33
+    * @Params: [respondentId, finalScore]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.TeacherCorrectRespondentResultVO
+    */
+    @PostMapping("/correct-respondent")
+    public TeacherCorrectRespondentResultVO TeacherCorrectRespondent(@RequestParam("respondentId") Long respondentId,
+                                                                     @RequestParam("finalScore") int finalScore){
+        return teacherService.TeacherCorrectRespondent(respondentId, finalScore);
     }
 }

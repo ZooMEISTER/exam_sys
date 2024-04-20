@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
+
 import { useLocation } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 
@@ -15,6 +17,8 @@ import "./examDetailPage_index.css"
 const Teacher_ExamDetailPage_index = () => {
     const state = useLocation()
     const navigate = useNavigate()
+
+    const userid = useSelector(state => state.userid.value)
 
     const [examInfo, setExamInfo] = useState({})
     const [finishedRespondentInfo, setFinishedRespondentInfo] = useState([])
@@ -202,6 +206,30 @@ const Teacher_ExamDetailPage_index = () => {
         })
     }
 
+    // 老师跳转到试卷批改页面
+    const jumpToRespondentCorrectPage = (item) => {
+        if(userid == examInfo.teachby){
+            navigate('/correct-respondent', 
+            {
+                state: {
+                    departmentId: state.state.departmentId, 
+                    departmentName: state.state.departmentName, 
+                    subjectId: state.state.subjectId, 
+                    subjectName: state.state.subjectName,
+                    courseId: state.state.courseId,
+                    courseName: state.state.courseName,
+
+                    examId: state.state.examId,
+                    examName: examInfo.examName,
+                    respondentId: item.id
+                }
+            })
+        }
+        else{
+            message.error("您不是该课程的授课老师，无法查看学生答卷")
+        }
+    }
+
     return(
         <div className='exam-detail-root'>
             <div className='teacher-exam-detail-base'>
@@ -262,7 +290,10 @@ const Teacher_ExamDetailPage_index = () => {
                                             dataSource={finishedRespondentInfo}
                                             renderItem={(item, index) => (
                                                 <List.Item
-                                                    actions={[<a href={item.respondent_path} target='_blank'>查看答卷</a>]}
+                                                    actions={[
+                                                        // <a href={item.respondent_path} target='_blank'>查看答卷</a>
+                                                        <a onClick={(e) => jumpToRespondentCorrectPage(item)}>查看答卷</a>
+                                                    ]}
                                                 >
                                                     <Skeleton avatar title={false} loading={item.loading} active>
                                                         <List.Item.Meta
@@ -292,7 +323,10 @@ const Teacher_ExamDetailPage_index = () => {
                                             dataSource={unCheckedFinishedRespondentInfo}
                                             renderItem={(item, index) => (
                                                 <List.Item
-                                                    actions={[<a href={item.respondent_path} target='_blank'>查看答卷</a>]}
+                                                    actions={[
+                                                        // <a href={item.respondent_path} target='_blank'>查看答卷</a>
+                                                        <a onClick={(e) => jumpToRespondentCorrectPage(item)}>查看答卷</a>
+                                                    ]}
                                                 >
                                                     <List.Item.Meta
                                                         avatar={<Avatar shape="square" size={48} src={item.studentAvatar} />}
@@ -311,7 +345,10 @@ const Teacher_ExamDetailPage_index = () => {
                                             dataSource={checkedFinishedRespondentInfo}
                                             renderItem={(item, index) => (
                                                 <List.Item
-                                                    actions={[<a href={item.respondent_path} target='_blank'>查看答卷</a>]}
+                                                    actions={[
+                                                        // <a href={item.respondent_path} target='_blank'>查看答卷</a>
+                                                        <a onClick={(e) => jumpToRespondentCorrectPage(item)}>查看答卷</a>
+                                                    ]}
                                                 >
                                                     <Skeleton avatar title={false} loading={item.loading} active>
                                                         <List.Item.Meta

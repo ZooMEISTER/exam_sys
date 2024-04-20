@@ -1,4 +1,4 @@
-package org.zoom.Utils;
+package com.zoom.exam_sys_backend.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * @Author ZooMEISTER
  * @Description: TODO
- * @DateTime 2024/4/17 19:05
+ * @DateTime 2024/4/18 15:31
  **/
 
 public class Sha256Utils {
@@ -24,16 +24,17 @@ public class Sha256Utils {
      */
     public static byte[] calculateSHA256(String filePath) throws IOException, NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        try(FileInputStream fis = new FileInputStream(filePath);
-            FileChannel channel = fis.getChannel();
-            DigestInputStream dis = new DigestInputStream(fis, digest)) {
-                ByteBuffer buffer = ByteBuffer.allocate(8192); // 8 KB buffer
-                while (channel.read(buffer) != -1) {
-                    buffer.flip();
-                    digest.update(buffer);
-                    buffer.clear();
-                }
-                return digest.digest();
+        try (
+                FileInputStream fis = new FileInputStream(filePath);
+                FileChannel channel = fis.getChannel();
+                DigestInputStream dis = new DigestInputStream(fis, digest)) {
+            ByteBuffer buffer = ByteBuffer.allocate(8192); // 8 KB buffer
+            while (channel.read(buffer) != -1) {
+                buffer.flip();
+                digest.update(buffer);
+                buffer.clear();
+            }
+            return digest.digest();
         }
     }
 

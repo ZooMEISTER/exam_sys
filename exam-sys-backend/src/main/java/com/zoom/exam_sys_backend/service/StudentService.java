@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,8 +28,8 @@ public interface StudentService {
     int StudentCheckIfSignedCourse(Long studentId, Long courseId);
     StudentSignCourseResultVO StudentSignCourse(Long studentId, Long courseId);
     CourseVO StudentGetCourseInfo(Long courseId);
-    String StudentUploadRespondentFile(MultipartFile multipartFile) throws IOException;
-    StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value);
+    StudentUploadRespondentFileResultVO StudentUploadRespondentFile(MultipartFile multipartFile, Long lastModified) throws IOException;
+    StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value, Date lastModifiedTime) throws IOException, NoSuchAlgorithmException;
     List<MyCourseVO> StudentGetAllMyCourse(Long studentId);
     List<MyExamVO> StudentGetAllMyExam(Long studentId);
     StudentToTeacherResultVO StudentApplyTobeTeacher(Long studentId, String description);

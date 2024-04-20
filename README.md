@@ -70,6 +70,8 @@ BasePage
 			Teacher_ExamDetailPage_index
 		Teacher_MyClass
 		Teacher_MyExam
+		Teacher_MyApplication
+		TeacherCorrectRespondentPage_index
 		Student_ChooseClass
 			Student_AllDepartmentPage_index
 			Student_AllSubjectPage_index

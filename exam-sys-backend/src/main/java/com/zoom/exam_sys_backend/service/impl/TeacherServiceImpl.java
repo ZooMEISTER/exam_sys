@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.zoom.exam_sys_backend.comparator.MyExamVOComparator;
 import com.zoom.exam_sys_backend.comparator.TeacherAddCourseVOComparator;
 import com.zoom.exam_sys_backend.comparator.TeacherExamVOComparator;
-import com.zoom.exam_sys_backend.constant.ExamStatusStudent;
 import com.zoom.exam_sys_backend.constant.ExamStatusTeacher;
 import com.zoom.exam_sys_backend.exception.code.TeacherResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
@@ -24,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.URLEncoder;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +46,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Value("${data.examAnswerPaperFolder}")
     String examAnswerPaperFolderPath;
+
+    @Value("${data.respondentMappingPath}")
+    String respondentMappingPath;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -345,7 +346,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         // 对试卷进行加密
         String aeskey = FileUtils.getRandomString(16);
-        AESUtiles.aesEncryptFile(
+        AESUtils.aesEncryptFile(
                 fileDataFolderPath + examPaperFolderPath + paperFileName,
                 fileDataFolderPath + examPaperFolderPath + "e/" + paperFileName,
                 aeskey);
@@ -688,6 +689,46 @@ public class TeacherServiceImpl implements TeacherService {
             outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师批卷时获取答卷信息方法
+    * @DateTime: 2024/4/20 17:26
+    * @Params: [respondentId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.RespondentTeacherVO
+    */
+    @Override
+    public RespondentTeacherVO TeacherGetRespondentInfo(Long respondentId) {
+        // 获取答卷信息
+        RespondentExamStudentBO respondentExamStudentBO = teacherMapper.TeacherGetRespondentInfo(respondentId);
+        return new RespondentTeacherVO(respondentExamStudentBO.getId().toString(),
+                respondentExamStudentBO.getExam_id().toString(),
+                respondentExamStudentBO.getStudent_id().toString(),
+                respondentExamStudentBO.getRespondent_path(),
+                respondentExamStudentBO.getFinal_score(),
+                respondentExamStudentBO.getSha256_code(),
+                TimeTransferUtils.TransferTime2LocalTime(respondentExamStudentBO.getCreated_time()),
+                respondentExamStudentBO.getIs_sha256_good(),
+                TimeTransferUtils.TransferTime2LocalTime(respondentExamStudentBO.getLast_modified_time()));
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 老师批改试卷方法
+    * @DateTime: 2024/4/20 20:33
+    * @Params: [respondentId, finalScore]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.TeacherCorrectRespondentResultVO
+    */
+    @Override
+    public TeacherCorrectRespondentResultVO TeacherCorrectRespondent(Long respondentId, int finalScore) {
+        int res = teacherMapper.TeacherCorrectRespondentScore(respondentId, finalScore);
+        if(res > 0){
+            return new TeacherCorrectRespondentResultVO(TeacherResultCode.TEACHER_CORRECT_RESPONDENT_SUCCESS, "批改成功");
+        }
+        else{
+            return new TeacherCorrectRespondentResultVO(TeacherResultCode.TEACHER_CORRECT_RESPONDENT_FAIL, "批改失败");
         }
     }
 }

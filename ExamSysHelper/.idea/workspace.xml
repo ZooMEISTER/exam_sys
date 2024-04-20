@@ -5,19 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b37310bf-9040-43cc-a996-446a18857769" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AES_D.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AES_E.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Key1.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/zoom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/zoom/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/zoom/Utils/AesUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/zoom/Utils/AesUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/AesEDTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/AesEDTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/zoom/Utils/Sha256Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/zoom/Utils/Sha256Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$6.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Utils/AesUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Utils/AesUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/AesEDTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/AesEDTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/config/MyWebConfigurer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/config/MyWebConfigurer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/StudentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/TeacherController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/TeacherController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/exception/code/TeacherResultCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/exception/code/TeacherResultCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/interceptor/UserRequestInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/interceptor/UserRequestInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/StudentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/StudentMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/TeacherMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/TeacherMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/pojo/bo/RespondentExamStudentBO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/pojo/bo/RespondentExamStudentBO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/StudentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/TeacherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/TeacherService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/StudentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/StudentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/TeacherServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/TeacherServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/util/AESUtiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/util/AESUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,13 +54,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\myPrograming\WEB\Exam_System\ExamSysHelper\src\test\java" />
@@ -92,7 +103,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1713344130723</updated>
-      <workItem from="1713344132192" duration="8796000" />
+      <workItem from="1713344132192" duration="9040000" />
+      <workItem from="1713424403016" duration="1777000" />
+      <workItem from="1713588675451" duration="4757000" />
     </task>
     <servers />
   </component>

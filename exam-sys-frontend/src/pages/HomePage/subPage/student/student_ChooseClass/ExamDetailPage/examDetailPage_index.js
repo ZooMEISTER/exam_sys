@@ -19,18 +19,20 @@ const Student_ExamDetailPage_index = () => {
     const [examInfo, setExamInfo] = useState({})
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [sha256Value, setSha256Value] = useState("")
-    const [respondentFileName, setRespondentFileName] = useState("")
+    const [respondentFileInfo, setRespondentFileInfo] = useState([])
     const [justAddRespondent, setJustAddRespondent] = useState(false)
 
     // Upload的自定义request
     const customRequest = async (options) => {
+        console.log(options)
         // 调用api接口进行请求
         await userFileUploadRequest.post("/student/upload-respondent", {
-            examRespondent: options.file
+            examRespondent: options.file,
+            lastModified: options.file.lastModified
         })
         .then( function(response) {
             console.log(response)
-            setRespondentFileName(response)
+            setRespondentFileInfo(response)
             options.onSuccess(response, options.file);
         })
         .catch( function (error) {
@@ -76,17 +78,19 @@ const Student_ExamDetailPage_index = () => {
         if(sha256Value == ""){
             message.info("SHA-256 值不能为空")
         }
-        else if(respondentFileName == ""){
+        else if(respondentFileInfo.respondentFileName == ""){
             message.info("必须上传答卷")
         }
         else{
             userRequest.post("/student/add-respondent-record", {
                 examId: examInfo.id,
                 studentId: userid,
-                respondentFileName: respondentFileName,
-                sha256Value: sha256Value
+                respondentFileName: respondentFileInfo.respondentFileName,
+                sha256Value: sha256Value,
+                lastModifiedTime: respondentFileInfo.respondentLastModifiedTime
             })
             .then( function(response) {
+                console.log(response)
                 if(response.resultCode == 12004){
                     message.success(response.msg)
                     setJustAddRespondent(true)
@@ -119,7 +123,7 @@ const Student_ExamDetailPage_index = () => {
     };
     const handleCancel = () => {
         setSha256Value("")
-        setRespondentFileName("")
+        setRespondentFileInfo([])
         setIsModalOpen(false);
     };
 
@@ -178,7 +182,7 @@ const Student_ExamDetailPage_index = () => {
         })
     }
 
-    // 老师下载试卷
+    // 学生下载试卷
     const downloadExamPaper = () => {
         message.loading("正在下载试卷...")
         userFileDownloadRequest.post("/student/download-exam-paper", {

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -163,8 +165,8 @@ public class StudentController {
     * @Return java.lang.String
     */
     @PostMapping("/upload-respondent")
-    public String StudentUploadRespondentFile(@RequestParam("examRespondent") MultipartFile multipartFile) throws IOException {
-        return studentService.StudentUploadRespondentFile(multipartFile);
+    public StudentUploadRespondentFileResultVO StudentUploadRespondentFile(@RequestParam("examRespondent") MultipartFile multipartFile, @RequestParam("lastModified") Long lastModified) throws IOException {
+        return studentService.StudentUploadRespondentFile(multipartFile, lastModified);
     }
 
     /**
@@ -176,10 +178,12 @@ public class StudentController {
     */
     @PostMapping("/add-respondent-record")
     public StudentAddRespondentResultVO StudentAddRespondent(@RequestParam("examId") Long examId,
-                                                            @RequestParam("studentId") Long studentId,
-                                                            @RequestParam("respondentFileName") String respondentFileName,
-                                                            @RequestParam("sha256Value") String sha256Value){
-        return studentService.StudentAddRespondent(examId, studentId, respondentFileName, sha256Value);
+                                                             @RequestParam("studentId") Long studentId,
+                                                             @RequestParam("respondentFileName") String respondentFileName,
+                                                             @RequestParam("sha256Value") String sha256Value,
+                                                             @RequestParam("lastModifiedTime") String lastModifiedTime) throws IOException, NoSuchAlgorithmException {
+        Date _lastModifiedTime = new Date(Long.parseLong(lastModifiedTime));
+        return studentService.StudentAddRespondent(examId, studentId, respondentFileName, sha256Value, _lastModifiedTime);
     }
 
     /**
