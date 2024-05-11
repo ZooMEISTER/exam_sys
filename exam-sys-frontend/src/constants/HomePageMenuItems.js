@@ -1,3 +1,51 @@
+
+const homePageMenuItems_Admin = [
+    {
+        label: (
+            "学院管理"
+        ),
+        key: "/home/admin-department-management"
+    },
+    {
+        label: (
+            "专业管理"
+        ),
+        key: "/home/admin-subject-management"
+    },
+    {
+        label: (
+            "课程管理"
+        ),
+        key: "/home/admin-course-management"
+    },
+    {
+        label: (
+            "考试管理"
+        ),
+        key: "/home/admin-exam-management"
+    },
+    {
+        label: (
+            "申请管理"
+        ),
+        key: "/home/admin-application-management",
+        children: [
+            {
+                label: (
+                    "添加课程申请"
+                ),
+                key: "/home/admin-application-management/add-course-application"
+            },
+            {
+                label: (
+                    "成为老师申请"
+                ),
+                key: "/home/admin-application-management/be-teacher-application"
+            }
+        ]
+    }
+]
+
 const homePageMenuItems_Teacher = [
     {
         label: (
@@ -55,4 +103,4 @@ const homePageMenuItems_Student = [
 ]
 
 
-export { homePageMenuItems_Teacher, homePageMenuItems_Student }
+export { homePageMenuItems_Admin, homePageMenuItems_Teacher, homePageMenuItems_Student }

@@ -148,7 +148,7 @@ const Student_ExamDetailPage_index = () => {
     }
 
 
-    // 老师获取AES密钥
+    // 学生获取AES密钥
     const getAeskey = () => {
         userRequest.post("/student/get-exam-aes-key", {
             paperId: examInfo.paperId
@@ -160,8 +160,9 @@ const Student_ExamDetailPage_index = () => {
             }
             else if(response.resultCode == 12010){
                 const type = "text/plain";
-                const blob = new Blob([response], { type });
+                const blob = new Blob([response.aesKey], { type });
                 const data = [new ClipboardItem({ [type]: blob })];
+                console.log(data)
                 navigator.clipboard.write(data).then(
                     () => {
                         /* success */

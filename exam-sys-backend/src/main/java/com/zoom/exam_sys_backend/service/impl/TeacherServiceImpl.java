@@ -5,6 +5,7 @@ import com.zoom.exam_sys_backend.comparator.MyExamVOComparator;
 import com.zoom.exam_sys_backend.comparator.TeacherAddCourseVOComparator;
 import com.zoom.exam_sys_backend.comparator.TeacherExamVOComparator;
 import com.zoom.exam_sys_backend.constant.ExamStatusTeacher;
+import com.zoom.exam_sys_backend.constant.ExamSysConstants;
 import com.zoom.exam_sys_backend.exception.code.TeacherResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.TeacherMapper;
@@ -75,7 +76,7 @@ public class TeacherServiceImpl implements TeacherService {
                 return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_USER_NOT_EXIST, 0, "0", null, null, null, null, null, null, 0, 0);
             }
             requestSenderVO = new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_SUCCESS,
-                    2,
+                    ExamSysConstants.TEACHER_PERMISSION_LEVEL,
                     String.valueOf(userid),
                     teacherPO.getAvatar(),
                     teacherPO.getUsername(),
@@ -108,7 +109,7 @@ public class TeacherServiceImpl implements TeacherService {
         String newToken = JWTUtils.genAccessToken(userid, newProfilev);
         // 生成新的对象
         TouristLoginResultVO touristLoginResultVO = new TouristLoginResultVO(TeacherResultCode.TEACHER_UPDATE_PROFILE_SUCCESS,
-                2,
+                ExamSysConstants.TEACHER_PERMISSION_LEVEL,
                 String.valueOf(userid),
                 newAvatar,
                 newUsername,

@@ -5,6 +5,14 @@ import BasePage from "../pages/BasePage/basePage_index";
     import HomePage from "../pages/HomePage/homePage_index";
         import Default_SubPage from "../pages/HomePage/defaultSubPage/default_sub_page";
 
+        import Admin_ApplicationManagement from "../pages/HomePage/subPage/admin/admin_Application_Management/adminApplicationManagement_index";
+            import Admin_AddCourse_Application from "../pages/HomePage/subPage/admin/admin_Application_Management/admin_AddCourse_Application/adminAddCourseApplication";
+            import Admin_BeTeacher_Application from "../pages/HomePage/subPage/admin/admin_Application_Management/admin_BeTeacher_Application/adminBeTeacherApplication";
+        import Admin_DepartmentManagement from "../pages/HomePage/subPage/admin/admin_Department_Management/adminDepartmentManagement_index";
+        import Admin_SubjectManagement from "../pages/HomePage/subPage/admin/admin_Subject_Mangement/adminSubjectManagement_index";
+        import Admin_CourseManagement from "../pages/HomePage/subPage/admin/admin_Course_Management/adminCourseManagement_index";
+        import Admin_ExamManagement from "../pages/HomePage/subPage/admin/admin_Exam_Management/adminExamManagement_index";
+
         import Student_ChooseClass from "../pages/HomePage/subPage/student/student_ChooseClass/student_ChooseClass_index"
             import Student_AllDepartmentPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllDepartmentPage/allDepartmentPage_index";
             import Student_AllSubjectPage_index from "../pages/HomePage/subPage/student/student_ChooseClass/AllSubjectPage/allSubjectPage_index";
@@ -23,8 +31,7 @@ import BasePage from "../pages/BasePage/basePage_index";
         import Teacher_MyClass from "../pages/HomePage/subPage/teacher/teacher_MyClass/teacher_MyClass_index"
         import Teacher_MyExam from "../pages/HomePage/subPage/teacher/teacher_MyExam/teacher_MyExam_index"
         import Teacher_MyApplication from "../pages/HomePage/subPage/teacher/teacher_MyApplication/teacher_MyAppliation_index";
-
-    import TeacherCorrectRespondentPage_index from "../pages/HomePage/subPage/teacher/teacher_CorrectRespondent/teacherCorrectRespondentPage_index";
+        import TeacherCorrectRespondentPage_index from "../pages/HomePage/subPage/teacher/teacher_CorrectRespondent/teacherCorrectRespondentPage_index";
 
     import LoginPage from "../pages/LoginPage/loginPage_index";
 
@@ -54,6 +61,37 @@ const router = createBrowserRouter([
                         index: true,
                         element: <Default_SubPage/>
                     },
+                    {
+                        path: "admin-application-management",
+                        element: <Admin_ApplicationManagement/>,
+                        children:[
+                            {
+                                path: "add-course-application",
+                                element: <Admin_AddCourse_Application/>
+                            },
+                            {
+                                path: "be-teacher-application",
+                                element: <Admin_BeTeacher_Application/>
+                            }
+                        ]
+                    },
+                    {
+                        path: "admin-department-management",
+                        element: <Admin_DepartmentManagement/>,
+                    },
+                    {
+                        path: "admin-subject-management",
+                        element: <Admin_SubjectManagement/>,
+                    },
+                    {
+                        path: "admin-course-management",
+                        element: <Admin_CourseManagement/>,
+                    },
+                    {
+                        path: "admin-exam-management",
+                        element: <Admin_ExamManagement/>,
+                    },
+
                     {
                         path: "teacher-operate-class",
                         element: <Teacher_OperateClass/>,

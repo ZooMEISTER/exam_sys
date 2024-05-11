@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.util.Date;
+
 /**
  * @Author ZooMEISTER
  * @Description: TODO
@@ -16,11 +18,15 @@ public class StudentToTeacherBO {
     private Long id;
     private Long student_id;
     private String description;
+    private int approve_status;
+    private Date apply_time;
 
-    public StudentToTeacherBO(Long id, Long student_id, String description) {
+    public StudentToTeacherBO(Long id, Long student_id, String description, int approve_status, Date apply_time) {
         this.id = id;
         this.student_id = student_id;
         this.description = description;
+        this.approve_status = approve_status;
+        this.apply_time = apply_time;
     }
 
     public Long getId() {
@@ -47,12 +53,30 @@ public class StudentToTeacherBO {
         this.description = description;
     }
 
+    public int getApprove_status() {
+        return approve_status;
+    }
+
+    public void setApprove_status(int approve_status) {
+        this.approve_status = approve_status;
+    }
+
+    public Date getApply_time() {
+        return apply_time;
+    }
+
+    public void setApply_time(Date apply_time) {
+        this.apply_time = apply_time;
+    }
+
     @Override
     public String toString() {
         return "StudentToTeacherBO{" +
                 "id=" + id +
                 ", student_id=" + student_id +
                 ", description='" + description + '\'' +
+                ", approve_status=" + approve_status +
+                ", apply_time=" + apply_time +
                 '}';
     }
 }

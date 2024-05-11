@@ -177,6 +177,55 @@ const ProfilePage = () =>{
                 console.log(error)
             })
         }
+        else if(permissionLevel === 3){
+            // 管理员更改个人信息
+            userRequest.post("/admin/update-profile", {
+                userid: userid,
+                avatar: imageUrl,
+                username: newUsername,
+                realname: newRealname,
+                phone: newPhone,
+                email: newEmail,
+                password: newPassword
+            })
+            .then( function(response) {
+                console.log(response)
+                if(response.resultCode === 12000){
+                    // 用户信息更改成功
+                    message.success("用户信息修改成功")
+                    // 在这里把返回的用户数据存入到redux中
+                    dispatch(avatar_setValue(response.avatar))
+                    dispatch(email_setValue(response.email))
+                    dispatch(permissionLevel_setValue(response.permissionLevel))
+                    dispatch(phone_setValue(response.phone))
+                    dispatch(realname_setValue(response.realname))
+                    dispatch(token_setValue(response.token))
+                    dispatch(userid_setValue(response.userid))
+                    dispatch(username_setValue(response.username))
+    
+                    const user = response
+                    user.expiration = new Date().getTime() + (24 * 60 * 60 * 1000);
+                    // 如何显示用户信息呢？需要储存起来
+                    memoryUtils.user = JSON.stringify(user)     //保存在内存中
+                    storageUtils.saveUser(user) //保存到local中
+    
+                    localStorage.setItem("exam-sys-login-token", response.token)
+                    
+                    navigate("/")
+                }
+                else if(response.resultCode === 12001){
+                    // 用户信息更改失败
+                    message.warning("用户信息修改失败")
+                }
+                else if(response.resultCode === 10022){
+                    // 用户不存在
+                    message.warning("10022,请尝试重新登录,或联系管理员")
+                }
+            })
+            .catch( function (error) {
+                console.log(error)
+            })
+        }
     };
 
 

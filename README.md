@@ -62,6 +62,17 @@ BasePage
 	FrontPage
 	HomePage
 		Default_SubPage
+		
+		# 管理员相关页面
+		Admin_ApplicationManagement
+			Admin_AddCourse_Application
+			Admin_BeTeacher_Application
+		Admin_DepartmentManagement
+		Admin_SubjectManagement
+		Admin_CourseManagement
+		Admin_ExamManagement
+		
+		# 老师相关页面
 		Teacher_OperateClass
 			Teacher_AllDepartmentPage_index
 			Teacher_AllSubjectPage_index
@@ -72,6 +83,8 @@ BasePage
 		Teacher_MyExam
 		Teacher_MyApplication
 		TeacherCorrectRespondentPage_index
+		
+		# 学生相关页面
 		Student_ChooseClass
 			Student_AllDepartmentPage_index
 			Student_AllSubjectPage_index
@@ -80,6 +93,7 @@ BasePage
 			Student_ExamDetailPage_index
 		Student_MyClass
 		Student_MyExam
+		
 	LoginPage
 	RegisterPage
 	ProfilePage

@@ -80,7 +80,7 @@ public class StudentServiceImpl implements StudentService {
                 return new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_FAIL_USER_NOT_EXIST, 0, "0", null, null, null, null, null, null, 0, 0);
             }
             requestSenderVO = new TouristLoginResultVO(TouristResultCode.TOURIST_AUTOLOGIN_SUCCESS,
-                                                        1,
+                                                        ExamSysConstants.STUDENT_PERMISSION_LEVEL,
                                                         String.valueOf(userid),
                                                         studentPO.getAvatar(),
                                                         studentPO.getUsername(),
@@ -113,7 +113,7 @@ public class StudentServiceImpl implements StudentService {
         String newToken = JWTUtils.genAccessToken(userid, newProfilev);
         // 生成新的对象
         TouristLoginResultVO touristLoginResultVO = new TouristLoginResultVO(StudentResultCode.STUDENT_UPDATE_PROFILE_SUCCESS,
-                                                                            1,
+                                                                            ExamSysConstants.STUDENT_PERMISSION_LEVEL,
                                                                             String.valueOf(userid),
                                                                             newAvatar,
                                                                             newUsername,

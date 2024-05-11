@@ -160,7 +160,7 @@ const Teacher_ExamDetailPage_index = () => {
         .then( function(response) {
             console.log(response)
             const type = "text/plain";
-            const blob = new Blob([response], { type });
+            const blob = new Blob([response.aesKey], { type });
             const data = [new ClipboardItem({ [type]: blob })];
             navigator.clipboard.write(data).then(
                 () => {

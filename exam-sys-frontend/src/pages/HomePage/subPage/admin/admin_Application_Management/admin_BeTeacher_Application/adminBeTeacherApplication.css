@@ -1,0 +1,38 @@
+
+.admin-be-teacher-application-div{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 95%;
+}
+
+.admin-be-teacher-all-filter-outer-div{
+    display: flex;
+    flex-direction: row;
+
+    margin: auto;
+    margin-top: 20px;
+}
+.admin-be-teacher-all-filter-inner-div{
+    display: flex;
+    flex-direction: column;
+
+    margin-right: 20px;
+}
+.admin-be-teacher-filte-button{
+    margin: auto;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    width: 100px;
+}
+
+.admin-be-teacher-application-table{
+    width: 100%;
+
+    margin-top: 20px;
+}
+
+.admin-to-teacher-application-icon{
+    height: 50px;
+    width: 50px;
+}
