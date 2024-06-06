@@ -162,14 +162,29 @@ const TeacherCorrectRespondentPage_index = () => {
                     <label className='teacher-correct-respondent-info-sub-title'>总分</label>
                     <label className='teacher-correct-respondent-info-content'>{examInfo.paperScore}</label>
 
-                    <label className='teacher-correct-respondent-info-sub-title'>答卷修改时间</label>
-                    <label className='teacher-correct-respondent-info-content'>{respondentInfo.lastModifiedTime}</label>
+                    <label className='teacher-correct-respondent-info-sub-title'>答卷最后修改时间</label>
+                    <label className='teacher-correct-respondent-info-content'>
+                        {respondentInfo.lastModifiedTime}
+                        {new Date(respondentInfo.lastModifiedTime) > new Date(examInfo.end_time) && 
+                            <Tag color="red">超时</Tag>
+                        }
+                        {new Date(respondentInfo.lastModifiedTime) <= new Date(examInfo.end_time) && new Date(respondentInfo.lastModifiedTime) >= new Date(examInfo.start_time) &&
+                            <Tag color="green">未超时</Tag>
+                        }
+                    </label>
                     
                     <label className='teacher-correct-respondent-info-sub-title'>答卷提交时间</label>
                     <label className='teacher-correct-respondent-info-content'>{respondentInfo.created_time}</label>
 
-                    <label className='teacher-correct-respondent-info-sub-title'>SHA-256验证</label>
-                    <label className='teacher-correct-respondent-info-content'>{respondentInfo.is_sha256_good}</label>
+                    <label className='teacher-correct-respondent-info-sub-title'>ECDSA验证</label>
+                    <label className='teacher-correct-respondent-info-content'>
+                        {respondentInfo.is_sign_verify_good == 0 &&
+                            <Tag color="red">不通过</Tag>
+                        }
+                        {respondentInfo.is_sign_verify_good == 1 &&
+                            <Tag color="green">通过</Tag>
+                        }
+                    </label>
                     
                     {respondentInfo.final_score == -1 &&
                         <Button onClick={correctTheRespondent} className='teacher-correct-respondent-button' type='primary'>打分</Button>

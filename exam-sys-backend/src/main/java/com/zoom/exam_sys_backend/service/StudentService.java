@@ -29,7 +29,7 @@ public interface StudentService {
     StudentSignCourseResultVO StudentSignCourse(Long studentId, Long courseId);
     CourseVO StudentGetCourseInfo(Long courseId);
     StudentUploadRespondentFileResultVO StudentUploadRespondentFile(MultipartFile multipartFile, Long lastModified) throws IOException;
-    StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value, Date lastModifiedTime) throws IOException, NoSuchAlgorithmException;
+    StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String signValue, String publicKeyValue, Date lastModifiedTime) throws IOException, NoSuchAlgorithmException;
     List<MyCourseVO> StudentGetAllMyCourse(Long studentId);
     List<MyExamVO> StudentGetAllMyExam(Long studentId);
     StudentToTeacherResultVO StudentApplyTobeTeacher(Long studentId, String description);

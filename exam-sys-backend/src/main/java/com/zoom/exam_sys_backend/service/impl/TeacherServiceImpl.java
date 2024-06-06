@@ -51,11 +51,14 @@ public class TeacherServiceImpl implements TeacherService {
     @Value("${data.respondentMappingPath}")
     String respondentMappingPath;
 
-    @Autowired
-    RedisTemplate redisTemplate;
 
-    @Autowired
+    RedisTemplate redisTemplate;
     TeacherMapper teacherMapper;
+
+    public TeacherServiceImpl(RedisTemplate redisTemplate, TeacherMapper teacherMapper) {
+        this.redisTemplate = redisTemplate;
+        this.teacherMapper = teacherMapper;
+    }
 
     /**
     * @Author: ZooMEISTER
@@ -186,6 +189,7 @@ public class TeacherServiceImpl implements TeacherService {
         List<CourseVO> courseVOList = new ArrayList<>();
         for(SubjectCourseBO i : subjectCoursePOList){
             CoursePO coursePO = teacherMapper.teacherGetSingleCourse(i.getCourse_id());
+            if(coursePO.getDeleted() > 0) continue;
             TeacherPO teacherPO = teacherMapper.TeacherGetTeacherPOById(coursePO.getTeachby());
             courseVOList.add(new CourseVO(
                     coursePO.getId().toString(),
@@ -710,8 +714,10 @@ public class TeacherServiceImpl implements TeacherService {
                 respondentExamStudentBO.getRespondent_path(),
                 respondentExamStudentBO.getFinal_score(),
                 respondentExamStudentBO.getSha256_code(),
+                respondentExamStudentBO.getSign(),
+                respondentExamStudentBO.getPublickey(),
+                respondentExamStudentBO.getIs_sign_verify_good(),
                 TimeTransferUtils.TransferTime2LocalTime(respondentExamStudentBO.getCreated_time()),
-                respondentExamStudentBO.getIs_sha256_good(),
                 TimeTransferUtils.TransferTime2LocalTime(respondentExamStudentBO.getLast_modified_time()));
     }
 

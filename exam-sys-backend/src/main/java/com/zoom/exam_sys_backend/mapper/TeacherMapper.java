@@ -27,10 +27,10 @@ public interface TeacherMapper extends BaseMapper<TeacherPO> {
     @Update("UPDATE user_teacher SET avatar=#{newAvatar}, username=#{newUsername}, realname=#{newRealname}, phone=#{newPhone}, email=#{newEmail}, profilev=#{newProfilev} WHERE id=#{userid}")
     int updateTeacherProfileWithoutPassword(Long userid, String newAvatar, String newUsername, String newRealname, String newPhone, String newEmail, int newProfilev);
 
-    @Select("SELECT * FROM sys_department")
+    @Select("SELECT * FROM sys_department WHERE deleted != 1")
     List<DepartmentPO> teacherGetAllDepartment();
 
-    @Select("SELECT * FROM sys_subject WHERE belongto=#{departmentId}")
+    @Select("SELECT * FROM sys_subject WHERE belongto=#{departmentId} AND deleted != 1")
     List<SubjectPO> teacherGetAllSubjects(Long departmentId);
 
     @Select("SELECT * FROM relation_subject_course WHERE subject_id=#{subjectId}")
@@ -91,7 +91,7 @@ public interface TeacherMapper extends BaseMapper<TeacherPO> {
     @Select("SELECT COUNT(*) FROM respondent_exam_student WHERE exam_id=#{examId} AND student_id=#{studentId}")
     int TeacherGetStudentRespondentCount(Long examId, Long studentId);
 
-    @Select("SELECT * FROM sys_course WHERE teachby=#{teacherId}")
+    @Select("SELECT * FROM sys_course WHERE teachby=#{teacherId} AND deleted != 1")
     List<CoursePO> TeacherGetAllMyClass(Long teacherId);
 
     @Select("SELECT * FROM relation_subject_course WHERE course_id=#{courseId}")

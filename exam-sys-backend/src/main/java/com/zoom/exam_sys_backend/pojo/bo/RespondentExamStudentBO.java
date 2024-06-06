@@ -21,18 +21,22 @@ public class RespondentExamStudentBO {
     private String respondent_path;
     private int final_score;
     private String sha256_code;
-    private int is_sha256_good;
+    private String sign;
+    private String publickey;
+    private int is_sign_verify_good;
     private Date created_time;
     private Date last_modified_time;
 
-    public RespondentExamStudentBO(Long id, Long exam_id, Long student_id, String respondent_path, int final_score, String sha256_code, int is_sha256_good, Date created_time, Date last_modified_time) {
+    public RespondentExamStudentBO(Long id, Long exam_id, Long student_id, String respondent_path, int final_score, String sha256_code, String sign, String publickey, int is_sign_verify_good, Date created_time, Date last_modified_time) {
         this.id = id;
         this.exam_id = exam_id;
         this.student_id = student_id;
         this.respondent_path = respondent_path;
         this.final_score = final_score;
         this.sha256_code = sha256_code;
-        this.is_sha256_good = is_sha256_good;
+        this.sign = sign;
+        this.publickey = publickey;
+        this.is_sign_verify_good = is_sign_verify_good;
         this.created_time = created_time;
         this.last_modified_time = last_modified_time;
     }
@@ -85,12 +89,28 @@ public class RespondentExamStudentBO {
         this.sha256_code = sha256_code;
     }
 
-    public int getIs_sha256_good() {
-        return is_sha256_good;
+    public String getSign() {
+        return sign;
     }
 
-    public void setIs_sha256_good(int is_sha256_good) {
-        this.is_sha256_good = is_sha256_good;
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getPublickey() {
+        return publickey;
+    }
+
+    public void setPublickey(String publickey) {
+        this.publickey = publickey;
+    }
+
+    public int getIs_sign_verify_good() {
+        return is_sign_verify_good;
+    }
+
+    public void setIs_sign_verify_good(int is_sign_verify_good) {
+        this.is_sign_verify_good = is_sign_verify_good;
     }
 
     public Date getCreated_time() {
@@ -118,7 +138,9 @@ public class RespondentExamStudentBO {
                 ", respondent_path='" + respondent_path + '\'' +
                 ", final_score=" + final_score +
                 ", sha256_code='" + sha256_code + '\'' +
-                ", is_sha256_good=" + is_sha256_good +
+                ", sign='" + sign + '\'' +
+                ", publickey='" + publickey + '\'' +
+                ", is_sign_verify_good=" + is_sign_verify_good +
                 ", created_time=" + created_time +
                 ", last_modified_time=" + last_modified_time +
                 '}';

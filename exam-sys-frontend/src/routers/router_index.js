@@ -5,6 +5,9 @@ import BasePage from "../pages/BasePage/basePage_index";
     import HomePage from "../pages/HomePage/homePage_index";
         import Default_SubPage from "../pages/HomePage/defaultSubPage/default_sub_page";
 
+        import Admin_UserManagement from "../pages/HomePage/subPage/admin/admin_User_Management/adminUserManagement_index"
+            import Admin_StudentManagement from "../pages/HomePage/subPage/admin/admin_User_Management/admin_Student_Management/adminStudentManagement"
+            import Admin_TeacherManagement from "../pages/HomePage/subPage/admin/admin_User_Management/admin_Teacher_Management/adminTeacherManagement"
         import Admin_ApplicationManagement from "../pages/HomePage/subPage/admin/admin_Application_Management/adminApplicationManagement_index";
             import Admin_AddCourse_Application from "../pages/HomePage/subPage/admin/admin_Application_Management/admin_AddCourse_Application/adminAddCourseApplication";
             import Admin_BeTeacher_Application from "../pages/HomePage/subPage/admin/admin_Application_Management/admin_BeTeacher_Application/adminBeTeacherApplication";
@@ -60,6 +63,20 @@ const router = createBrowserRouter([
                     {
                         index: true,
                         element: <Default_SubPage/>
+                    },
+                    {
+                        path: "admin-user-management",
+                        element: <Admin_UserManagement/>,
+                        children:[
+                            {
+                                path: "teacher-management",
+                                element: <Admin_TeacherManagement/>
+                            },
+                            {
+                                path: "student-management",
+                                element: <Admin_StudentManagement/>
+                            }
+                        ]
                     },
                     {
                         path: "admin-application-management",

@@ -234,7 +234,7 @@ const Admin_BeTeacher_Application = () => {
                         />
                     </div>
 
-                    <Button onClick={filterBeTeacherApplication} className='admin-be-teacher-filte-button'>筛选</Button>
+                    <Button type='primary' onClick={filterBeTeacherApplication} className='admin-be-teacher-filte-button'>筛选</Button>
                     
                 </div>
 

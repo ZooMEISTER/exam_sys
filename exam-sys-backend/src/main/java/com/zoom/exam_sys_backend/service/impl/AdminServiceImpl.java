@@ -7,6 +7,7 @@ import com.zoom.exam_sys_backend.exception.code.TeacherResultCode;
 import com.zoom.exam_sys_backend.exception.code.TouristResultCode;
 import com.zoom.exam_sys_backend.mapper.AdminMapper;
 import com.zoom.exam_sys_backend.pojo.bo.StudentToTeacherBO;
+import com.zoom.exam_sys_backend.pojo.bo.SubjectCourseBO;
 import com.zoom.exam_sys_backend.pojo.bo.TeacherAddCourseBO;
 import com.zoom.exam_sys_backend.pojo.po.*;
 import com.zoom.exam_sys_backend.pojo.vo.*;
@@ -44,12 +45,13 @@ public class AdminServiceImpl implements AdminService {
     @Value("${data.respondentMappingPath}")
     String respondentMappingPath;
 
-    @Autowired
     RedisTemplate redisTemplate;
-
-    @Autowired
     AdminMapper adminMapper;
 
+    public AdminServiceImpl(RedisTemplate redisTemplate, AdminMapper adminMapper) {
+        this.redisTemplate = redisTemplate;
+        this.adminMapper = adminMapper;
+    }
 
     /**
     * @Author: ZooMEISTER
@@ -173,6 +175,7 @@ public class AdminServiceImpl implements AdminService {
         for(TeacherAddCourseBO i : teacherAddCourseBOList){
             SubjectPO subjectPO = adminMapper.AdminGetSubjectPOById(i.getSubject_id());
             DepartmentPO departmentPO = adminMapper.AdminGetDepartmentPOById(subjectPO.getBelongto());
+            if(departmentPO.getDeleted() > 0) continue;  // 排除已经逻辑删除的学院
             TeacherPO teacherPO = adminMapper.AdminGetTeacherPOById(i.getTeachby());
             adminAddCourseApplicationVOList.add(new AdminAddCourseApplicationVO(
                     i.getId().toString(),
@@ -247,7 +250,7 @@ public class AdminServiceImpl implements AdminService {
     */
     @Override
     @Transactional
-    public AdminApplicationManageResultVO AdminApproveAddCourseApplication(Long applicationId) {
+    public ResultVO AdminApproveAddCourseApplication(Long applicationId) {
         TeacherAddCourseBO teacherAddCourseBO = adminMapper.AdminGetAddCourseApplicationBOById(applicationId);
         SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
         Long newCourseId = idWorker.nextId();
@@ -267,10 +270,10 @@ public class AdminServiceImpl implements AdminService {
         int res3 = adminMapper.AdminPlusOne2SubjectCourseCount(teacherAddCourseBO.getSubject_id());
         int res4 = adminMapper.AdminUpdateApplicationStatus("application_add_course", teacherAddCourseBO.getId(), 1);
         if(res1 > 0 && res2 > 0 && res3 > 0 && res4 > 0){
-            return new AdminApplicationManageResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_SUCCESS, "课程添加成功");
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_SUCCESS, "课程添加成功");
         }
         else {
-            return new AdminApplicationManageResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_FAIL, "课程添加失败");
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_FAIL, "课程添加失败");
         }
     }
 
@@ -283,13 +286,13 @@ public class AdminServiceImpl implements AdminService {
     */
     @Override
     @Transactional
-    public AdminApplicationManageResultVO AdminTurnDownAddCourseApplication(Long applicationId) {
+    public ResultVO AdminTurnDownAddCourseApplication(Long applicationId) {
         int res = adminMapper.AdminUpdateApplicationStatus("application_add_course", applicationId, 2);
         if(res > 0){
-            return new AdminApplicationManageResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_SUCCESS, "已拒绝申请");
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_SUCCESS, "已拒绝申请");
         }
         else{
-            return new AdminApplicationManageResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_FAIL, "拒绝申请失败");
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_FAIL, "拒绝申请失败");
         }
     }
 
@@ -332,7 +335,7 @@ public class AdminServiceImpl implements AdminService {
     */
     @Override
     @Transactional
-    public AdminApplicationManageResultVO AdminApproveToTeacherApplication(Long applicationId) {
+    public ResultVO AdminApproveToTeacherApplication(Long applicationId) {
         StudentToTeacherBO studentToTeacherBO = adminMapper.AdminGetToTeacherBOById(applicationId);
         StudentPO studentPO = adminMapper.AdminGetStudentPOById(studentToTeacherBO.getStudent_id());
         SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
@@ -363,10 +366,10 @@ public class AdminServiceImpl implements AdminService {
                 studentPO.getProfilev()
         ));
         if(res1 > 0 && res2 > 0 && res3 > 0){
-            return  new AdminApplicationManageResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_SUCCESS, "批准申请成功");
+            return  new ResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_SUCCESS, "批准申请成功");
         }
         else{
-            return new AdminApplicationManageResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_FAIL, "批准申请失败");
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_FAIL, "批准申请失败");
         }
     }
 
@@ -379,13 +382,389 @@ public class AdminServiceImpl implements AdminService {
     */
     @Override
     @Transactional
-    public AdminApplicationManageResultVO AdminTurnDownToTeacherApplication(Long applicationId) {
+    public ResultVO AdminTurnDownToTeacherApplication(Long applicationId) {
         int res = adminMapper.AdminUpdateApplicationStatus("application_to_teacher", applicationId, 2);
         if(res > 0){
-            return new AdminApplicationManageResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_SUCCESS, "已拒绝该申请");
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_SUCCESS, "已拒绝该申请");
         }
         else{
-            return new AdminApplicationManageResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_FAIL, "拒绝申请失败");
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_APPLICATION_STATUS_FAIL, "拒绝申请失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员搜索名称符合要求的学院方法
+    * @DateTime: 2024/5/13 15:06
+    * @Params: [searchStr]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.DepartmentVO>
+    */
+    @Override
+    public List<DepartmentVO> AdminSearchDepartment(String searchStr) {
+        List<DepartmentVO> departmentVOList = new ArrayList<>();
+        List<DepartmentPO> departmentPOList = adminMapper.AdminSearchDepartment(searchStr);
+        for(DepartmentPO i : departmentPOList){
+            departmentVOList.add(new DepartmentVO(
+                    i.getId().toString(),
+                    i.getIcon(),
+                    i.getName(),
+                    i.getDescription(),
+                    i.getSubject_count()
+            ));
+        }
+
+        return departmentVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员添加新学院方法
+    * @DateTime: 2024/5/13 17:56
+    * @Params: [newDepartmentName, newDepartmentIcon, newDepartmentDescription]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    @Transactional
+    public ResultVO AdminAddNewDepartment(String newDepartmentName, String newDepartmentIcon, String newDepartmentDescription) {
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+        Long newDepartmentId = idWorker.nextId();
+        int res = adminMapper.AdminAddNewDepartment(newDepartmentId, newDepartmentName, newDepartmentIcon, newDepartmentDescription);
+        if(res > 0){
+            return new ResultVO(AdminResultCode.ADMIN_INSERT_DEPARTMENT_SUCCESS, "添加学院成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_INSERT_DEPARTMENT_FAIL, "添加学院失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员更新学院信息方法
+    * @DateTime: 2024/5/13 17:09
+    * @Params: [newDepartmentName, newDepartmentIcon, newDepartmentDescription]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    public ResultVO AdminUpdateDepartmentInfo(Long departmentId, String newDepartmentName, String newDepartmentIcon, String newDepartmentDescription) {
+        int res = adminMapper.AdminUpdateDepartmentInfo(departmentId, newDepartmentName, newDepartmentIcon, newDepartmentDescription);
+        if(res > 0){
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_DEPARTMENT_INFO_SUCCESS, "学院信息更新成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_DEPARTMENT_INFO_FAIL, "学院信息更新失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员删除学院方法
+    * @DateTime: 2024/5/13 18:24
+    * @Params: [departmentId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    public ResultVO AdminDeleteDepartment(Long departmentId) {
+        int res = adminMapper.AdminDeleteDepartment(departmentId);
+        if(res > 0){
+            return new ResultVO(AdminResultCode.ADMIN_DELETE_DEPARTMENT_SUCCESS, "删除学院成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_DELETE_DEPARTMENT_FAIL, "删除学院失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员获取专业管理所有专业方法
+    * @DateTime: 2024/5/14 0:15
+    * @Params: [departmentId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.AdminSubjectManagementVO>
+    */
+    @Override
+    public List<AdminSubjectManagementVO> AdminGetSubjectManagement(String departmentId) {
+        List<AdminSubjectManagementVO> adminSubjectManagementVOList = new ArrayList<>();
+        String d = departmentId.equals("all") ? "" : departmentId;
+        List<SubjectPO> subjectPOList = adminMapper.AdminGetSubjectManagement(d);
+        for(SubjectPO i : subjectPOList){
+            DepartmentPO departmentPO = adminMapper.AdminGetDepartmentPOById(i.getBelongto());
+            if(departmentPO.getDeleted() > 0) continue; // 跳过隶属于已逻辑删除的学院的专业
+            adminSubjectManagementVOList.add(new AdminSubjectManagementVO(
+                    i.getId().toString(),
+                    i.getIcon(),
+                    i.getName(),
+                    i.getDescription(),
+                    i.getBelongto().toString(),
+                    i.getCourse_count(),
+                    departmentPO.getName()
+            ));
+        }
+        return adminSubjectManagementVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员更新专业信息方法
+    * @DateTime: 2024/5/14 0:50
+    * @Params: [subjectId, newSubjectIcon, newSubjectName, newSubjectDescription]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    public ResultVO AdminUpdateSubjectInfo(Long subjectId, String newSubjectIcon, String newSubjectName, String newSubjectDescription) {
+        int res = adminMapper.AdminUpdateSubjectInfo(subjectId, newSubjectIcon, newSubjectName, newSubjectDescription);
+        if(res > 0){
+            return  new ResultVO(AdminResultCode.ADMIN_UPDATE_SUBJECT_INFO_SUCCESS, "更新专业信息成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_SUBJECT_INFO_FAIL, "更新专业信息失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员添加新专业方法
+    * @DateTime: 2024/5/14 1:11
+    * @Params: [belongto, newSubjectIcon, newSubjectName, newSubjectDescription]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    @Transactional
+    public ResultVO AdminAddNewSubject(Long belongto, String newSubjectIcon, String newSubjectName, String newSubjectDescription) {
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+        Long newSubjectId = idWorker.nextId();
+        int res1 = adminMapper.AdminAddNewSubject(newSubjectId, newSubjectIcon, newSubjectName, newSubjectDescription, belongto);
+        int res2 = adminMapper.AdminDepartmentSubjectCountIncrement(belongto);
+        if(res1 > 0 && res2 > 0){
+            return  new ResultVO(AdminResultCode.ADMIN_INSERT_SUBJECT_SUCCESS, "添加专业成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_INSERT_SUBJECT_FAIL, "添加专业失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员删除专业方法
+    * @DateTime: 2024/5/14 1:25
+    * @Params: [subjectId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    public ResultVO AdminDeleteSubject(Long subjectId) {
+        int res1 = adminMapper.AdminDeletedSubject(subjectId);
+        SubjectPO subjectPO = adminMapper.AdminGetSubjectPOById(subjectId);
+        int res2 = adminMapper.AdminDepartmentSubjectCountDecrement(subjectPO.getBelongto());
+        if(res1 > 0 && res2 > 0){
+            return  new ResultVO(AdminResultCode.ADMIN_DELETE_SUBJECT_SUCCESS, "删除专业成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_DELETE_SUBJECT_FAIL, "删除专业失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员根据条件筛选课程方法
+    * @DateTime: 2024/5/14 21:35
+    * @Params: [departmentId, subjectId, teacherId]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.AdminCourseManagementVO>
+    */
+    @Override
+    public List<AdminCourseManagementVO> AdminGetCourseByConditions(String departmentId, String subjectId, String teacherId) {
+        List<AdminCourseManagementVO> adminCourseManagementVOList = new ArrayList<>();
+        String d = departmentId.equals("all") ? "" : departmentId;
+        String s = subjectId.equals("all") ? "" : subjectId;
+        String t = teacherId.equals("all") ? "" : teacherId;
+        List<CoursePO> coursePOList = adminMapper.AdminGetCourseByTeachby(t);
+        for(CoursePO i : coursePOList){
+            SubjectCourseBO subjectCourseBO = adminMapper.AdminGetSubjectCourseBOByCourseId(i.getId());
+            SubjectPO subjectPO = adminMapper.AdminGetSubjectPOById(subjectCourseBO.getSubject_id());
+            DepartmentPO departmentPO = adminMapper.AdminGetDepartmentPOById(subjectPO.getBelongto());
+            TeacherPO teacherPO = adminMapper.AdminGetTeacherPOById(i.getTeachby());
+            if(!s.equals("") && !String.valueOf(subjectCourseBO.getSubject_id()).equals(s)) continue;
+            adminCourseManagementVOList.add(new AdminCourseManagementVO(
+                    i.getId().toString(),
+                    i.getIcon(),
+                    i.getName(),
+                    i.getDescription(),
+                    i.getTeachby().toString(),
+                    TimeTransferUtils.TransferTime2LocalTime(i.getCreated_time()),
+                    departmentPO.getId().toString(),
+                    departmentPO.getName().toString(),
+                    subjectPO.getId().toString(),
+                    subjectPO.getName(),
+                    teacherPO.getRealname()
+            ));
+        }
+
+        return adminCourseManagementVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员更新课程信息方法
+    * @DateTime: 2024/5/15 17:30
+    * @Params: [courseId, newCourseIcon, newCourseName, newCourseDescription]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    public ResultVO AdminUpdateCourseInfo(Long courseId, String newCourseIcon, String newCourseName, String newCourseDescription) {
+        int res = adminMapper.AdminUpdateCourseInfo(courseId, newCourseIcon, newCourseName, newCourseDescription);
+        if(res > 0){
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_COURSE_INFO_SUCCESS, "更新课程信息成功");
+        }
+        else {
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_COURSE_INFO_FAIL, "更新课程信息失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员添加课程方法
+    * @DateTime: 2024/5/15 17:31
+    * @Params: [belongto, newCourseIcon, newCourseName, newCourseDescription, teachby]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    @Transactional
+    public ResultVO AdminAddNewCourse(Long belongto, String newCourseIcon, String newCourseName, String newCourseDescription, Long teachby) {
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+        Long newCourseId = idWorker.nextId();
+        Long newRelationId = idWorker.nextId();
+        int res1 = adminMapper.AdminAddNewCourse(newCourseId, newCourseIcon, newCourseName, newCourseDescription, teachby);
+        int res2 = adminMapper.AdminAddSubjectCourseRelation(newRelationId, belongto, newCourseId);
+        int res3 = adminMapper.AdminPlusOne2SubjectCourseCount(belongto);
+
+        if(res1 > 0 && res2 > 0 && res3 > 0){
+            return new ResultVO(AdminResultCode.ADMIN_INSERT_COURSE_SUCCESS, "添加课程成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_INSERT_COURSE_FAIL, "添加课程失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员删除课程方法
+    * @DateTime: 2024/5/16 12:07
+    * @Params: [courseId]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    public ResultVO AdminDeleteCourse(Long courseId) {
+        int res1 = adminMapper.AdminDeletedCourse(courseId);
+        SubjectCourseBO subjectCourseBO = adminMapper.AdminGetSubjectCourseBOByCourseId(courseId);
+        int res2 = adminMapper.AdminMinusOne2SubjectCourseCount(subjectCourseBO.getSubject_id());
+        if(res1 > 0 && res2 > 0){
+            return new ResultVO(AdminResultCode.ADMIN_DELETE_COURSE_SUCCESS, "删除课程成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_DELETE_COURSE_FAIL, "删除课程失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员获取老师用户信息方法
+    * @DateTime: 2024/5/18 16:36
+    * @Params: [searchStr]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.TeacherVO>
+    */
+    @Override
+    public List<TeacherVO> AdminGetTeacherInfo(String searchStr) {
+        List<TeacherVO> teacherVOList = new ArrayList<>();
+        List<TeacherPO> teacherPOList = adminMapper.AdminGetTeacherInfo(searchStr);
+        for(TeacherPO i : teacherPOList){
+            teacherVOList.add(new TeacherVO(
+                    i.getId().toString(),
+                    i.getAvatar(),
+                    i.getUsername(),
+                    i.getRealname(),
+                    i.getPhone(),
+                    i.getEmail(),
+                    i.getDeleted(),
+                    i.getProfilev()
+            ));
+        }
+        return teacherVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员更新老师用户信息方法
+    * @DateTime: 2024/5/18 17:33
+    * @Params: [curUserId, newAvatar, newUsername, newRealname, newPhone, newEmail, resetPwd]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    public ResultVO AdminUpdateTeacherInfo(Long curUserId, String newAvatar, String newUsername, String newRealname, String newPhone, String newEmail, Boolean resetPwd) {
+        if(redisTemplate.opsForValue().get(curUserId.toString()) != null){
+            redisTemplate.delete(curUserId.toString());
+        }
+        int res1 = adminMapper.AdminUpdateTeacherProfile(curUserId, newAvatar, newUsername, newRealname, newPhone, newEmail);
+        int res2 = 1;
+        if(resetPwd){
+            res2 = 0;
+            res2 = adminMapper.AdminResetTeacherPassword(curUserId, ExamSysConstants.RESET_PASSWORD_DEFAULT_PASSWORD);
+        }
+
+        if(res1 > 0 && res2 > 0){
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_TEACHER_PROFILE_SUCCESS, "更新老师用户信息成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_TEACHER_PROFILE_FAIL, "更新老师用户信息失败");
+        }
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员获取学生用户信息方法
+    * @DateTime: 2024/5/18 17:11
+    * @Params: [searchStr]
+    * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.StudentVO>
+    */
+    @Override
+    public List<StudentVO> AdminGetStudentInfo(String searchStr) {
+        List<StudentVO> studentVOList = new ArrayList<>();
+        List<StudentPO> studentPOList = adminMapper.AdminGetStudentInfo(searchStr);
+        for(StudentPO i : studentPOList){
+            studentVOList.add(new StudentVO(
+                    i.getId().toString(),
+                    i.getAvatar(),
+                    i.getUsername(),
+                    i.getRealname(),
+                    i.getPhone(),
+                    i.getEmail(),
+                    i.getDeleted(),
+                    i.getProfilev()
+            ));
+        }
+        return studentVOList;
+    }
+
+    /**
+    * @Author: ZooMEISTER
+    * @Description: 管理员更新学生用户信息方法
+    * @DateTime: 2024/5/18 17:34
+    * @Params: [curUserId, newAvatar, newUsername, newRealname, newPhone, newEmail, resetPwd]
+    * @Return com.zoom.exam_sys_backend.pojo.vo.ResultVO
+    */
+    @Override
+    public ResultVO AdminUpdateStudentInfo(Long curUserId, String newAvatar, String newUsername, String newRealname, String newPhone, String newEmail, Boolean resetPwd) {
+        if(redisTemplate.opsForValue().get(curUserId.toString()) != null){
+            redisTemplate.delete(curUserId.toString());
+        }
+        int res1 = adminMapper.AdminUpdateStudentProfile(curUserId, newAvatar, newUsername, newRealname, newPhone, newEmail);
+        int res2 = 1;
+        if(resetPwd){
+            res2 = 0;
+            res2 = adminMapper.AdminResetStudentPassword(curUserId, ExamSysConstants.RESET_PASSWORD_DEFAULT_PASSWORD);
+        }
+
+        if(res1 > 0 && res2 > 0){
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_STUDENT_PROFILE_SUCCESS, "更新学生用户信息成功");
+        }
+        else{
+            return new ResultVO(AdminResultCode.ADMIN_UPDATE_STUDENT_PROFILE_FAIL, "更新学生用户信息失败");
         }
     }
 }

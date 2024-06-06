@@ -385,7 +385,7 @@ const Admin_AddCourse_Application = () => {
                         />
                     </div>
 
-                    <Button onClick={filterAddCourseApplication} className='admin-add-course-filte-button'>筛选</Button>
+                    <Button type='primary' onClick={filterAddCourseApplication} className='admin-add-course-filte-button'>筛选</Button>
                     
                 </div>
 

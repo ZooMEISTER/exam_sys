@@ -7,6 +7,7 @@ package com.zoom.exam_sys_backend.controller;
  *  @DateTime 2024/1/1 11:09
  **/
 
+import com.zoom.exam_sys_backend.annotation.LogAnnotation;
 import com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO;
 import com.zoom.exam_sys_backend.pojo.vo.TouristRegisterResultVO;
 import com.zoom.exam_sys_backend.service.TouristService;
@@ -20,9 +21,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tourist")
 public class TouristController {
 
-    @Autowired
     private TouristService touristService;
-
+    public TouristController(TouristService touristService) {
+        this.touristService = touristService;
+    }
 
     /**
     * @Author: ZooMEISTER
@@ -32,6 +34,7 @@ public class TouristController {
     * @Return java.lang.String
     */
     @GetMapping("/test")
+    @LogAnnotation(description = "游客测试用接口")
     public String TouristControllerTest(){
         return "Tourist controller test success";
     }
@@ -45,6 +48,7 @@ public class TouristController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.TouristVO
     */
     @PostMapping("/register")
+    @LogAnnotation(description = "游客注册接口")
     public TouristRegisterResultVO TouristRegister(@RequestParam("avatar") String avatar,
                                                    @RequestParam("username") String username,
                                                    @RequestParam("password") String password
@@ -60,6 +64,7 @@ public class TouristController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginVO
     */
     @PostMapping("/login")
+    @LogAnnotation(description = "游客登陆接口")
     public TouristLoginResultVO TouristLogin(@RequestParam("username") String username,
                                              @RequestParam("password") String password
     ){
@@ -74,6 +79,7 @@ public class TouristController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO
     */
     @PostMapping("/autologin")
+    @LogAnnotation(description = "用户自动登录接口")
     public TouristLoginResultVO TouristAutoLogin(@RequestParam("token") String token){
         return touristService.TouristAutoLogin(token);
     }

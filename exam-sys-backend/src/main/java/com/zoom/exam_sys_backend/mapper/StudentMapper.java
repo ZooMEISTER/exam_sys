@@ -27,10 +27,10 @@ public interface StudentMapper extends BaseMapper<StudentPO> {
     @Update("UPDATE user_student SET avatar=#{newAvatar}, username=#{newUsername}, realname=#{newRealname}, phone=#{newPhone}, email=#{newEmail}, profilev=#{newProfilev} WHERE id=#{userid}")
     int updateStudentProfileWithoutPassword(Long userid, String newAvatar, String newUsername, String newRealname, String newPhone, String newEmail, int newProfilev);
 
-    @Select("SELECT * FROM sys_department")
+    @Select("SELECT * FROM sys_department WHERE deleted != 1")
     List<DepartmentPO> studentGetAllDepartment();
 
-    @Select("SELECT * FROM sys_subject WHERE belongto=#{departmentId}")
+    @Select("SELECT * FROM sys_subject WHERE belongto=#{departmentId} AND deleted != 1")
     List<SubjectPO> studentGetAllSubjects(Long departmentId);
 
     @Select("SELECT * FROM relation_subject_course WHERE subject_id=#{subjectId}")
@@ -70,10 +70,10 @@ public interface StudentMapper extends BaseMapper<StudentPO> {
     @Select("SELECT * FROM respondent_exam_student WHERE exam_id=#{examId} AND student_id=#{studentId}")
     RespondentExamStudentBO StudentGetRespondentInfo(Long examId, Long studentId);
 
-    @Insert("INSERT INTO respondent_exam_student(id,exam_id,student_id,respondent_path,final_score,sha256_code,is_sha256_good,last_modified_time) VALUES(#{respondentId},#{examId},#{studentId},#{respondentFileName},#{finalScore},#{sha256Value},#{is_sha256_good},#{last_modified_time})")
-    int StudentAddRespondent(Long respondentId, Long examId, Long studentId, String respondentFileName, int finalScore, String sha256Value, int is_sha256_good, Date last_modified_time);
+    @Insert("INSERT INTO respondent_exam_student(id,exam_id,student_id,respondent_path,final_score,sha256_code,sign,publickey,is_sign_verify_good,last_modified_time) VALUES(#{respondentId},#{examId},#{studentId},#{respondentFileName},#{finalScore},#{sha256Value},#{sign},#{publicKey},#{is_sign_verify_good},#{last_modified_time})")
+    int StudentAddRespondent(Long respondentId, Long examId, Long studentId, String respondentFileName, int finalScore, String sha256Value, String sign, String publicKey, int is_sign_verify_good, Date last_modified_time);
 
-    @Select("SELECT * FROM sys_course WHERE teachby=#{teacherId}")
+    @Select("SELECT * FROM sys_course WHERE teachby=#{teacherId} AND deleted != 1")
     List<CoursePO> StudentGetAllMyClass(Long teacherId);
 
     @Select("SELECT * FROM relation_subject_course WHERE course_id=#{courseId}")

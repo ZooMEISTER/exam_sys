@@ -1,5 +1,6 @@
 package com.zoom.exam_sys_backend.controller;
 
+import com.zoom.exam_sys_backend.annotation.LogAnnotation;
 import com.zoom.exam_sys_backend.pojo.vo.*;
 import com.zoom.exam_sys_backend.service.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,8 +23,10 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentController {
 
-    @Autowired
     StudentService studentService;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     /**
     * @Author: ZooMEISTER
@@ -34,6 +37,7 @@ public class StudentController {
     */
     @GetMapping("/test")
     @ResponseBody
+    @LogAnnotation(description = "学生测试接口")
     public String StudentControllerTest(){
         return "Student controller test success";
     }
@@ -46,6 +50,7 @@ public class StudentController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.TouristLoginResultVO
     */
     @PostMapping("/update-profile")
+    @LogAnnotation(description = "学生更新用户信息接口")
     public TouristLoginResultVO StudentUpdateProfile(@RequestParam("userid") Long userid,
                                                      @RequestParam("avatar") String newAvatar,
                                                      @RequestParam("username") String newUsername,
@@ -65,6 +70,7 @@ public class StudentController {
     * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.DepartmentVO>
     */
     @GetMapping("/get-all-department")
+    @LogAnnotation(description = "学生获取所有学院信息接口")
     public List<DepartmentVO> StudentGetAllDepartment(){
         return studentService.StudentGetAllDepartment();
     }
@@ -77,6 +83,7 @@ public class StudentController {
     * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.SubjectVO>
     */
     @PostMapping("/get-all-subject")
+    @LogAnnotation(description = "学生获取某个学院下所有专业接口")
     public List<SubjectVO> StudentGetAllSubject(@RequestParam("departmentId") Long departmentId){
         return studentService.StudentGetAllSubject(departmentId);
     }
@@ -89,6 +96,7 @@ public class StudentController {
     * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.CourseVO>
     */
     @PostMapping("/get-all-course")
+    @LogAnnotation(description = "学生获取某个专业下所有课程接口")
     public List<CourseVO> StudentGetAllCourse(@RequestParam("subjectId") Long subjectId){
         return studentService.StudentGetAllCourse(subjectId);
     }
@@ -101,6 +109,7 @@ public class StudentController {
     * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.ExamVO>
     */
     @PostMapping("/get-all-exam")
+    @LogAnnotation(description = "学生获取某个课程下所有考试的接口")
     public List<StudentExamVO> StudentGetAllExam(@RequestParam("courseId") Long courseId,
                                                  @RequestParam("studentId") Long studentId){
         return studentService.StudentGetAllExam(courseId, studentId);
@@ -114,6 +123,7 @@ public class StudentController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.StudentExtendedExamVO
     */
     @PostMapping("/get-exam-detail")
+    @LogAnnotation(description = "学生获取某个考试详细信息的接口")
     public StudentExtendedExamVO StudentGetSingleExamInfo(@RequestParam("examId") Long examId,
                                                           @RequestParam("studentId") Long studentId){
         return studentService.StudentGetSingleExamInfo(examId, studentId);
@@ -127,6 +137,7 @@ public class StudentController {
     * @Return int
     */
     @PostMapping("/check-if-student-signed-course")
+    @LogAnnotation(description = "学生查询自己是否报名该课程接口")
     public int StudentCheckIfSignedCourse(@RequestParam("studentId") Long studentId,
                                           @RequestParam("courseId") Long courseId){
         return studentService.StudentCheckIfSignedCourse(studentId, courseId);
@@ -140,6 +151,7 @@ public class StudentController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.StudentSignCourseResultVO
     */
     @PostMapping("/student-sign-course")
+    @LogAnnotation(description = "学生报名课程接口")
     public StudentSignCourseResultVO StudentSignCourse(@RequestParam("studentId") Long studentId,
                                                        @RequestParam("courseId") Long courseId){
         return studentService.StudentSignCourse(studentId, courseId);
@@ -153,6 +165,7 @@ public class StudentController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.CourseVO
     */
     @PostMapping("/get-course-info")
+    @LogAnnotation(description = "学生获取某个课程信息的接口")
     public CourseVO StudentGetCourseInfo(@RequestParam("courseId") Long courseId){
         return studentService.StudentGetCourseInfo(courseId);
     }
@@ -165,6 +178,7 @@ public class StudentController {
     * @Return java.lang.String
     */
     @PostMapping("/upload-respondent")
+    @LogAnnotation(description = "学生上传答卷接口")
     public StudentUploadRespondentFileResultVO StudentUploadRespondentFile(@RequestParam("examRespondent") MultipartFile multipartFile, @RequestParam("lastModified") Long lastModified) throws IOException {
         return studentService.StudentUploadRespondentFile(multipartFile, lastModified);
     }
@@ -177,13 +191,15 @@ public class StudentController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.StudentAddRespondentResultVO
     */
     @PostMapping("/add-respondent-record")
+    @LogAnnotation(description = "学生添加答卷记录接口")
     public StudentAddRespondentResultVO StudentAddRespondent(@RequestParam("examId") Long examId,
                                                              @RequestParam("studentId") Long studentId,
                                                              @RequestParam("respondentFileName") String respondentFileName,
-                                                             @RequestParam("sha256Value") String sha256Value,
+                                                             @RequestParam("signValue") String signValue,
+                                                             @RequestParam("publicKeyValue") String publicKeyValue,
                                                              @RequestParam("lastModifiedTime") String lastModifiedTime) throws IOException, NoSuchAlgorithmException {
         Date _lastModifiedTime = new Date(Long.parseLong(lastModifiedTime));
-        return studentService.StudentAddRespondent(examId, studentId, respondentFileName, sha256Value, _lastModifiedTime);
+        return studentService.StudentAddRespondent(examId, studentId, respondentFileName, signValue, publicKeyValue, _lastModifiedTime);
     }
 
     /**
@@ -194,6 +210,7 @@ public class StudentController {
     * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.MyCourseVO>
     */
     @PostMapping("/get-all-my-course")
+    @LogAnnotation(description = "学生获取所有自己参加的课的接口")
     public List<MyCourseVO> StudentGetAllMyCourse(@RequestParam("studentId") Long studentId){
         return studentService.StudentGetAllMyCourse(studentId);
     }
@@ -206,6 +223,7 @@ public class StudentController {
     * @Return java.util.List<com.zoom.exam_sys_backend.pojo.vo.MyExamVO>
     */
     @PostMapping("/get-all-my-exam")
+    @LogAnnotation(description = "学生获取所有我参加的考试接口")
     public List<MyExamVO> StudentGetAllMyExam(@RequestParam("studentId") Long studentId){
         return studentService.StudentGetAllMyExam(studentId);
     }
@@ -218,6 +236,7 @@ public class StudentController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.StudentToTeacherResultVO
     */
     @PostMapping("/to-teacher")
+    @LogAnnotation(description = "学生申请成为老师的接口")
     public StudentToTeacherResultVO StudentApplyTobeTeacher(@RequestParam("studentId") Long studentId,
                                                             @RequestParam("description") String description){
         return studentService.StudentApplyTobeTeacher(studentId, description);
@@ -231,6 +250,7 @@ public class StudentController {
     * @Return com.zoom.exam_sys_backend.pojo.vo.StudentGetExamPaperAesKeyResultVO
     */
     @PostMapping("/get-exam-aes-key")
+    @LogAnnotation(description = "学生获取考试试卷的aes密钥的接口")
     public StudentGetExamPaperAesKeyResultVO TeacherGetExamAesKey(@RequestParam("paperId") Long paperId){
         return studentService.StudentGetExamAesKey(paperId);
     }
@@ -243,6 +263,7 @@ public class StudentController {
     * @Return void
     */
     @RequestMapping("/download-exam-paper")
+    @LogAnnotation(description = "学生下载试卷接口")
     public void downloadLocal(String paperName, HttpServletResponse response) throws IOException {
         studentService.StudentDownloadExamPaper(paperName, response);
     }

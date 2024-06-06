@@ -55,11 +55,14 @@ public class StudentServiceImpl implements StudentService {
     @Value("${data.respondentMappingPath}")
     String respondentMappingPath;
 
-    @Autowired
-    RedisTemplate redisTemplate;
 
-    @Autowired
+    RedisTemplate redisTemplate;
     StudentMapper studentMapper;
+
+    public StudentServiceImpl(RedisTemplate redisTemplate, StudentMapper studentMapper) {
+        this.redisTemplate = redisTemplate;
+        this.studentMapper = studentMapper;
+    }
 
     /**
     * @Author: ZooMEISTER
@@ -190,6 +193,7 @@ public class StudentServiceImpl implements StudentService {
         List<CourseVO> courseVOList = new ArrayList<>();
         for(SubjectCourseBO i : subjectCoursePOList){
             CoursePO coursePO = studentMapper.studentGetSingleCourse(i.getCourse_id());
+            if(coursePO.getDeleted() > 0) continue;
             TeacherPO teacherPO = studentMapper.StudentGetTeacherPOById(coursePO.getTeachby());
             courseVOList.add(new CourseVO(
                     coursePO.getId().toString(),
@@ -423,16 +427,18 @@ public class StudentServiceImpl implements StudentService {
     * @Return com.zoom.exam_sys_backend.pojo.vo.StudentAddRespondentResultVO
     */
     @Override
-    public StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String sha256Value, Date lastModifiedTime) throws IOException, NoSuchAlgorithmException {
+    public StudentAddRespondentResultVO StudentAddRespondent(Long examId, Long studentId, String respondentFileName, String signValue, String publicKeyValue, Date lastModifiedTime) throws IOException, NoSuchAlgorithmException {
         SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
         Long respondentId = idWorker.nextId();
-        int is_sha256_good = 0;
+        int is_sign_verify_good = 0;
         try{
+            // 获取文件的sha256值
             byte[] sha256 = Sha256Utils.calculateSHA256(fileDataFolderPath + examAnswerPaperFolderPath + respondentFileName);
-            String sha256Hex = Sha256Utils.bytesToHex(sha256);
-            is_sha256_good = (sha256Hex.equals(sha256Value)) ? 1 : -1;
-//            File respondentFile = new File(fileDataFolderPath + examAnswerPaperFolderPath + respondentFileName);
-            int res = studentMapper.StudentAddRespondent(respondentId, examId, studentId, respondentFileName, -1, sha256Value, is_sha256_good, lastModifiedTime);
+            // 验签
+            boolean result = ECDsaUtils.verifySign(HexUtils.hexStringToBytes(publicKeyValue), HexUtils.hexStringToBytes(signValue), sha256);
+            is_sign_verify_good = result ? 1 : -1;
+
+            int res = studentMapper.StudentAddRespondent(respondentId, examId, studentId, respondentFileName, -1, Sha256Utils.bytesToHex(sha256), signValue, publicKeyValue, is_sign_verify_good, lastModifiedTime);
             if(res > 0){
                 return new StudentAddRespondentResultVO(StudentResultCode.STUDENT_ADD_RESPONDENT_SUCCESS, "交卷成功");
             }
@@ -461,6 +467,7 @@ public class StudentServiceImpl implements StudentService {
             int totalStudentCount = studentMapper.StudentGetCourseStudentCount(i.getCourse_id());
             int examCount = studentMapper.StudentGetCourseExamCountByCourseId(i.getCourse_id());
             CoursePO coursePO = studentMapper.StudentGetCourseInfo(i.getCourse_id());
+            if(coursePO.getDeleted() > 0) continue;
             SubjectCourseBO subjectCourseBO = studentMapper.StudentGetSubjectCourseRelationByCourseId(i.getCourse_id());
             SubjectPO subjectPO = studentMapper.StudentGetSubjectPOById(subjectCourseBO.getSubject_id());
             DepartmentPO departmentPO = studentMapper.StudentGetDepartmentPOById(subjectPO.getBelongto());
@@ -498,6 +505,7 @@ public class StudentServiceImpl implements StudentService {
         List<CourseStudentBO> courseStudentBOList = studentMapper.StudentGetAllCourseStudentRelation(studentId);
         for(CourseStudentBO i : courseStudentBOList){
             CoursePO coursePO = studentMapper.StudentGetCourseInfo(i.getCourse_id());
+            if(coursePO.getDeleted() > 0) continue;
             SubjectCourseBO subjectCourseBO = studentMapper.StudentGetSubjectCourseRelationByCourseId(i.getCourse_id());
             SubjectPO subjectPO = studentMapper.StudentGetSubjectPOById(subjectCourseBO.getSubject_id());
             DepartmentPO departmentPO = studentMapper.StudentGetDepartmentPOById(subjectPO.getBelongto());

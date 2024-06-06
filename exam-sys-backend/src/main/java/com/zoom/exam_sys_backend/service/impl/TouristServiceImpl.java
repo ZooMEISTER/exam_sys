@@ -34,23 +34,22 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Service
 public class TouristServiceImpl implements TouristService {
 
-    @Autowired
+
     private RedisTemplate<String, Object> redisTemplate;
-
-    @Autowired
     private TouristMapper touristMapper;
-
-    @Autowired
     private SuperAdminMapper superAdminMapper;
-
-    @Autowired
     private AdminMapper adminMapper;
-
-    @Autowired
     private TeacherMapper teacherMapper;
-
-    @Autowired
     private StudentMapper studentMapper;
+
+    public TouristServiceImpl(RedisTemplate<String, Object> redisTemplate, TouristMapper touristMapper, SuperAdminMapper superAdminMapper, AdminMapper adminMapper, TeacherMapper teacherMapper, StudentMapper studentMapper) {
+        this.redisTemplate = redisTemplate;
+        this.touristMapper = touristMapper;
+        this.superAdminMapper = superAdminMapper;
+        this.adminMapper = adminMapper;
+        this.teacherMapper = teacherMapper;
+        this.studentMapper = studentMapper;
+    }
 
     /**
     * @Author: ZooMEISTER

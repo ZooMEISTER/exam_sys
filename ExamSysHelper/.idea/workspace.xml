@@ -5,17 +5,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b37310bf-9040-43cc-a996-446a18857769" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/zoom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/zoom/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/zoom/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/zoom/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/ExceptionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/ExceptionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/StudentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/exception/code/AdminResultCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/exception/code/AdminResultCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/AdminMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/AdminMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/StudentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/StudentMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/TeacherMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/mapper/TeacherMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/pojo/bo/RespondentExamStudentBO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/pojo/bo/RespondentExamStudentBO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/pojo/vo/AdminApplicationManageResultVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/pojo/vo/RespondentTeacherVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/pojo/vo/RespondentTeacherVO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/StudentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/AdminServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/AdminServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/StudentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/StudentServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/TeacherServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/service/impl/TeacherServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/constants/HomePageMenuItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/constants/HomePageMenuItems.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/homePage_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/homePage_index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/ProfilePage/profilePage_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/ProfilePage/profilePage_index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Application_Management/admin_AddCourse_Application/adminAddCourseApplication.css" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Application_Management/admin_AddCourse_Application/adminAddCourseApplication.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Application_Management/admin_AddCourse_Application/adminAddCourseApplication.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Application_Management/admin_AddCourse_Application/adminAddCourseApplication.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Application_Management/admin_BeTeacher_Application/adminBeTeacherApplication.css" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Application_Management/admin_BeTeacher_Application/adminBeTeacherApplication.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Application_Management/admin_BeTeacher_Application/adminBeTeacherApplication.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Application_Management/admin_BeTeacher_Application/adminBeTeacherApplication.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Course_Management/adminCourseManagement_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Course_Management/adminCourseManagement_index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Department_Management/adminDepartmentManagement_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Department_Management/adminDepartmentManagement_index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Subject_Mangement/adminSubjectManagement_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/admin/admin_Subject_Mangement/adminSubjectManagement_index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/student/student_ChooseClass/ExamDetailPage/examDetailPage_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/student/student_ChooseClass/ExamDetailPage/examDetailPage_index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/teacher/teacher_CorrectRespondent/teacherCorrectRespondentPage_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/teacher/teacher_CorrectRespondent/teacherCorrectRespondentPage_index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/routers/router_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/routers/router_index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,10 +81,43 @@
       <recent name="D:\myPrograming\WEB\Exam_System\ExamSysHelper\src\main\java\org\zoom\Utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Application.AesEDTest">
     <configuration name="AesEDTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="AesEDTest" />
       <module name="ExamSysHelper" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ECDSA" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.zoom.Utils.ECDSA" />
+      <module name="ExamSysHelper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.zoom.Utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ECDsaTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ECDsaTest" />
+      <module name="ExamSysHelper" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ECDsaUtils" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.zoom.Utils.ECDsaUtils" />
+      <module name="ExamSysHelper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.zoom.Utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -78,8 +137,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
         <item itemvalue="Application.AesEDTest" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.ECDsaTest" />
+        <item itemvalue="Application.ECDsaUtils" />
+        <item itemvalue="Application.ECDSA" />
       </list>
     </recent_temporary>
   </component>
@@ -97,6 +159,10 @@
       <workItem from="1713642742236" duration="923000" />
       <workItem from="1713780949810" duration="5000" />
       <workItem from="1714118535437" duration="569000" />
+      <workItem from="1716096446058" duration="16239000" />
+      <workItem from="1716191714240" duration="1642000" />
+      <workItem from="1716265589774" duration="4832000" />
+      <workItem from="1716881079922" duration="5000" />
     </task>
     <servers />
   </component>

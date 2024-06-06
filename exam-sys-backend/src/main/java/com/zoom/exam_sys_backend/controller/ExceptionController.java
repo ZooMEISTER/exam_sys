@@ -20,9 +20,11 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Map globalException(HttpServletRequest request, Exception e) {
+        e.printStackTrace();
         Map<String,Object> errMap = new HashMap<>();
         errMap.put("Code", 500);
-        errMap.put("Message", e.toString());
+        errMap.put("Message", e.getMessage());
+        errMap.put("String", e.toString());
         errMap.put("StackTrace", e.getStackTrace());
         return errMap;
     }

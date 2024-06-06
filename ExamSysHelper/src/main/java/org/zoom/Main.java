@@ -1,8 +1,6 @@
 package org.zoom;
 
-import org.zoom.Utils.AesUtils;
-import org.zoom.Utils.ClipboardUtils;
-import org.zoom.Utils.Sha256Utils;
+import org.zoom.Utils.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -18,7 +16,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +38,7 @@ public class Main {
     public static void main(String[] args) {
         // 窗体对象
         JFrame mainFrame = new JFrame("ExamSysHelper");
-        mainFrame.setSize(new Dimension(400,190));
+        mainFrame.setSize(new Dimension(500,175));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
         mainFrame.setLayout(new BorderLayout());
@@ -50,10 +52,11 @@ public class Main {
 
         // 标签页内容对象
         JComponent panel1 = makeDecryptPanel("解密试卷");
-        panel1.setPreferredSize(new Dimension(350,90));
+        panel1.setSize(new Dimension(500,90));
         mainTab.addTab("解密试卷", null, panel1,"Does nothing");
 
         JComponent panel2 = makeSignPanel("签名答卷");
+        panel2.setSize(new Dimension(500,90));
         mainTab.addTab("签名答卷", null, panel2,"Does nothing");
 
 
@@ -149,8 +152,11 @@ public class Main {
         JPanel panel = new JPanel(false);
         panel.setLayout(new GridLayout(3,1));
         JButton signButton = new JButton("点我选择要签名的答卷");
-        JTextField sha256TextField = new JTextField();
-        JButton getSha256Button = new JButton("复制SHA-256值");
+        JTextField signTextField = new JTextField(20);
+        JButton getSignButton = new JButton("复制签名");
+        JTextField publicKeyTextField = new JTextField(20);
+        JButton getPublicKeyButton = new JButton("复制公钥");
+
 
         // 创建并配置文件选择对话框
         JFileChooser signFileChooser = new JFileChooser();
@@ -179,10 +185,21 @@ public class Main {
                     System.out.println(currentFile.getPath());
 
                     try {
+                        // 对文件生成sha256hash值
                         byte[] sha256 = Sha256Utils.calculateSHA256(currentFile.getPath());
-                        String sha256Hex = Sha256Utils.bytesToHex(sha256);
-                        System.out.println("SHA256: " + sha256Hex);
-                        sha256TextField.setText(sha256Hex);
+
+                        // 生成密钥对
+                        KeyPair keyPair = ECDsaUtils.generateKeyPair_ECDSA();
+                        byte[] privateKey = keyPair.getPrivate().getEncoded();
+                        byte[] publicKey = (keyPair.getPublic().getEncoded());
+                        publicKeyTextField.setText(HexUtils.bytesToHexString(publicKey));
+                        System.out.println("PrivateKey: " + HexUtils.bytesToHexString(privateKey));
+                        System.out.println("PublicKey: " + HexUtils.bytesToHexString(publicKey));
+
+                        // 对文件的sha256生成签名
+                        byte[] sign = ECDsaUtils.getSign_ECDSA(privateKey, sha256);
+                        signTextField.setText(HexUtils.bytesToHexString(sign));
+                        System.out.println("Sign: " + HexUtils.bytesToHexString(sign));
 
                         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Date date = new Date(System.currentTimeMillis());
@@ -193,25 +210,53 @@ public class Main {
                         statusLabel.setText(formatter.format(date) + " 答卷签名失败...");
 
                         er.printStackTrace();
+                    } catch (InvalidKeySpecException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (SignatureException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (InvalidKeyException ex) {
+                        throw new RuntimeException(ex);
                     }
                 }
             }
         });
 
-        // 复制sha256值到剪切板事件
-        getSha256Button.addActionListener(new ActionListener() {
+        // 复制签名到剪切板事件
+        getSignButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClipboardUtils.setSysClipboardText(sha256TextField.getText());
+                ClipboardUtils.setSysClipboardText(signTextField.getText());
                 SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = new Date(System.currentTimeMillis());
-                statusLabel.setText(formatter.format(date) + " SHA-256值已复制到剪切板...");
+                statusLabel.setText(formatter.format(date) + " 签名已复制到剪切板...");
+            }
+        });
+
+        // 复制公钥到剪切板事件
+        getPublicKeyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ClipboardUtils.setSysClipboardText(publicKeyTextField.getText());
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = new Date(System.currentTimeMillis());
+                statusLabel.setText(formatter.format(date) + " 公钥已复制到剪切板...");
             }
         });
 
         panel.add(signButton);
-        panel.add(sha256TextField);
-        panel.add(getSha256Button);
+
+        JPanel jp1 = new JPanel(false);
+        jp1.setLayout(new GridLayout(1, 2));
+        jp1.add(signTextField);
+        jp1.add(getSignButton);
+        JPanel jp2 = new JPanel(false);
+        jp2.setLayout(new GridLayout(1, 2));
+        jp2.add(publicKeyTextField);
+        jp2.add(getPublicKeyButton);
+
+        panel.add(jp1);
+        panel.add(jp2);
+
         return panel;
     }
 

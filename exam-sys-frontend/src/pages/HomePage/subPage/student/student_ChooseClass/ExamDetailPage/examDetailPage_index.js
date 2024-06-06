@@ -18,7 +18,8 @@ const Student_ExamDetailPage_index = () => {
 
     const [examInfo, setExamInfo] = useState({})
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [sha256Value, setSha256Value] = useState("")
+    const [signValue, setSignValue] = useState("")
+    const [publicKeyValue, setPublicKeyValue] = useState("")
     const [respondentFileInfo, setRespondentFileInfo] = useState([])
     const [justAddRespondent, setJustAddRespondent] = useState(false)
 
@@ -75,8 +76,11 @@ const Student_ExamDetailPage_index = () => {
     }
 
     const handleOk = () => {
-        if(sha256Value == ""){
-            message.info("SHA-256 值不能为空")
+        if(signValue == ""){
+            message.info("签名不能为空")
+        }
+        else if(publicKeyValue == ""){
+            message.info("公钥不能为空")
         }
         else if(respondentFileInfo.respondentFileName == ""){
             message.info("必须上传答卷")
@@ -86,7 +90,8 @@ const Student_ExamDetailPage_index = () => {
                 examId: examInfo.id,
                 studentId: userid,
                 respondentFileName: respondentFileInfo.respondentFileName,
-                sha256Value: sha256Value,
+                signValue: signValue,
+                publicKeyValue: publicKeyValue,
                 lastModifiedTime: respondentFileInfo.respondentLastModifiedTime
             })
             .then( function(response) {
@@ -122,7 +127,8 @@ const Student_ExamDetailPage_index = () => {
         }
     };
     const handleCancel = () => {
-        setSha256Value("")
+        setSignValue("")
+        setPublicKeyValue("")
         setRespondentFileInfo([])
         setIsModalOpen(false);
     };
@@ -142,9 +148,13 @@ const Student_ExamDetailPage_index = () => {
         })
     }
 
-    // 学生输入sha256值
-    const sha256ValueChange = (event) => {
-        setSha256Value(event.target.value)
+    // 学生输入签名
+    const signValueChange = (event) => {
+        setSignValue(event.target.value)
+    }
+    // 学生输入公钥
+    const publicKeyValueChange = (event) => {
+        setPublicKeyValue(event.target.value)
     }
 
 
@@ -323,16 +333,29 @@ const Student_ExamDetailPage_index = () => {
                     autoComplete="off"
                 >
                     <Form.Item
-                        label="SHA-256值"
-                        name="sha256_value"
+                        label="签名"
+                        name="signValue"
                         rules={[
                             {
                             required: true,
-                            message: '请输入SHA-256值',
+                            message: '请输入签名',
                             },
                         ]}
                         >
-                        <Input value={sha256Value} onChange={sha256ValueChange}/>
+                        <Input value={signValue} onChange={signValueChange}/>
+                    </Form.Item>
+
+                    <Form.Item
+                        label="公钥"
+                        name="publicKeyValue"
+                        rules={[
+                            {
+                            required: true,
+                            message: '请输入公钥',
+                            },
+                        ]}
+                        >
+                        <Input value={publicKeyValue} onChange={publicKeyValueChange}/>
                     </Form.Item>
 
                     <Form.Item

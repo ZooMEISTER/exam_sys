@@ -15,4 +15,7 @@ public interface ExamSysConstants {
 
     // 学生可以在考试开始之前提前拿到aeskey的时间（ms）
     public static final long AES_KEY_AHEAD_AVAILABLE_TIME = 60000;
+
+    // 重置密码 默认密码
+    public static final String RESET_PASSWORD_DEFAULT_PASSWORD = "abc123456";
 }

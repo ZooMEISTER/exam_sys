@@ -15,19 +15,23 @@ public class RespondentTeacherVO {
     private String respondent_path;
     private int final_score;
     private String sha256_code;
+    private String sign;
+    private String publickey;
+    private int is_sign_verify_good;
     private String created_time;
-    private int is_sha256_good;
     private String lastModifiedTime;
 
-    public RespondentTeacherVO(String id, String exam_id, String student_id, String respondent_path, int final_score, String sha256_code, String created_time, int is_sha256_good, String lastModifiedTime) {
+    public RespondentTeacherVO(String id, String exam_id, String student_id, String respondent_path, int final_score, String sha256_code, String sign, String publickey, int is_sign_verify_good, String created_time, String lastModifiedTime) {
         this.id = id;
         this.exam_id = exam_id;
         this.student_id = student_id;
         this.respondent_path = respondent_path;
         this.final_score = final_score;
         this.sha256_code = sha256_code;
+        this.sign = sign;
+        this.publickey = publickey;
+        this.is_sign_verify_good = is_sign_verify_good;
         this.created_time = created_time;
-        this.is_sha256_good = is_sha256_good;
         this.lastModifiedTime = lastModifiedTime;
     }
 
@@ -79,20 +83,36 @@ public class RespondentTeacherVO {
         this.sha256_code = sha256_code;
     }
 
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getPublickey() {
+        return publickey;
+    }
+
+    public void setPublickey(String publickey) {
+        this.publickey = publickey;
+    }
+
+    public int getIs_sign_verify_good() {
+        return is_sign_verify_good;
+    }
+
+    public void setIs_sign_verify_good(int is_sign_verify_good) {
+        this.is_sign_verify_good = is_sign_verify_good;
+    }
+
     public String getCreated_time() {
         return created_time;
     }
 
     public void setCreated_time(String created_time) {
         this.created_time = created_time;
-    }
-
-    public int getIs_sha256_good() {
-        return is_sha256_good;
-    }
-
-    public void setIs_sha256_good(int is_sha256_good) {
-        this.is_sha256_good = is_sha256_good;
     }
 
     public String getLastModifiedTime() {
@@ -112,8 +132,10 @@ public class RespondentTeacherVO {
                 ", respondent_path='" + respondent_path + '\'' +
                 ", final_score=" + final_score +
                 ", sha256_code='" + sha256_code + '\'' +
+                ", sign='" + sign + '\'' +
+                ", publickey='" + publickey + '\'' +
+                ", is_sign_verify_good=" + is_sign_verify_good +
                 ", created_time='" + created_time + '\'' +
-                ", is_sha256_good=" + is_sha256_good +
                 ", lastModifiedTime='" + lastModifiedTime + '\'' +
                 '}';
     }

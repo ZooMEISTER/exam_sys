@@ -3,14 +3,14 @@ package com.zoom.exam_sys_backend.pojo.vo;
 /**
  * @Author ZooMEISTER
  * @Description: TODO
- * @DateTime 2024/5/8 14:33
+ * @DateTime 2024/5/13 17:05
  **/
 
-public class AdminApplicationManageResultVO {
+public class ResultVO {
     private int resultCode;
     private String msg;
 
-    public AdminApplicationManageResultVO(int resultCode, String msg) {
+    public ResultVO(int resultCode, String msg) {
         this.resultCode = resultCode;
         this.msg = msg;
     }
@@ -33,7 +33,7 @@ public class AdminApplicationManageResultVO {
 
     @Override
     public String toString() {
-        return "AdminApplicationManageResultVO{" +
+        return "ResultVO{" +
                 "resultCode=" + resultCode +
                 ", msg='" + msg + '\'' +
                 '}';

@@ -18,11 +18,31 @@ const homePageMenuItems_Admin = [
         ),
         key: "/home/admin-course-management"
     },
+    // {
+    //     label: (
+    //         "考试管理"
+    //     ),
+    //     key: "/home/admin-exam-management"
+    // },
     {
         label: (
-            "考试管理"
+            "用户管理"
         ),
-        key: "/home/admin-exam-management"
+        key: "/home/admin-user-management",
+        children: [
+            {
+                label: (
+                    "老师管理"
+                ),
+                key: "/home/admin-user-management/teacher-management"
+            },
+            {
+                label: (
+                    "学生管理"
+                ),
+                key: "/home/admin-user-management/student-management"
+            },
+        ]
     },
     {
         label: (
