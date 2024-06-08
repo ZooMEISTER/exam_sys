@@ -1,0 +1,41 @@
+
+.course-card{
+    width: 300px;
+    height: 375px;
+
+    margin-left: 10px;
+    margin-top: 10px;
+
+    border: solid;
+    border-color: #e5e5e5af;
+    border-width: 1px;
+}
+
+.course-cover-img{
+    height: 200px;
+    width: 300px;
+    object-fit: contain;
+}
+
+.course-card-info-div{
+    display: flex;
+    flex-direction: column;
+
+    height: 135px;
+}
+.course-card-title{
+    font-size: 25px;
+}
+.course-card-description{
+    font-size: 15px;
+    margin-top: auto;
+    color: rgb(66, 66, 66);
+}
+.course-card-teachby{
+    font-size: 15px;
+    color: rgb(138, 138, 138);
+}
+.course-card-created-time{
+    font-size: 15px;
+    color: rgb(138, 138, 138);
+}

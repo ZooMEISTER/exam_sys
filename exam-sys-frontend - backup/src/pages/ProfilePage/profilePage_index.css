@@ -1,0 +1,19 @@
+.card-class{
+    width: 800px;
+    margin: auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+div.ant-upload.ant-upload-select{
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.profile-form-item-content{
+    display: flex;
+    flex-direction: row;
+}
+.profile-form-item-content-btn{
+    margin-left: 5px;
+}

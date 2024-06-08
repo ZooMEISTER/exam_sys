@@ -1,0 +1,37 @@
+
+.subject-card{
+    width: 300px;
+    height: 375px;
+
+    margin-left: 10px;
+    margin-top: 10px;
+
+    border: solid;
+    border-color: #e5e5e5af;
+    border-width: 1px;
+}
+
+.subject-cover-img{
+    height: 200px;
+    width: 300px;
+    object-fit: contain;
+}
+
+.subject-card-info-div{
+    display: flex;
+    flex-direction: column;
+
+    height: 135px;
+}
+.subject-card-title{
+    font-size: 25px;
+}
+.subject-card-description{
+    font-size: 15px;
+    margin-top: auto;
+    color: rgb(66, 66, 66);
+}
+.subject-card-subject-count{
+    font-size: 15px;
+    color: rgb(138, 138, 138);
+}

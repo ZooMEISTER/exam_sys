@@ -1,0 +1,122 @@
+
+.navigate-breadcrumb{
+    margin-top: 30px;
+    margin-left: 40px;
+
+    font-size: 20px;
+}
+
+.teacher-course-info-div{
+    display: flex;
+    flex-direction: row;
+
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
+
+    width: 95%;
+    height: 240px;
+
+    box-shadow: 0px 0px 5px grey;
+    border-radius: 5px;
+}
+.teacher-course-info-img{
+    height: 200px;
+    width: 200px;
+    object-fit: contain;
+
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 25px;
+    box-shadow: 0px 0px 2px grey;
+}
+.teacher-course-info-sub-div{
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 15px;
+    margin-left: 20px;
+}
+.teacher-course-info-name{
+    font-size: 40px;
+}
+.teacher-course-info-description{
+    font-size: 20px;
+    color: rgb(66, 66, 66);
+}
+.teacher-course-info-teachby{
+    margin-top: auto;
+    font-size: 15px;
+    color: rgb(138, 138, 138);
+}
+.teacher-course-info-createdtime{
+    font-size: 15px;
+    margin-bottom: 25px;
+    color: rgb(138, 138, 138);
+}
+.add-exam-button-div{
+    width: auto;
+    height: auto;
+    margin-left: auto;
+    margin-right: 40px;
+
+    display: flex;
+}
+.add-exam-button{
+    width: 200px;
+    margin-top: auto;
+    margin-bottom: 25px;
+}
+
+
+.info-div{
+    margin: auto;
+    margin-top: 20px;
+
+    width: 95%;
+}
+.info-text{
+    font-size: 20px;
+}
+
+.teacher-exam-tabs{
+    margin: auto;
+    width: 95%;
+}
+
+
+.show-all-exam-div{
+    margin: auto;
+    margin-top: 0px;
+
+    display: flex;
+    flex-direction: column;
+    
+    width: 95%;
+}
+.exam-info-component{
+    width: 100%;
+}
+
+
+
+.show-all-course-student-div{
+    display: flex;
+    flex-wrap: wrap;
+
+    width: 95%;
+    margin: auto;
+}
+.student-info-component{
+}
+
+
+.paper-uploader{
+    display: flex;
+    flex-direction: column;
+    width: auto !important;
+    height: 100px;
+}
+.timepicker{
+    margin-left: 10px;
+}

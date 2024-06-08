@@ -1,0 +1,43 @@
+
+.admin-add-course-application-div{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 95%;
+}
+
+.admin-add-course-all-filter-outer-div{
+    display: flex;
+    flex-direction: row;
+
+    margin: auto;
+    margin-top: 20px;
+    margin-right: 0px;
+}
+.admin-add-course-all-filter-inner-div{
+    display: flex;
+    flex-direction: column;
+
+    margin-right: 20px;
+}
+.admin-add-course-filte-button{
+    margin: auto;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    width: 100px;
+}
+
+.admin-add-course-application-table-div{
+    margin-top: 10px;
+}
+
+.admin-add-course-application-table{
+    width: 100%;
+
+    margin-top: 20px;
+}
+
+.admin-add-course-application-icon{
+    height: 50px;
+    width: 50px;
+}

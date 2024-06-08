@@ -1,0 +1,37 @@
+.student-myclass-root-div{
+    display: flex;
+    flex-direction: column;
+
+    width: 95%;
+    height: 100%;
+    margin: auto;
+}
+.student-myclass-label-div{
+    margin-top: 35px;
+}
+.student-myclass-label{
+    font-size: 20px;
+}
+
+.student-myclass-list-div{
+    margin-top: 20px;
+}
+.student-myclass-list{
+    min-height: 650px;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-myclass-list-item-icon{
+    height: 135px;
+    width: 210px;
+    object-fit: contain;
+    margin-right: 20px;
+}
+
+.student-myclass-course-name{
+    color: black;
+}
+.student-myclass-course-path-url{
+    color: grey;
+}

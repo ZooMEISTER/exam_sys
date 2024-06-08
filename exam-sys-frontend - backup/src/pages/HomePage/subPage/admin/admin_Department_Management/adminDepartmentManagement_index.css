@@ -1,0 +1,36 @@
+
+.admin-department-management-div{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 0px;
+    width: 95%;
+}
+
+.admin-department-management-filter-outer-div{
+    display: flex;
+    flex-direction: row;
+
+    margin: auto;
+    margin-top: 20px;
+    margin-right: 0px;
+}
+
+.admin-department-management-table{
+    width: 100%;
+
+    margin-top: 20px;
+}
+
+.admin-department-management-icon{
+    height: 50px;
+    width: 50px;
+}
+
+.admin-department-management-search-input{
+    width: 250px;
+}
+
+.admin-department-management-search-button{
+    margin-left: 10px;
+}

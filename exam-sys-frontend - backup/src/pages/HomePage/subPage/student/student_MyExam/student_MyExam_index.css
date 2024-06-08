@@ -1,0 +1,40 @@
+.student-myexam-root-div{
+    display: flex;
+    flex-direction: column;
+
+    width: 95%;
+    height: 100%;
+    margin: auto;
+}
+.student-myexam-label-div{
+    margin-top: 35px;
+    display: flex;
+    flex-direction: row;
+}
+.student-myexam-label{
+    font-size: 20px;
+}
+.student-myexam-segmented{
+    margin-left: auto;
+}
+
+.student-myexam-list-div{
+    margin-top: 20px;
+}
+.student-myexam-list{
+    min-height: 650px;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-myexam-course-name{
+    color: black;
+}
+.student-myexam-course-path-url{
+    color: grey;
+}
+
+.student-myexam-exam-status-tag-div{
+    display: flex;
+    flex-direction: row;
+}

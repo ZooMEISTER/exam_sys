@@ -1,0 +1,43 @@
+
+.admin-subject-management-div{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 0px;
+    width: 95%;
+}
+
+.admin-subject-management-filter-outer-div{
+    display: flex;
+    flex-direction: row;
+
+    margin: auto;
+    margin-top: 20px;
+    margin-right: 0px;
+}
+
+.admin-subject-management-filter-inner-div{
+    display: flex;
+    flex-direction: column;
+
+    margin-right: 20px;
+}
+
+.admin-subject-management-filte-button{
+    margin: auto;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    width: 100px;
+}
+
+.admin-subject-management-add-subject-button{
+    margin: auto;
+    margin-left: 10px;
+    margin-bottom: 0px;
+}
+
+.admin-subject-management-table{
+    width: 100%;
+
+    margin-top: 20px;
+}
