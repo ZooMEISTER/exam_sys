@@ -87,7 +87,7 @@ const userFileDownloadRequest = axios.create({
     baseURL: "http://localhost:3001",
     timeout: 20000,
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    // responseType: "blob"
+    responseType: "blob"
 })
 
 // 添加请求拦截器

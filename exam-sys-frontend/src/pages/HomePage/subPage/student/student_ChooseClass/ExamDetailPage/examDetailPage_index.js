@@ -201,14 +201,14 @@ const Student_ExamDetailPage_index = () => {
         })
         .then(function(response) {
             console.log(response)
-            var fileNameEncode = response.headers['content-disposition']
-                .split('filename=')[1]
-                .split(';')[0];
-            var fileNameDecode = decodeURI(fileNameEncode);
+            // var fileNameEncode = response.headers['content-disposition']
+            //     .split('filename=')[1]
+            //     .split(';')[0];
+            // var fileNameDecode = decodeURI(fileNameEncode);
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', fileNameDecode);
+            link.setAttribute('download', "试卷.pdf");
             document.body.appendChild(link);
             link.click();
 

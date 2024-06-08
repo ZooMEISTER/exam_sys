@@ -24,7 +24,7 @@ import java.util.List;
  **/
 
 @RestController
-@RequestMapping("/teacher")
+@RequestMapping(path = {"/teacher", "/proxy"})
 public class TeacherController {
 
     TeacherService teacherService;

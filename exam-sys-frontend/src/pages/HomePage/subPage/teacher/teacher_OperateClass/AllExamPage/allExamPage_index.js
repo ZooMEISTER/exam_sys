@@ -242,7 +242,7 @@ const Teacher_AllExamPage_index = () =>{
 
     // 创建新的考试
     const addNewExam = () =>{
-        if(state.state.courseTeachby != userid){
+        if(courseInfo.teachby != userid){
             message.info("你需要为该课程的授课老师才可创建考试")
         }
         else{

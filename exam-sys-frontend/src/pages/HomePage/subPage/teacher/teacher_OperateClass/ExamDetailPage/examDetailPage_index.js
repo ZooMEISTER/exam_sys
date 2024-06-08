@@ -160,8 +160,9 @@ const Teacher_ExamDetailPage_index = () => {
         .then( function(response) {
             console.log(response)
             const type = "text/plain";
-            const blob = new Blob([response.aesKey], { type });
+            const blob = new Blob([response], { type });
             const data = [new ClipboardItem({ [type]: blob })];
+            console.log(data)
             navigator.clipboard.write(data).then(
                 () => {
                     /* success */
@@ -181,7 +182,7 @@ const Teacher_ExamDetailPage_index = () => {
     // 老师下载试卷
     const downloadExamPaper = () => {
         message.loading("正在下载试卷...")
-        userFileDownloadRequest.post("/api/teacher/download-exam-paper", {
+        userFileDownloadRequest.post("/teacher/download-exam-paper", {
             paperName: examInfo.paperPath
         })
         .then(function(response) {
@@ -193,7 +194,7 @@ const Teacher_ExamDetailPage_index = () => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', "fileNameDecode.pdf");
+            link.setAttribute('download', "试卷.pdf");
             document.body.appendChild(link);
             link.click();
 

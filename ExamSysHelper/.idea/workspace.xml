@@ -5,11 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b37310bf-9040-43cc-a996-446a18857769" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/env.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/getHttpsConfig.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/jest/babelTransform.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/jest/cssTransform.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/jest/fileTransform.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/modules.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/paths.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/webpack.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/webpack/persistentCache/createEnvironmentHash.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/config/webpackDevServer.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/scripts/build.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/scripts/start.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../exam-sys-frontend/scripts/test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/TeacherController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/controller/TeacherController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/interceptor/UserRequestInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-backend/src/main/java/com/zoom/exam_sys_backend/interceptor/UserRequestInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/BasePage/basePage_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/BasePage/basePage_index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/FrontPage/frontPage_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/FrontPage/frontPage_index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/defaultSubPage/default_sub_page.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/defaultSubPage/default_sub_page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/teacher/teacher_OperateClass/AllExamPage/allExamPage_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/teacher/teacher_OperateClass/AllExamPage/allExamPage_index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/teacher/teacher_OperateClass/ExamDetailPage/examDetailPage_index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/pages/HomePage/subPage/teacher/teacher_OperateClass/ExamDetailPage/examDetailPage_index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/setupProxy.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../exam-sys-frontend/src/utils/request.js" beforeDir="false" afterPath="$PROJECT_DIR$/../exam-sys-frontend/src/utils/request.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,6 +148,8 @@
       <workItem from="1716265589774" duration="4832000" />
       <workItem from="1716881079922" duration="5000" />
       <workItem from="1717738327931" duration="304000" />
+      <workItem from="1717829340778" duration="607000" />
+      <workItem from="1717830237155" duration="469000" />
     </task>
     <servers />
   </component>

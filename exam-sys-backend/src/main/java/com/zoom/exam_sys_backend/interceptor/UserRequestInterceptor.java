@@ -67,11 +67,11 @@ public class UserRequestInterceptor implements HandlerInterceptor {
             // 管理员 请求
             expectPermissionLevel = ExamSysConstants.ADMIN_PERMISSION_LEVEL;
         }
-        else if(requestPath.startsWith("/teacher")){
+        else if(requestPath.startsWith("/teacher") || requestPath.startsWith("/proxy/teacher")){
             // 老师 请求
             expectPermissionLevel = ExamSysConstants.TEACHER_PERMISSION_LEVEL;
         }
-        else if(requestPath.startsWith("/student")){
+        else if(requestPath.startsWith("/student") || requestPath.startsWith("/proxy/student")){
             // 学生 请求
             expectPermissionLevel = ExamSysConstants.STUDENT_PERMISSION_LEVEL;
         }
